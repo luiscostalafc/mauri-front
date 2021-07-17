@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve"
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/config/ReactotronConfig.js",
+    "src/store/createStore.js",
+    "src/store/index.js",
+    "src/store/persistReducers.js",
+    "src/utils/px2vw.js",
+    "src/utils/viaCep.js",
+    "src/utils"
+, "src/services/apiCep.js"  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

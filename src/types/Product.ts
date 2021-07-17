@@ -1,0 +1,75 @@
+import { Asset } from './Asset';
+import { Group } from './Group';
+import { ProductAsingment } from './ProductAsingment';
+import { ProductVariation } from './ProductVariation';
+import { StockOperation } from './StockOperation';
+import { Subgroup } from './Subgroup';
+
+export type Product = {
+  id: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  inactive: boolean;
+  groupId: number;
+  subgroupId: number;
+  // application
+  automaker: string;
+  model: string;
+  year_start: number;
+  year_end: number;
+  engine: string;
+  complement: string;
+  quantity_used: number;
+  quantity_package: number;
+  // dimension
+  measure: number;
+  size: number;
+  height: number;
+  width: number;
+  lenth: number;
+  weight: number;
+  inner_diameter: number;
+  external_diameter: number;
+  // description
+  title: string;
+  name: string;
+  type: string;
+  position: string;
+  system: string;
+  color: string;
+  material: string;
+  obs: string;
+  fuel: string;
+  chassi: string;
+  year_fab: string;
+  year_model: string;
+  quality: string;
+  price: number;
+  // others
+  branch_type: string;
+  provider_description: string;
+  depth: string;
+  provider_name: string;
+  ncm: string;
+  sku: string;
+  eam: string;
+  oem: string;
+  mpn: string;
+  brand: string;
+  purchase_packaging: string;
+  place: string;
+  unity: string;
+  cost_price: string;
+  sale_price: string;
+  description: string;
+  type_mlb: string;
+  variations_mlb: string;
+  assignments_mlb: string;
+  category_id_mlb: string;
+  group: Group;
+  subgroup: Subgroup;
+  productAsingment: ProductAsingment;
+  productVariations: ProductVariation;
+  stockOperation: StockOperation;
+  asset: Asset;
+};
