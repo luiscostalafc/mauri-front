@@ -48,22 +48,25 @@ function getMainDataOfResponse(
   { time, debug }: Options = defaultOptions,
 ): Response {
   const timeEnd: number = Date.now() - Number(time);
-  const [returntype, ok] = getReturnType(response.status);
+  const { statusCode, data, info } = response?.data || {}
+  const status = response?.status ?? statusCode
+  const [returntype, ok] = getReturnType(status);
+
   const mainData = {
-    method: response.config.method,
-    path: response.config.url,
-    status: response.status,
+    method: response?.config?.method || 'get',
+    path: response?.config?.url || '/',
+    status,
     returntype,
     ok,
-    message: response.statusText,
+    message: response?.statusText || '',
     'data (count)': response?.data?.length || 0,
     time: timeEnd,
   } as Response;
 
   if (debug) console.table(mainData);
 
-  mainData.data = response.data;
-  mainData.messageErrors = response.data.messageErrors;
+  mainData.data = data;
+  mainData.messageErrors = response?.data?.contentError ?? [];
   return mainData;
 }
 
@@ -71,7 +74,7 @@ export function setResponse(
   response: AxiosResponse,
   { time, debug, silent, msg }: Options = defaultOptions,
 ): Response {
-  delete response.headers.Authorization; // remove token of response
+  if(response?.headers?.Authorization) delete response.headers.Authorization; // remove token of response
 
   return getMainDataOfResponse(response, { time, debug, silent, msg });
 }
