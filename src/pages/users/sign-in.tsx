@@ -11,6 +11,7 @@ import { FiLock, FiLogIn, FiMail } from 'react-icons/fi';
 import * as Yup from 'yup';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import { IN_APPROVAL_TOAST } from '../../constants/messages';
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
 import { api } from '../../services/API/index';
@@ -21,7 +22,7 @@ import {
   Content,
   Image,
   // eslint-disable-next-line prettier/prettier
-  ImageCart,
+  ImageCart
 } from '../../styles/pages/sign-in';
 import { User } from '../../types';
 
@@ -69,17 +70,13 @@ const SignIn: React.FC = () => {
       });
 
       if (ok) {
+        if (response.message === "Usuário Logado") router.push('/home')
         const { token, user, expires_in } = response as LoginResponse;
         // @ts-ignore
         await signIn({ token, user, expires_in });
 
-        if (user.inactive === true) {
-          addToast({
-            type: 'info',
-            title: 'Cadastro em análise',
-            description:
-              'Seu cadastro está em fase de análise, em breve você receberá um e-mail. Obrigado!',
-          });
+        if (user.inactive) {
+          addToast(IN_APPROVAL_TOAST);
         } else {
           router.push('/home');
         }
