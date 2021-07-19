@@ -10,7 +10,9 @@ import ThemeContainer from '../contexts/theme/ThemeContainer';
 import AppProvider from '../hooks';
 import GlobalStyle from '../styles/global';
 
-Router.events.on('routeChangeStart', () => NProgress.start());
+Router.events.on('routeChangeStart', () => {
+  NProgress.start()
+});
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 

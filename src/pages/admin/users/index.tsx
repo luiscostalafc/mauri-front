@@ -70,6 +70,14 @@ export default function Index() {
     }
   },[])
 
+  const handleIsAdmin = useCallback(async (user) => {
+    const msg = user.is_admin ? 'deixar de ser administrador': 'tornar administrador'
+    user.is_admin = !user.is_admin
+    if(window.confirm(`Tem certeza que deseja ${msg}?`)) {
+      await updateUser(user)
+    }
+  },[])
+
   const columns = [
     { name: 'Name', selector: 'name', sortable: true },
     { name: 'Username', selector: 'username', sortable: true },
@@ -92,6 +100,14 @@ export default function Index() {
       cell: (row) => (
         <>
           <Switch checked={row.inactive} onClick={() => handleActive(row)}/>
+        </>
+      ),
+    },
+    {
+      name: 'Administrador',
+      cell: (row) => (
+        <>
+          <Switch checked={row.is_admin} onClick={() => handleIsAdmin(row)}/>
         </>
       ),
     },
