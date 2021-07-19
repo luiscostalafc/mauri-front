@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Button, Flex, Text } from '@chakra-ui/core';
 import Link from 'next/link';
-import React, { CSSProperties } from 'react';
+import { useRouter } from 'next/router';
+import React, { CSSProperties, useCallback } from 'react';
+import { LOGOUT_TOAST } from '../constants/messages';
+import { useToast } from '../hooks/toast';
+import { api } from '../services/API';
 
 const MenuItems: React.FC<CSSProperties> = ({ children }) => (
   <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
@@ -24,8 +28,23 @@ const menuItens: MenuItemsInterface[] = [
 ]
 const Header = () => {
   const [show, setShow] = React.useState(false);
+  const router = useRouter();
+  const { addToast } = useToast();
   const handleToggle = () => setShow(!show);
 
+  const handleSignout = useCallback(async () => {
+    try {
+      const { ok } = await api.post('logout', {});
+      if (ok) {
+        addToast(LOGOUT_TOAST.SUCCESS);
+        router.push('/');
+      } else {
+        addToast(LOGOUT_TOAST.ERROR);
+      }
+    } catch (error) {
+      addToast(LOGOUT_TOAST.ERROR);
+    }
+  }, [])
   return (
     <>
       <Flex
@@ -68,6 +87,9 @@ const Header = () => {
               Perfil
             </Button>
           </Link>
+          <Button bg="transparent" border="1px" marginLeft={20} onClick={handleSignout}>
+            Logout
+          </Button>
         </Box>
       </Flex>
     </>
