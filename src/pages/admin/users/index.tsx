@@ -6,48 +6,69 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Switch } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { FiDelete, FiEdit } from 'react-icons/fi';
 import AdminMenu from '../../../components/AdminMenu';
 import Button from '../../../components/Button';
 import Template from '../../../components/Template';
-import { deletionToast } from '../../../config/toastMessages';
+import { deletionToast, updateToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
 import { api } from '../../../services/API/index';
 
+interface Toggle {
+  id: number
+  ['string']: boolean
+}
 const moduleName = '/api/users';
-// export async function getStaticProps() {
-//   const { data } = await api.get(moduleName, { debug: true });
-//   console.log(`🚀  get ${moduleName} data!`);
-
-//   if (!data) {
-//     return {
-//       notFound: true,
-//     };
-//   }
-
-//   return {
-//     props: {
-//       data,
-//     },
-//   };
-// }
-
-// export default function Index({ data }: any) {
 export default function Index() {
   const [dataVal, setData] = useState([]);
   useEffect(() => {
     async function getData() {
-      const { data: response } = await api.get(moduleName, { debug: true });
-      setData(response);
+      fetchData()
     }
     getData();
   }, []);
 
+  const fetchData = useCallback(async ()=> {
+    const { data: response } = await api.get(moduleName, { debug: true });
+    setData(response);
+  },[])
+
   const router = useRouter();
   const { addToast } = useToast();
+  const updateUser = useCallback(async (data) => {
+    try {
+      const { ok } = await api.put(`${moduleName}/${data.id}`, data);
+      if (ok) {
+        addToast(updateToast.success);
+        await fetchData()
+      } else {
+        addToast(updateToast.error);
+      }
+    } catch (error) {
+      console.log(error)
+      addToast(updateToast.error);
+    }
+  }, [])
+
+  const handleProvider = useCallback(async (user) => {
+    const msg = user.is_provider ? 'deixar de ser fornecedor': 'deixar como fornecedor'
+    user.is_provider = !user.is_provider
+    if(window.confirm(`Tem certeza que deseja ${msg}?`)) {
+      await updateUser(user)
+    }
+  },[])
+
+  const handleActive = useCallback(async (user) => {
+    const msg = user.inactive ? 'desativar': 'ativar'
+    user.inactive = !user.inactive
+    if(window.confirm(`Tem certeza que deseja ${msg}?`)) {
+      await updateUser(user)
+    }
+  },[])
 
   const columns = [
     { name: 'Name', selector: 'name', sortable: true },
@@ -58,10 +79,24 @@ export default function Index() {
     { name: 'rg', selector: 'rg', sortable: true },
     { name: 'cpf_cnpj', selector: 'cpf_cnpj', sortable: true },
     { name: 'nick', selector: 'nick', sortable: true },
-    { name: 'is_provider', selector: 'is_provider', sortable: true },
-    { name: 'inactive', selector: 'inactive', sortable: true },
     {
-      name: 'Actions',
+      name: 'É fornecedor',
+      cell: (row) => (
+        <>
+          <Switch checked={row.is_provider} onClick={() => handleProvider(row)}/>
+        </>
+      ),
+    },
+    {
+      name: 'Inativo',
+      cell: (row) => (
+        <>
+          <Switch checked={row.inactive} onClick={() => handleActive(row)}/>
+        </>
+      ),
+    },
+    {
+      name: 'Ações',
       cell: (row: { id: number }) => (
         <>
           <Button
