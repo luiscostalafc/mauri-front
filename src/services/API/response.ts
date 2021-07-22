@@ -66,7 +66,7 @@ function getMainDataOfResponse(
   if (debug) console.table(mainData);
 
   mainData.data = data;
-  mainData.messageErrors = response?.data?.contentError ?? [];
+  mainData.messageErrors = info?.contentError ?? [];
   return mainData;
 }
 
