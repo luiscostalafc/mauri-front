@@ -67,15 +67,15 @@ const SignIn: React.FC = () => {
       const { data: response, ok, messageErrors } = await api.post('login', {
         email,
         password,
-      });
+      }, {debug: true});
 
       if (ok) {
-        if (response.message === "Usuário Logado") router.push('/home')
+        if (response?.message === "Usuário Logado") router.push('/home')
         const { token, user, expires_in } = response as LoginResponse;
         // @ts-ignore
         await signIn({ token, user, expires_in });
 
-        if (user.inactive) {
+        if (user?.inactive) {
           addToast(IN_APPROVAL_TOAST);
         } else {
           router.push('/home');
