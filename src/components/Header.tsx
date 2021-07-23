@@ -83,7 +83,7 @@ const Header = () => {
           display={{ sm: show ? 'block' : 'none', md: 'block' }}
           mt={{ base: 4, md: 0 }}
         >
-          {isUserAdmin() && <Link href="admin/users">
+          {isUserAdmin() && <Link href="/admin/users">
             <Button bg="transparent" border="1px" marginLeft={20}>
               Admin
             </Button>
