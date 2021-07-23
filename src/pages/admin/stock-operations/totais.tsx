@@ -6,7 +6,6 @@
 /* eslint-disable react/display-name */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Text } from '@chakra-ui/core';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
@@ -49,32 +48,10 @@ export default function Index() {
   const router = useRouter();
 
   const columns = [
-    {
-      name: 'operação',
-      cell: (row: any) => row?.operation?.operation && <Text color={row.operation.operation == "Entrada" ? "green" : 'tomato'}>{row.operation.operation}</Text>
-    },
     { name: 'quantidade', selector: 'quantity', sortable: true },
-    {
-      name: 'valor unitário',
-      cell: (row: { unit_value: number }) => row?.unit_value && `R$ ${row.unit_value}`
-    },
-    { name: 'comentário', selector: 'comment', sortable: true },
     {
       name: 'produto',
       cell: (row: any) => row?.product?.name && row.product.name
-    },
-    {
-      name: 'Actions',
-      cell: (row: { id: number }) => (
-        <>
-          <Button
-            typeColor="edit"
-            onClick={() => router.push(`/admin/${moduleName}/${row.id}`)}
-          >
-            Editar
-          </Button>
-        </>
-      ),
     },
   ];
 
@@ -90,12 +67,12 @@ export default function Index() {
           </Button>
           <Button
             typeColor="create"
-            onClick={() => router.push(`/admin/${moduleName}/totais`)}
+            onClick={() => router.push(`/admin/${moduleName}`)}
           >
-            Totais
+            Movimentação
           </Button>
           <DataTable
-            title="Movimentação de produtos"
+            title="Estoque de Produtos"
             columns={columns}
             data={dataVal}
             pagination
