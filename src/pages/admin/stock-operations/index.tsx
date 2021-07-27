@@ -90,9 +90,9 @@ export default function Index() {
           </Button>
           <Button
             typeColor="create"
-            onClick={() => router.push(`/admin/${moduleName}/totais`)}
+            onClick={() => router.push(`/admin/stocks`)}
           >
-            Totais
+            Ver Totais
           </Button>
           <DataTable
             title="Movimentação de produtos"

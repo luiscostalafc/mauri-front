@@ -6,6 +6,7 @@
 /* eslint-disable react/display-name */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Text } from '@chakra-ui/core';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
@@ -33,7 +34,7 @@ const customStyles = {
   },
 };
 
-const moduleName = 'stock-operations';
+const moduleName = 'stock';
 
 export default function Index() {
   const [dataVal, setData] = useState([]);
@@ -48,10 +49,23 @@ export default function Index() {
   const router = useRouter();
 
   const columns = [
-    { name: 'quantidade', selector: 'quantity', sortable: true },
+    { name: 'qualidade', selector: 'quality', sortable: true },
+    {
+      name: 'quantidade',
+      cell: (row: any) => <Text color={row.quantity > row.min_alert ? "green" : 'tomato'}>{row.quantity}</Text>
+    },
+    { name: 'quantidade min.', selector: 'min_alert', sortable: true },
+    {
+      name: 'usuário',
+      cell: (row: any) => row?.user?.name && row.user.name
+    },
     {
       name: 'produto',
       cell: (row: any) => row?.product?.name && row.product.name
+    },
+    {
+      name: 'tipo de estoque',
+      cell: (row: any) => row?.stockType?.stock_type && row.stockType.stock_type
     },
   ];
 
@@ -67,9 +81,9 @@ export default function Index() {
           </Button>
           <Button
             typeColor="create"
-            onClick={() => router.push(`/admin/${moduleName}`)}
+            onClick={() => router.push(`/admin/stock-operations`)}
           >
-            Movimentação
+            Ver Movimentação
           </Button>
           <DataTable
             title="Estoque de Produtos"
