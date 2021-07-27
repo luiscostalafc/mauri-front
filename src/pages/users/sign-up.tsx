@@ -2,25 +2,26 @@
 import { Checkbox, Progress } from '@chakra-ui/core';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useCallback, useRef, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { FiArrowLeft, FiLock, FiMail, FiTrello, FiUser } from 'react-icons/fi';
-import * as Yup from 'yup';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import InputMask from '../../components/InputMask';
+import { SIGN_IN_TOAST } from '../../constants/messages';
 import { useToast } from '../../hooks/toast';
+import { signUpSchema } from '../../schemas/sign-up';
 import { api } from '../../services/API/index';
+import { updateToken } from '../../services/auth';
 import { validateForm, validationErrors } from '../../services/validateForm';
 import {
   AnimationContainer,
   Background,
   Content,
   // eslint-disable-next-line prettier/prettier
-  ImageCart,
+  ImageCart
 } from '../../styles/pages/sign-up';
 import { User } from '../../types';
 
@@ -51,50 +52,26 @@ const SignUp: React.FC = () => {
     }
   }, [cpfNumber]);
 
-  const schema = Yup.object().shape({
-    name: Yup.string().required('Nome completo'),
-    username: Yup.string().required('Nome de usuário obrigatório'),
-    activity: Yup.string().optional(),
-    rg: Yup.string().required('Preencha seu RG').max(14),
-    cpf_cnpj: Yup.string().required('Preencha o CNPJ ou RG'),
-    email: Yup.string()
-      .required('E-mail obrigatório')
-      .email('Digite um e-mail válido'),
-    password: Yup.string().min(6, 'No mínimo 6 dígitos'),
-  });
-
   const handleSubmit = useCallback(
     async (data: SignUpFormData) => {
-      const { hasErrors, toForm, toToast } = await validateForm(schema, data);
+      const { hasErrors, toForm, toToast } = await validateForm(signUpSchema, data);
       if (hasErrors) {
         formRef.current?.setErrors(toForm);
         toToast.map(({ path, message }) =>
           addToast(validationErrors({ path, message })),
         );
+        return
       }
 
-      const { data: response, ok, messageErrors } = await api.post(
-        'api/users',
-        data,
-        { debug: true },
-      );
+      const { data: response, ok, messageErrors } = await api.post('api/users',data);
 
       if (ok) {
         const { id } = response as User;
-        const expires = new Date();
-        expires.setTime(expires.getTime() + 10 * 1000);
-        Cookies.set('@Liconnection:user', JSON.stringify(id), {
-          path: '/',
-          expires,
-        });
+        updateToken(id)
 
         router.push(`phone-sign-up?id=${String(id)}`);
 
-        addToast({
-          type: 'success',
-          title: 'Dados de usuário preenchidos com sucesso!',
-          description: 'Você agora preencherá os dados telefônicos',
-        });
+        addToast(SIGN_IN_TOAST);
       } else {
         messageErrors?.length &&
           messageErrors.map(({ path, message }) =>
@@ -102,7 +79,7 @@ const SignUp: React.FC = () => {
           );
       }
     },
-    [addToast, router, schema],
+    [addToast, router, signUpSchema],
   );
 
   return (

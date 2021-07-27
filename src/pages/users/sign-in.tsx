@@ -8,12 +8,12 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useRef } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { FiLock, FiLogIn, FiMail } from 'react-icons/fi';
-import * as Yup from 'yup';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { IN_APPROVAL_TOAST } from '../../constants/messages';
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
+import { signIpSchema } from '../../schemas/sign-in';
 import { api } from '../../services/API/index';
 import { validateForm, validationErrors } from '../../services/validateForm';
 import {
@@ -37,6 +37,7 @@ interface LoginResponse {
   expires_in: number;
 }
 
+const LOGGED_USER = "Usuário Logado"
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
@@ -45,16 +46,9 @@ const SignIn: React.FC = () => {
 
   const router = useRouter();
 
-  const schema = Yup.object().shape({
-    email: Yup.string()
-      .required('E-mail obrigatório')
-      .email('Digite um e-mail válido'),
-    password: Yup.string().required('Senha obrigatória'),
-  });
-
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
-      const { hasErrors, toForm, toToast } = await validateForm(schema, data);
+      const { hasErrors, toForm, toToast } = await validateForm(signIpSchema, data);
       if (hasErrors) {
         formRef.current?.setErrors(toForm);
         toToast.map(({ path, message }) =>
@@ -67,10 +61,10 @@ const SignIn: React.FC = () => {
       const { data: response, ok, messageErrors } = await api.post('login', {
         email,
         password,
-      }, {debug: true});
+      });
 
       if (ok) {
-        if (response?.message === "Usuário Logado") router.push('/home')
+        if (response?.message === LOGGED_USER) router.push('/home')
         const { token, user, expires_in } = response as LoginResponse;
         // @ts-ignore
         await signIn({ token, user, expires_in });
@@ -87,7 +81,7 @@ const SignIn: React.FC = () => {
           );
       }
     },
-    [schema, addToast, signIn, router],
+    [signIpSchema, addToast, signIn, router],
   );
 
   return (

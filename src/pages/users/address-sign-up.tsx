@@ -4,27 +4,28 @@
 import { Progress } from '@chakra-ui/core';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { FaCity } from 'react-icons/fa';
 import { FiArrowLeft, FiMapPin } from 'react-icons/fi';
-import * as Yup from 'yup';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import InputMask from '../../components/InputMask';
+import { SIGN_IN_ADDRESS_TOAST } from '../../constants/messages';
 import { useToast } from '../../hooks/toast';
+import { addresSignUpSchema } from '../../schemas/addres-sign-up';
 import { api } from '../../services/API/index';
 import { getCEPData } from '../../services/apiCep.js';
+import { getUserId } from '../../services/auth';
 import { validateForm, validationErrors } from '../../services/validateForm';
 import {
   AnimationContainer,
   Background,
   Content,
   // eslint-disable-next-line prettier/prettier
-  ImageCart,
+  ImageCart
 } from '../../styles/pages/address-sign-up';
 
 interface AddressFormData {
@@ -38,39 +39,29 @@ interface AddressFormData {
   complement: string;
 }
 
+const DEFAULT_STATE = {
+  cep: '',
+  city: '',
+  neighborhood: '',
+  service: '',
+  state: '',
+  street: '',
+}
+
 const AddressSignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const [values, setValues] = useState({
-    cep: '',
-    city: '',
-    neighborhood: '',
-    service: '',
-    state: '',
-    street: '',
-  });
+  const [values, setValues] = useState(DEFAULT_STATE);
   const [paramsState, setParamsState] = useState<any>();
 
   const { addToast } = useToast();
   const router = useRouter();
-  const userId = Cookies?.get('@Liconnection:user');
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window?.location?.search);
     setParamsState(urlParams);
   }, []);
 
-  const id = paramsState?.get('id') ?? userId;
-
-  const schema = Yup.object().shape({
-    user_id: Yup.string().default(id),
-    cep: Yup.string().required('Preencha o CEP'),
-    state: Yup.string().required('Preencha o UF'),
-    city: Yup.string().required('Preencha a cidade'),
-    district: Yup.string().required('Preencha o bairro'),
-    street: Yup.string().required('Preencha o estado'),
-    number: Yup.string().required('Preencha o número ou deixe como s/n'),
-    complement: Yup.string(),
-  });
+  const id = paramsState?.get('id') ?? getUserId();
 
   const callCep = async (e: { target: { value: any } }) => {
     const { value } = e.target;
@@ -91,12 +82,13 @@ const AddressSignUp: React.FC = () => {
 
   const handleSubmit = useCallback(
     async (data: AddressFormData) => {
-      const { hasErrors, toForm, toToast } = await validateForm(schema, data);
+      const { hasErrors, toForm, toToast } = await validateForm(addresSignUpSchema(id), data);
       if (hasErrors) {
         formRef.current?.setErrors(toForm);
         toToast.map(({ path, message }) =>
           addToast(validationErrors({ path, message })),
         );
+        return
       }
       const userData = { ...data, user_id: id };
 
@@ -105,25 +97,16 @@ const AddressSignUp: React.FC = () => {
       if (ok) {
         router.push('sign-in');
 
-        addToast({
-          type: 'success',
-          title: 'Cadastro do realizado com sucesso!',
-          description: 'Aguarde a autorização de acesso',
-        });
+        addToast(SIGN_IN_ADDRESS_TOAST.SUCCESS);
       } else {
-        addToast({
-          type: 'info',
-          title: 'Erro no cadastro',
-          description:
-            'Ocorreu um erro ao fazer seu cadastro. Verifique seus dados e tente novamente.',
-        });
+        addToast(SIGN_IN_ADDRESS_TOAST.ERROR);
         messageErrors?.length &&
           messageErrors.map(({ path, message }) =>
             addToast(validationErrors({ path, message })),
           );
       }
     },
-    [addToast, router, schema, id],
+    [addToast, router, addresSignUpSchema, id],
   );
 
   return (
@@ -157,21 +140,18 @@ const AddressSignUp: React.FC = () => {
                   icon={FiMapPin}
                   placeholder="Rua"
                   value={values.street}
-                  // loading={loading}
                 />
 
                 <Input
                   name="number"
                   icon={FiMapPin}
                   placeholder="Número"
-                  // loading={loading}
                 />
 
                 <Input
                   name="complement"
                   icon={FiMapPin}
                   placeholder="Complemento"
-                  // loading={loading}
                 />
 
                 <Input
@@ -179,7 +159,6 @@ const AddressSignUp: React.FC = () => {
                   icon={FiMapPin}
                   placeholder="Bairro"
                   value={values.neighborhood}
-                  // loading={loading}
                 />
 
                 <Input
@@ -187,7 +166,6 @@ const AddressSignUp: React.FC = () => {
                   icon={FaCity}
                   placeholder="Cidade"
                   value={values.city}
-                  // loading={loading}
                 />
 
                 <Input
@@ -195,12 +173,11 @@ const AddressSignUp: React.FC = () => {
                   icon={FaCity}
                   placeholder="Estado"
                   value={values.state}
-                  // loading={loading}
                 />
 
                 <Button type="submit">Concluir</Button>
               </Form>
-              <Link href="address-sign-up">
+              <Link href={`phone-sign-up?${id}`}>
                 <a>
                   <FiArrowLeft />
                   Voltar aos Dados de contato

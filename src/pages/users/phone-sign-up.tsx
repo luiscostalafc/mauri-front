@@ -4,20 +4,21 @@
 import { Flex, Progress, Switch } from '@chakra-ui/core';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { FaWhatsapp } from 'react-icons/fa';
 import { FiArrowLeft, FiFileText, FiPhone, FiSmartphone } from 'react-icons/fi';
-import * as Yup from 'yup';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import InputMask from '../../components/InputMask';
 import SelectInput from '../../components/SelectInput';
+import { SIGN_IN_PHONE_TOAST } from '../../constants/messages';
 import { useToast } from '../../hooks/toast';
+import { phoneSignUpSchema } from '../../schemas/phone-sign-up';
 import { api } from '../../services/API/index';
+import { getUserId } from '../../services/auth';
 import { validateForm, validationErrors } from '../../services/validateForm';
 import {
   AnimationContainer,
@@ -26,7 +27,7 @@ import {
   DivContainer,
 
   // eslint-disable-next-line prettier/prettier
-  SelectContainer,
+  SelectContainer
 } from '../../styles/pages/phone-sign-up';
 import { ImageCart } from '../../styles/pages/sign-up';
 
@@ -70,22 +71,13 @@ const PhoneSignUp: React.FC = () => {
     withWhatsapp ? setWithWhatsapp(false) : setWithWhatsapp(true);
   }
 
-  const userId = Cookies.get('@Liconnection:user');
   const queryString = paramsState;
   const urlParams = new URLSearchParams(queryString);
-  const id = urlParams.get('id') ?? userId;
-
-  const schema = Yup.object().shape({
-    type: Yup.string().required('Tipo do telefone deve ser selecionado'),
-    phone: Yup.string().required('Preencha o telefone com o DDD'),
-    whatsapp: Yup.boolean().default(true),
-    obs: Yup.string().optional(),
-    user_id: Yup.string().default(id),
-  });
+  const id = urlParams.get('id') ?? getUserId();
 
   const handleSubmit = useCallback(
     async (data: PhoneFormData) => {
-      const { hasErrors, toForm, toToast } = await validateForm(schema, data);
+      const { hasErrors, toForm, toToast } = await validateForm(phoneSignUpSchema(id), data);
       if (hasErrors) {
         formRef.current?.setErrors(toForm);
         toToast.map(({ path, message }) =>
@@ -98,25 +90,16 @@ const PhoneSignUp: React.FC = () => {
       if (ok) {
         router.push(`address-sign-up?id=${String(id)}`);
 
-        addToast({
-          type: 'success',
-          title: 'Cadastro dos dados telefônicos realizado com sucesso!',
-          description: 'Agora falta pouco... Preencha seu dados de endereço',
-        });
+        addToast(SIGN_IN_PHONE_TOAST.SUCCESS);
       } else {
-        addToast({
-          type: 'info',
-          title: 'Erro no cadastro',
-          description:
-            'Ocorreu um erro ao fazer seu cadastro. Verifique seus dados e tente novamente.',
-        });
+        addToast(SIGN_IN_PHONE_TOAST.ERROR);
         messageErrors?.length &&
           messageErrors.map(({ path, message }) =>
             addToast(validationErrors({ path, message })),
           );
       }
     },
-    [addToast, router, schema, id, withWhatsapp],
+    [addToast, router, phoneSignUpSchema, id, withWhatsapp],
   );
 
   return (
@@ -184,7 +167,7 @@ const PhoneSignUp: React.FC = () => {
 
                 <Button type="submit">Avançar para endereço {'>>'}</Button>
               </Form>
-              <Link href="sign-up">
+              <Link href={`sign-up?${id}`}>
                 <a>
                   <FiArrowLeft />
                   Voltar aos Dados do usuário
