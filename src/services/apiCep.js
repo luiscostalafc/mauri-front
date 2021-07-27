@@ -7,7 +7,6 @@ function cleanCep(cepNumber) {
   return cepNumber.replace('-', '');
 }
 export const getCEPData = async (cepNumber, logErrors = false) => {
-  console.log(cepNumber);
   if (cepNumber.length > 5) {
     try {
       return await cep(cleanCep(cepNumber));
