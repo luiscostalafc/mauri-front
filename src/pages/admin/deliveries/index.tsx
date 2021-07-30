@@ -7,83 +7,76 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Switch } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import DataTable from 'react-data-table-component';
+import React, { useCallback, useEffect, useState } from 'react';
 import ActionButtons from '../../../components/ActionButtons';
 import Button from '../../../components/Button';
+import { DataTable } from '../../../components/DataTable';
 import Template from '../../../components/Template';
+import { updateToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
 import { api } from '../../../services/API/index';
 // import AdminMenu from '../../../components/AdminMenu'
 
-const customStyles = {
-  rows: {
-    style: {
-      minHeight: '72px', // override the row height
-    },
-  },
-  headCells: {
-    style: {
-      paddingLeft: '8px', // override the cell padding for head cells
-      paddingRight: '8px',
-    },
-  },
-  cells: {
-    style: {
-      maxWidht: '100vh',
-      paddingLeft: '10px', // override the cell padding for data cells
-      paddingRight: '10px',
-    },
-  },
-};
 
 const moduleName = '/api/deliveries';
-// export async function getStaticProps() {
-//   const { data } = await api.get(moduleName, { debug: true });
-//   console.log(`🚀  get ${moduleName} data!`);
 
-//   if (!data) {
-//     return {
-//       notFound: true,
-//     };
-//   }
-
-//   return {
-//     props: {
-//       data,
-//     },
-//   };
-// }
-
-// export default function Index({ data }: any) {
 export default function Index() {
   const [dataVal, setData] = useState([]);
+  const fetchData = useCallback(async ()=> {
+    const { data: response } = await api.get(moduleName, { debug: true });
+    setData(response);
+  },[])
+
   useEffect(() => {
-    async function getData() {
-      const { data: response } = await api.get(moduleName, { debug: true });
-      setData(response);
-    }
-    getData();
+    fetchData()
   }, []);
 
-  // const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const { addToast } = useToast();
+  const msgs = {
+    inactive: {
+      active: 'desativar',
+      deactive: 'ativar'
+    },
+  }
+  const updateDelivery = useCallback(async (data) => {
+    try {
+      const { ok } = await api.put(`${moduleName}/${data.id}`, data);
+      if (ok) {
+        addToast(updateToast.success);
+        await fetchData()
+      } else {
+        addToast(updateToast.error);
+      }
+    } catch (error) {
+      console.log(error)
+      addToast(updateToast.error);
+    }
+  }, [])
+
+  const handleDelivery = useCallback(async (delivery: any, prop: 'is_provider' | 'inactive' | 'is_admin') => {
+    const msg = delivery[prop] ? msgs[prop].active: msgs[prop].deactive
+    console.log({delivery})
+    delivery[prop] = !delivery[prop]
+    if(window.confirm(`Tem certeza que deseja ${msg}?`)) {
+      await updateDelivery(delivery)
+    }
+  },[msgs])
 
   const columns = [
-    { name: 'Entrega', selector: 'delivery', sortable: true },
+    { title: 'Entrega', field: 'delivery' },
     {
-      name: 'Inactivo',
-      selector: 'inactive',
-      cell: (row: any) => (row.inactive ? 'Sim' : 'Não'),
-      sortable: true,
+      title: 'Inativo',
+      render: ({tableData, ...row}) => (<Switch checked={row.inactive} onClick={() => handleDelivery(row, "inactive")}/>),
     },
     {
-      name: 'Actions',
-      cell: (row: { id: number }) => (
+      title: 'Actions',
+      render: (row: { id: number }) => (
         <ActionButtons
-          moduleName={moduleName}
+          isAdmin
+          moduleName="deliveries"
           row={row}
           onDelete={reloadData}
         />
@@ -113,11 +106,6 @@ export default function Index() {
             title="Entregas"
             columns={columns}
             data={dataVal}
-            pagination
-            highlightOnHover
-            striped
-            fixedHeader
-            customStyles={customStyles}
           />
         </>
       }

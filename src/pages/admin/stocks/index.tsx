@@ -1,38 +1,10 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/jsx-wrap-multilines */
-/* eslint-disable no-alert */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable react/display-name */
-/* eslint-disable @typescript-eslint/no-use-before-define */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Text } from '@chakra-ui/core';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import DataTable from 'react-data-table-component';
 import Button from '../../../components/Button';
+import { DataTable } from '../../../components/DataTable';
 import Template from '../../../components/Template';
 import { api } from '../../../services/API/index';
-
-const customStyles = {
-  rows: {
-    style: {
-      minHeight: '72px', // override the row height
-    },
-  },
-  headCells: {
-    style: {
-      paddingLeft: '8px', // override the cell padding for head cells
-      paddingRight: '8px',
-    },
-  },
-  cells: {
-    style: {
-      paddingLeft: '10px', // override the cell padding for data cells
-      paddingRight: '10px',
-    },
-  },
-};
 
 const moduleName = 'stock';
 
@@ -49,23 +21,23 @@ export default function Index() {
   const router = useRouter();
 
   const columns = [
-    { name: 'qualidade', selector: 'quality', sortable: true },
+    { title: 'qualidade', selector: 'quality' },
     {
-      name: 'quantidade',
-      cell: (row: any) => <Text color={row.quantity > row.min_alert ? "green" : 'tomato'}>{row.quantity}</Text>
+      title: 'quantidade',
+      render: (row: any) => <Text color={row.quantity > row.min_alert ? "green" : 'tomato'}>{row.quantity}</Text>
     },
-    { name: 'quantidade min.', selector: 'min_alert', sortable: true },
+    { title: 'quantidade min.', selector: 'min_alert' },
     {
-      name: 'usuário',
-      cell: (row: any) => row?.user?.name && row.user.name
-    },
-    {
-      name: 'produto',
-      cell: (row: any) => row?.product?.name && row.product.name
+      title: 'usuário',
+      render: (row: any) => row?.user?.name && row.user.name
     },
     {
-      name: 'tipo de estoque',
-      cell: (row: any) => row?.stockType?.stock_type && row.stockType.stock_type
+      title: 'produto',
+      render: (row: any) => row?.product?.name && row.product.name
+    },
+    {
+      title: 'tipo de estoque',
+      render: (row: any) => row?.stockType?.stock_type && row.stockType.stock_type
     },
   ];
 
@@ -89,11 +61,6 @@ export default function Index() {
             title="Estoque de Produtos"
             columns={columns}
             data={dataVal}
-            pagination
-            highlightOnHover
-            striped
-            fixedHeader
-            customStyles={customStyles}
           />
         </>
       }

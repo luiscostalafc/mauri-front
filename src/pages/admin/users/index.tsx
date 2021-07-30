@@ -1,20 +1,13 @@
-/* eslint-disable no-console */
-/* eslint-disable react/jsx-wrap-multilines */
-/* eslint-disable no-alert */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable react/display-name */
-/* eslint-disable @typescript-eslint/no-use-before-define */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { Switch } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
-import DataTable from 'react-data-table-component';
-import { FiDelete, FiEdit } from 'react-icons/fi';
+import ActionButtons from '../../../components/ActionButtons';
 import AdminMenu from '../../../components/AdminMenu';
 import Button from '../../../components/Button';
+import { DataTable } from '../../../components/DataTable';
 import Template from '../../../components/Template';
-import { deletionToast, updateToast } from '../../../config/toastMessages';
+import { updateToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
 import { api } from '../../../services/API/index';
 
@@ -54,97 +47,61 @@ export default function Index() {
     }
   }, [])
 
-  const handleProvider = useCallback(async (user) => {
-    const msg = user.is_provider ? 'deixar de ser fornecedor': 'deixar como fornecedor'
-    user.is_provider = !user.is_provider
-    if(window.confirm(`Tem certeza que deseja ${msg}?`)) {
-      await updateUser(user)
+  const msgs = {
+    is_provider: {
+      active: 'deixar de ser fornecedor',
+      deactive: 'deixar como fornecedor'
+    },
+    inactive: {
+      active: 'desativar',
+      deactive: 'ativar'
+    },
+    is_admin: {
+      active: 'deixar de ser administrador',
+      deactive: 'tornar administrador'
     }
-  },[])
+  }
 
-  const handleActive = useCallback(async (user) => {
-    const msg = user.inactive ? 'desativar': 'ativar'
-    user.inactive = !user.inactive
+  const handleUser = useCallback(async (user: any, prop: 'is_provider' | 'inactive' | 'is_admin') => {
+    const msg = user[prop] ? msgs[prop].active: msgs[prop].deactive
+    console.log({user})
+    user[prop] = !user[prop]
     if(window.confirm(`Tem certeza que deseja ${msg}?`)) {
       await updateUser(user)
     }
-  },[])
-
-  const handleIsAdmin = useCallback(async (user) => {
-    const msg = user.is_admin ? 'deixar de ser administrador': 'tornar administrador'
-    user.is_admin = !user.is_admin
-    if(window.confirm(`Tem certeza que deseja ${msg}?`)) {
-      await updateUser(user)
-    }
-  },[])
+  },[msgs])
 
   const columns = [
-    { name: 'Name', selector: 'name', sortable: true },
-    { name: 'Username', selector: 'username', sortable: true },
-    { name: 'activity', selector: 'activity', sortable: true },
-    { name: 'complete_name', selector: 'complete_name', sortable: true },
-    { name: 'email', selector: 'email', sortable: true },
-    { name: 'rg', selector: 'rg', sortable: true },
-    { name: 'cpf_cnpj', selector: 'cpf_cnpj', sortable: true },
-    { name: 'nick', selector: 'nick', sortable: true },
+    { title: 'Name', field: 'name' },
+    { title: 'Username', field: 'username' },
+    { title: 'activity', field: 'activity' },
+    { title: 'complete_name', field: 'complete_name' },
+    { title: 'email', field: 'email' },
+    { title: 'rg', field: 'rg' },
+    { title: 'cpf_cnpj', field: 'cpf_cnpj' },
+    { title: 'nick', field: 'nick' },
     {
-      name: 'É fornecedor',
-      cell: (row) => (
-        <>
-          <Switch checked={row.is_provider} onClick={() => handleProvider(row)}/>
-        </>
-      ),
+      title: 'É fornecedor',
+      render: ({tableData, ...row}: any) => (<Switch checked={row.is_provider} onClick={() => handleUser(row, "is_provider")}/>),
     },
     {
-      name: 'Inativo',
-      cell: (row) => (
-        <>
-          <Switch checked={row.inactive} onClick={() => handleActive(row)}/>
-        </>
-      ),
+      title: 'Inativo',
+      render: ({tableData, ...row}: any) => (<Switch checked={row.inactive} onClick={() => handleUser(row, "inactive")}/>),
     },
     {
-      name: 'Administrador',
-      cell: (row) => (
-        <>
-          <Switch checked={row.is_admin} onClick={() => handleIsAdmin(row)}/>
-        </>
-      ),
+      title: 'Administrador',
+      render: ({tableData, ...row}: any) => (<Switch checked={row.is_admin} onClick={() => handleUser(row, "is_admin")}/>),
     },
     {
       name: 'Ações',
-      cell: (row: { id: number }) => (
-        <>
-          <Button
-            typeColor="edit"
-            onClick={() => router.push(`/admin/${moduleName}/${row.id}`)}
-          >
-            <FiEdit />
-          </Button>
-          <Button
-            typeColor="delete"
-            style={{ marginLeft: 5 }}
-            onClick={() => remove(row.id)}
-          >
-            <FiDelete />
-          </Button>
-        </>
-      ),
+      render: (row: { id: number }) => <ActionButtons
+        row={row}
+        onDelete={(state) => setData(state)}
+        moduleName="users" 
+        isAdmin
+        />,
     },
   ];
-
-  async function remove(id: number | string) {
-    if (confirm('Are you sure?')) {
-      const { ok } = await api.delete(`${moduleName}/${id}`);
-      if (ok) {
-        const { data: state } = await api.get(moduleName);
-        addToast(deletionToast.success);
-        setData(state);
-      } else {
-        addToast(deletionToast.error);
-      }
-    }
-  }
 
   return (
     <Template
@@ -160,11 +117,6 @@ export default function Index() {
             title="Usuários"
             columns={columns}
             data={dataVal}
-            pagination
-            highlightOnHover
-            striped
-            fixedHeader
-            responsive
           />
         </>
       }
