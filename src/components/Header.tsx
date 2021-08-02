@@ -6,7 +6,7 @@ import React, { CSSProperties, useCallback } from 'react';
 import { LOGOUT_TOAST } from '../constants/messages';
 import { useToast } from '../hooks/toast';
 import { api } from '../services/API';
-import { isUserAdmin } from '../services/auth';
+import { getUserId, isUserAdmin } from '../services/auth';
 
 const MenuItems: React.FC<CSSProperties> = ({ children }) => (
   <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
@@ -88,7 +88,7 @@ const Header = () => {
               Admin
             </Button>
           </Link>}
-          <Link href="users/profile">
+          <Link href={`users/profile?id=${getUserId()}`}>
             <Button bg="transparent" border="1px" marginLeft={20}>
               Perfil
             </Button>

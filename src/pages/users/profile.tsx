@@ -1,9 +1,8 @@
 import { Checkbox } from '@chakra-ui/core';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import {
   FiArrowLeft,
   FiCamera,
@@ -11,15 +10,17 @@ import {
   FiMail,
   FiTrello,
   // eslint-disable-next-line prettier/prettier
-  FiUser,
+  FiUser
 } from 'react-icons/fi';
-import * as Yup from 'yup';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import InputMask from '../../components/InputMask';
+import { PROFILE_TOAST } from '../../constants/messages';
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
+import { userSchema } from '../../schemas/user';
 import { api } from '../../services/API/index';
+import { getUser } from '../../services/auth';
 import { validateForm, validationErrors } from '../../services/validateForm';
 import { AvatarInput, Container, Content } from '../../styles/pages/profile';
 
@@ -41,8 +42,20 @@ const Profile: React.FC = () => {
   const [check, setChecked] = useState(false);
   const { addToast } = useToast();
   const router = useRouter();
+  const { id } = router.query;
 
-  const { user, updateUser } = useAuth();
+  const { updateUser } = useAuth();
+  const user = getUser()
+  const idu = user?.id ? user.id : id
+  useEffect(() => {
+    if (idu) {
+      api
+        .get(`api/users/${idu}`)
+        .then(({ data }) =>
+          formRef?.current?.setData(data as Record<string, unknown>),
+        );
+    }
+  }, [idu]);
 
   const handleOptionDocument = useCallback(() => {
     if (cpfNumber === true) {
@@ -54,35 +67,9 @@ const Profile: React.FC = () => {
     }
   }, [cpfNumber]);
 
-  const schema = Yup.object().shape({
-    name: Yup.string().required('Nome é obrigatório'),
-    username: Yup.string().required('Usuário é obrigatório'),
-    activity: Yup.string().required('Atividade Profissional é obrigatório'),
-    rg: Yup.string().required('RG é obrigatório'),
-    cpf_cnpj: Yup.string().required('CPF ou CNPJ é obrigatório'),
-    email: Yup.string()
-      .required('E-mail é obrigatório')
-      .email('Digite um e-mail válido'),
-    old_password: Yup.string(),
-    password: Yup.string().when('old_password', {
-      is: val => !!val.length,
-      then: Yup.string()
-        .min(6, 'No mínimo 6 dígitos')
-        .required('Campo obrigatório'),
-      otherwise: Yup.string(),
-    }),
-    password_confirmation: Yup.string()
-      .when('old_password', {
-        is: val => !!val.length,
-        then: Yup.string().required('Campo obrigatório'),
-        otherwise: Yup.string(),
-      })
-      .oneOf([Yup.ref('password'), undefined], 'Confirmação incorreta'),
-  });
-
   const handleSubmit = useCallback(
     async (data: ProfileFormData) => {
-      const { hasErrors, toForm, toToast } = await validateForm(schema, data);
+      const { hasErrors, toForm, toToast } = await validateForm(userSchema, data);
       if (hasErrors) {
         formRef.current?.setErrors(toForm);
         toToast.map(({ path, message }) =>
@@ -109,6 +96,7 @@ const Profile: React.FC = () => {
         activity,
         rg,
         cpf_cnpj,
+        ...user,
         ...(old_password
           ? {
               old_password,
@@ -119,34 +107,24 @@ const Profile: React.FC = () => {
       };
 
       const { data: response, ok, messageErrors } = await api.put(
-        `/users/${user?.id}`,
+        `api/users/${user?.id}`,
         formData,
       );
       if (ok) {
         updateUser(response);
 
-        router.push('/');
+        router.push('/home');
 
-        addToast({
-          type: 'success',
-          title: 'Perfil atualizado!',
-          description:
-            'Suas informações do perfil foram atualizadas com sucesso!',
-        });
+        addToast(PROFILE_TOAST.SUCCESS);
       } else {
-        addToast({
-          type: 'error',
-          title: 'Erro na atualização',
-          description:
-            'Ocorreu um error ao atualizar o perfil, tente novamente.',
-        });
+        addToast(PROFILE_TOAST.ERROR);
         messageErrors?.length &&
           messageErrors.map(({ path, message }) =>
             addToast(validationErrors({ path, message })),
           );
       }
     },
-    [addToast, router, schema, updateUser, user?.id],
+    [addToast, router, userSchema, updateUser, user],
   );
 
   const handleAvatarChange = useCallback(
@@ -156,7 +134,7 @@ const Profile: React.FC = () => {
 
         data.append('avatar', e.target.files[0]);
 
-        api.post('/assets', data).then(response => {
+        api.post('api/assets', data).then(response => {
           updateUser(response.data);
 
           addToast({
@@ -173,9 +151,9 @@ const Profile: React.FC = () => {
     <Container>
       <header>
         <div>
-          <Link href="/">
+          <Button onClick={() => window.history.go(-1)} style={{maxWidth: '75px', background: '#6c757d'}}>
             <FiArrowLeft size={32} />
-          </Link>
+          </Button>
         </div>
       </header>
       <Content>

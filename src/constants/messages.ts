@@ -56,3 +56,18 @@ export const SIGN_IN_ADDRESS_TOAST = {
   }
 }
 
+export const PROFILE_TOAST = {
+  SUCCESS: {
+    type: 'success',
+    title: 'Perfil atualizado!',
+    description:
+      'Suas informações do perfil foram atualizadas com sucesso!',
+  },
+  ERROR: {
+    type: 'error',
+    title: 'Erro na atualização',
+    description:
+      'Ocorreu um error ao atualizar o perfil, tente novamente.',
+  }
+}
+
