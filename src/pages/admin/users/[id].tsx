@@ -58,7 +58,7 @@ export default function Edit() {
       api
         .get(`${moduleName}/${id}`)
         .then(({ data }) =>
-          formRef.current?.setData(data as Record<string, unknown>),
+          formRef?.current?.setData(data as Record<string, unknown>),
         );
     }
   }, [id]);
@@ -82,7 +82,7 @@ export default function Edit() {
 
       const { hasErrors, toForm, toToast } = await validateForm(schema, data);
       if (hasErrors) {
-        formRef.current?.setErrors(toForm);
+        formRef?.current?.setErrors(toForm);
         toToast.map(({ path, message }) =>
           addToast(validationErrors({ path, message })),
         );

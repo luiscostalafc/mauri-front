@@ -23,7 +23,7 @@ const InputMask: React.FC<Props> = ({ name, icon: Icon, ...rest }) => {
   const handleInputBlur = useCallback(() => {
     setIsFocused(false);
 
-    setIsFilled(!!inputRef.current?.value);
+    setIsFilled(!!inputRef?.current?.value);
   }, []);
 
   const handleInputFocus = useCallback(() => {
@@ -35,13 +35,13 @@ const InputMask: React.FC<Props> = ({ name, icon: Icon, ...rest }) => {
 
     registerField({
       name: fieldName,
-      ref: inputRef.current,
+      ref: inputRef?.current,
       path: 'value',
       setValue(ref: any, value: string) {
-        ref.setInputValue(value);
+        ref?.setInputValue(value);
       },
       clearValue(ref: any) {
-        ref.setInputValue('');
+        ref?.setInputValue('');
       },
     });
   }, [fieldName, registerField, showChild]);

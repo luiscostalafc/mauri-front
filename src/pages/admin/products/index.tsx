@@ -9,10 +9,10 @@
 import { Switch } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
-import DataTable from 'react-data-table-component';
-import { FiDelete, FiEdit } from 'react-icons/fi';
+import ActionButtons from '../../../components/ActionButtons';
 import AdminMenu from '../../../components/AdminMenu';
 import Button from '../../../components/Button';
+import { DataTable } from '../../../components/DataTable';
 import Template from '../../../components/Template';
 import { deletionToast, updateToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
@@ -62,62 +62,51 @@ export default function Index() {
   },[])
 
   const columns = [
-    { name: 'grupo', cell: (row) => (row?.group?.group ?? "não encontrado") },
-    { name: 'subgroupo', cell: (row) => (row?.subgroup?.subgroup ?? "não encontrado") },
-    { name: 'montadora', selector: 'automaker', sortable: true },
-    { name: 'modelo', selector: 'model', sortable: true },
-    // { name: 'year_start', selector: 'year_start', sortable: true },
-    // { name: 'year_end', selector: 'year_end', sortable: true },
-    { name: 'motor', selector: 'engine', sortable: true },
-    // { name: 'complement', selector: 'complement', sortable: true },
-    // { name: 'quantity_used', selector: 'quantity_used', sortable: true },
-    // { name: 'quantity_package', selector: 'quantity_package', sortable: true },
-    // { name: 'size', selector: 'size', sortable: true },
-    // { name: 'height', selector: 'height', sortable: true },
-    // { name: 'width', selector: 'width', sortable: true },
-    // { name: 'lenth', selector: 'lenth', sortable: true },
-    // { name: 'weight', selector: 'weight', sortable: true },
-    // { name: 'inner_diameter', selector: 'inner_diameter', sortable: true },
+    { title: 'grupo', render: (row) => (row?.group?.group ?? "não encontrado") },
+    { title: 'subgroupo', render: (row) => (row?.subgroup?.subgroup ?? "não encontrado") },
+    { title: 'montadora', field: 'automaker' },
+    { title: 'modelo', field: 'model' },
+    // { title: 'year_start', field: 'year_start' },
+    // { title: 'year_end', field: 'year_end' },
+    { title: 'motor', field: 'engine' },
+    // { title: 'complement', field: 'complement' },
+    // { title: 'quantity_used', field: 'quantity_used' },
+    // { title: 'quantity_package', field: 'quantity_package' },
+    // { title: 'size', field: 'size' },
+    // { title: 'height', field: 'height' },
+    // { title: 'width', field: 'width' },
+    // { title: 'lenth', field: 'lenth' },
+    // { title: 'weight', field: 'weight' },
+    // { title: 'inner_diameter', field: 'inner_diameter' },
     // {
-    //   name: 'external_diameter',
-    //   selector: 'external_diameter',
+    //   title: 'external_diameter',
+    //   field: 'external_diameter',
     //   sortable: true,
     // },
-    { name: 'título', selector: 'title', sortable: true },
-    { name: 'nome', selector: 'name', sortable: true },
-    { name: 'tipo', selector: 'type', sortable: true },
-    { name: 'posição', selector: 'position', sortable: true },
-    { name: 'sistema', selector: 'system', sortable: true },
-    // { name: 'color', selector: 'color', sortable: true },
-    // { name: 'material', selector: 'material', sortable: true },
-    { name: 'obs', selector: 'obs', sortable: true },
+    { title: 'título', field: 'title' },
+    { title: 'nome', field: 'name' },
+    { title: 'tipo', field: 'type' },
+    { title: 'posição', field: 'position' },
+    { title: 'sistema', field: 'system' },
+    // { title: 'color', field: 'color' },
+    // { title: 'material', field: 'material' },
+    { title: 'obs', field: 'obs' },
     {
-      name: 'Inativo',
-      cell: (row) => (
+      title: 'Inativo',
+      render: (row) => (
         <>
           <Switch checked={row.inactive} onClick={() => handleActive(row)}/>
         </>
       ),
     },
     {
-      name: 'Actions',
-      cell: (row: { id: number }) => (
-        <>
-          <Button
-            typeColor="edit"
-            onClick={() => router.push(`/admin/${moduleName}/${row.id}`)}
-          >
-            <FiEdit />
-          </Button>
-          <Button
-            style={{ marginLeft: 5 }}
-            typeColor="delete"
-            onClick={() => remove(row.id)}
-          >
-            <FiDelete />
-          </Button>
-        </>
-      ),
+      title: 'Actions',
+      render: (row: { id: number }) => <ActionButtons
+        row={row}
+        onDelete={(state) => setData(state)}
+        moduleName="products" 
+        isAdmin
+      />,
     },
   ];
 
