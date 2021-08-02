@@ -58,7 +58,6 @@ export default function Index() {
 
   const handleDelivery = useCallback(async (delivery: any, prop: 'is_provider' | 'inactive' | 'is_admin') => {
     const msg = delivery[prop] ? msgs[prop].active: msgs[prop].deactive
-    console.log({delivery})
     delivery[prop] = !delivery[prop]
     if(window.confirm(`Tem certeza que deseja ${msg}?`)) {
       await updateDelivery(delivery)
