@@ -30,13 +30,17 @@ export default function YearModel(props: any) {
 
   useEffect(() => {
     async function fetch() {
-      const { data } = await api.post('api/products/distinct', {
-        name: NAME
-      })
+      const query = props.model ? {
+        name: NAME,
+        restrictions: [
+          { name: 'model', operator: '=', value: props.model}
+        ]
+      } : { name: NAME}
+      const { data } = await api.post('api/products/distinct', query)
       if (data?.data) setState(data.data as Options[])
     }
     fetch()
-  },[])
+  },[props])
 
   const defaultOptions = () => {
     <MenuItem value={''}>
