@@ -4,9 +4,9 @@
 /* eslint-disable react/require-default-props */
 import { Flex, Grid, Image } from '@chakra-ui/core';
 import React from 'react';
-import AdminLeftMenu from './AdminLeftMenu';
-import AdminRightMenu from './AdminRightMenu';
-import Header from './Header';
+import Header from '../Header/index';
+import AdminLeftMenu from './LeftMenu/index';
+import AdminRightMenu from './RightMenu';
 
 declare interface TemplateInterface {
   logo?: JSX.Element;

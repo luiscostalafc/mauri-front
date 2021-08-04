@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import ActionButtons from '../../../components/ActionButtons';
-import AdminMenu from '../../../components/AdminMenu';
+import Template from '../../../components/Admin';
+import AdminMenu from '../../../components/Admin/Menu';
 import Button from '../../../components/Button';
 import { DataTable } from '../../../components/DataTable';
-import Template from '../../../components/Template';
 import { deletionToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
 import { api } from '../../../services/API/index';

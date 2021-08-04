@@ -1,9 +1,9 @@
 import { Text } from '@chakra-ui/core';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import Template from '../../../components/Admin';
 import Button from '../../../components/Button';
 import { DataTable } from '../../../components/DataTable';
-import Template from '../../../components/Template';
 import { api } from '../../../services/API/index';
 
 const moduleName = 'stock';
