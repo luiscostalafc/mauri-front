@@ -3,10 +3,10 @@ import { Box, Button, Flex, Text } from '@chakra-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { CSSProperties, useCallback } from 'react';
-import { LOGOUT_TOAST } from '../constants/messages';
-import { useToast } from '../hooks/toast';
-import { api } from '../services/API';
-import { getUserId, isUserAdmin } from '../services/auth';
+import { LOGOUT_TOAST } from '../../constants/messages';
+import { useToast } from '../../hooks/toast';
+import { api } from '../../services/API/index';
+import { getUserId, isUserAdmin } from '../../services/auth';
 
 const MenuItems: React.FC<CSSProperties> = ({ children }) => (
   <Text mt={{ base: 4, md: 0 }} mr={6} display="block">

@@ -6,11 +6,11 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { useRouter } from 'next/router';
 import React, { useCallback, useRef, useState } from 'react';
-import AdminMenu from '../../../components/AdminMenu';
+import Template from '../../../components/Admin';
+import AdminMenu from '../../../components/Admin/Menu';
 import Bread from '../../../components/Breadcrumb';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
-import Template from '../../../components/Template';
 import { updateToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
 // import { post } from '../../../services/API';
@@ -22,7 +22,7 @@ import {
   formatSend,
   formatSheet,
   // eslint-disable-next-line prettier/prettier
-  sheetToJson,
+  sheetToJson
 } from '../../../utils/uploadExcel';
 
 const moduleName = 'products/excel';
