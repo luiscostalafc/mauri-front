@@ -33,12 +33,14 @@ export default function Index() {
     { title: 'Entrega', field: 'delivery' },
     {
       title: 'Actions',
-      render: (row: { id: number }) => <ActionButtons
-        row={row}
-        onDelete={(state) => setData(state)}
-        moduleName="orders" 
-        isAdmin
-      />,
+      render: (row: { id: number }) => (
+        <ActionButtons
+          row={row}
+          onDelete={state => setData(state)}
+          moduleName="orders"
+          isAdmin
+        />
+      ),
     },
   ];
 
@@ -56,24 +58,14 @@ export default function Index() {
   }
 
   return (
-    <Template
-      content={
-        <>
-          <Button
-            typeColor="create"
-            onClick={() => router.push(`/admin/${moduleName}/create`)}
-          >
-            Criar
-          </Button>
-          <DataTable
-            title="Pedidos"
-            columns={columns}
-            data={dataVal}
-          />
-        </>
-      }
-      slider={<AdminMenu />}
-      group={<></>}
-    />
+    <Template slider={<AdminMenu />} group={<></>}>
+      <Button
+        typeColor="create"
+        onClick={() => router.push(`/admin/${moduleName}/create`)}
+      >
+        Criar
+      </Button>
+      <DataTable title="Pedidos" columns={columns} data={dataVal} />
+    </Template>
   );
 }

@@ -24,46 +24,52 @@ export default function Index() {
   const [dataVal, setData] = useState([]);
   useEffect(() => {
     async function getData() {
-      fetchData()
+      fetchData();
     }
     getData();
   }, []);
 
   const router = useRouter();
   const { addToast } = useToast();
-  const fetchData = useCallback(async ()=> {
+  const fetchData = useCallback(async () => {
     const { data: response } = await api.get(moduleName);
     setData(response);
-  },[])
+  }, []);
 
-  const updateProduct = useCallback(async (data) => {
-    const { group, subgroup, ...rest } = data
+  const updateProduct = useCallback(async data => {
+    const { group, subgroup, ...rest } = data;
 
     try {
       const { ok } = await api.put(`${moduleName}/${data.id}`, rest);
       if (ok) {
         addToast(updateToast.success);
-        await fetchData()
+        await fetchData();
       } else {
         addToast(updateToast.error);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       addToast(updateToast.error);
     }
-  }, [])
+  }, []);
 
-  const handleActive = useCallback(async (product) => {
-    const msg = product.inactive ? 'desativar': 'ativar'
-    product.inactive = !product.inactive
-    if(window.confirm(`Tem certeza que deseja ${msg}?`)) {
-      await updateProduct(product)
+  const handleActive = useCallback(async product => {
+    const msg = product.inactive ? 'desativar' : 'ativar';
+    product.inactive = !product.inactive;
+    if (window.confirm(`Tem certeza que deseja ${msg}?`)) {
+      await updateProduct(product);
     }
-  },[])
+  }, []);
 
   const columns = [
-    { title: 'grupo', render: (row) => (row?.group?.group ?? "não encontrado") },
-    { title: 'subgroupo', render: (row) => (row?.subgroup?.subgroup ?? "não encontrado") },
+    {
+      title: 'grupo',
+      render: (row: any) => row?.group?.group ?? 'não encontrado',
+    },
+    {
+      title: 'subgroupo',
+      render: (row: any) => row?.subgroup?.subgroup ?? 'não encontrado',
+    },
     { title: 'montadora', field: 'automaker' },
     { title: 'modelo', field: 'model' },
     // { title: 'year_start', field: 'year_start' },
@@ -93,20 +99,22 @@ export default function Index() {
     { title: 'obs', field: 'obs' },
     {
       title: 'Inativo',
-      render: (row) => (
+      render: (row: any) => (
         <>
-          <Switch checked={row.inactive} onClick={() => handleActive(row)}/>
+          <Switch checked={row.inactive} onClick={() => handleActive(row)} />
         </>
       ),
     },
     {
       title: 'Actions',
-      render: (row: { id: number }) => <ActionButtons
-        row={row}
-        onDelete={(state) => setData(state)}
-        moduleName="products" 
-        isAdmin
-      />,
+      render: (row: { id: number }) => (
+        <ActionButtons
+          row={row}
+          onDelete={state => setData(state)}
+          moduleName="products"
+          isAdmin
+        />
+      ),
     },
   ];
 
@@ -124,35 +132,29 @@ export default function Index() {
   }
 
   return (
-    <Template
-      content={
-        <>
-          <Button
-            typeColor="create"
-            onClick={() => router.push(`/admin/${moduleName}/create`)}
-          >
-            Criar
-          </Button>
-          <Button
-            typeColor="create"
-            onClick={() => router.push(`/admin/${moduleName}/excel`)}
-          >
-            Inserção via Excel
-          </Button>
-          <DataTable
-            title="Produtos"
-            columns={columns}
-            data={dataVal}
-            pagination
-            highlightOnHover
-            striped
-            fixedHeader
-            responsive
-          />
-        </>
-      }
-      slider={<AdminMenu />}
-      group={<></>}
-    />
+    <Template slider={<AdminMenu />} group={<></>}>
+      <Button
+        typeColor="create"
+        onClick={() => router.push(`/admin/${moduleName}/create`)}
+      >
+        Criar
+      </Button>
+      <Button
+        typeColor="create"
+        onClick={() => router.push(`/admin/${moduleName}/excel`)}
+      >
+        Inserção via Excel
+      </Button>
+      <DataTable
+        title="Produtos"
+        columns={columns}
+        data={dataVal}
+        pagination
+        highlightOnHover
+        striped
+        fixedHeader
+        responsive
+      />
+    </Template>
   );
 }

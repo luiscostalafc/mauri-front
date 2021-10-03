@@ -78,22 +78,20 @@ export default function Edit() {
     { href: '#', label: 'Operações de Estoque editar' },
   ];
   return (
-    <Template
-      content={
-        <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
-          <Bread admin breads={breads} />
-          <Heading size="md">Operações de Estoque</Heading>
-          <Input name="quantity" placeholder="quantidade" />
-          <Input name="unit_value" placeholder="unidade de medida" />
-          <Input name="comment" placeholder="comentário" />
-          <Input name="operation_id" placeholder="operation_id" />
-          <Input name="product_id" placeholder="product_id" />
+    <Template>
+      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <Heading size="md">Operações de Estoque</Heading>
+        <Input name="quantity" placeholder="quantidade" />
+        <Input name="unit_value" placeholder="unidade de medida" />
+        <Input name="comment" placeholder="comentário" />
+        <Input name="operation_id" placeholder="operation_id" />
+        <Input name="product_id" placeholder="product_id" />
 
-          <Button typeColor="create" type="submit">
-            Editar
-          </Button>
-        </Form>
-      }
-    />
+        <Button typeColor="create" type="submit">
+          Editar
+        </Button>
+      </Form>
+    </Template>
   );
 }

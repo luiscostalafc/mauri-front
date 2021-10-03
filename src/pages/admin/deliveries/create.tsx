@@ -62,20 +62,16 @@ export default function Create() {
     { href: '#', label: 'Entregas criar' },
   ];
   return (
-    <Template
-      content={
-        <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
-          <Bread admin breads={breads} />
-          <h1>Entregas</h1>
-          <Input name="delivery" placeholder="Entrega" />
-          <InputToogle name="inactive" placeholder="Inativo" />
-          <Button typeColor="create" type="submit">
-            Inserir
-          </Button>
-        </Form>
-      }
-      slider={<AdminMenu />}
-      group={<></>}
-    />
+    <Template slider={<AdminMenu />} group={<></>}>
+      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <h1>Entregas</h1>
+        <Input name="delivery" placeholder="Entrega" />
+        <InputToogle name="inactive" placeholder="Inativo" />
+        <Button typeColor="create" type="submit">
+          Inserir
+        </Button>
+      </Form>
+    </Template>
   );
 }

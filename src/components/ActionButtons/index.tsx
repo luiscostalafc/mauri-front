@@ -12,7 +12,7 @@ import Button from '../Button';
 declare interface ActionButtonsInterface {
   editLabel?: string;
   noEdit?: boolean;
-  onDelete?: (any) => any;
+  onDelete?: (state: any) => void;
   deleteLabel?: string;
   noDelete?: boolean;
   isAdmin?: boolean;
@@ -38,7 +38,7 @@ const ActionButtons = ({
       if (ok) {
         const { data: state } = await api.get(`api/${moduleName}`);
         addToast(deletionToast.success);
-        props.onDelete(state);
+        props.onDelete && props.onDelete(state);
       } else {
         addToast(deletionToast.error);
       }
@@ -51,7 +51,9 @@ const ActionButtons = ({
       {!noEdit && (
         <Button
           typeColor="edit"
-          onClick={() => router.push(`${isAdmin && "/admin"}/${moduleName}/${row.id}`)}
+          onClick={() =>
+            router.push(`${isAdmin && '/admin'}/${moduleName}/${row.id}`)
+          }
         >
           {editLabel || 'Editar'}
         </Button>

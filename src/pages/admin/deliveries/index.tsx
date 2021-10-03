@@ -19,18 +19,17 @@ import { useToast } from '../../../hooks/toast';
 import { api } from '../../../services/API/index';
 // import AdminMenu from '../../../components/AdminMenu'
 
-
 const moduleName = '/api/deliveries';
 
 export default function Index() {
   const [dataVal, setData] = useState([]);
-  const fetchData = useCallback(async ()=> {
+  const fetchData = useCallback(async () => {
     const { data: response } = await api.get(moduleName, { debug: true });
     setData(response);
-  },[])
+  }, []);
 
   useEffect(() => {
-    fetchData()
+    fetchData();
   }, []);
 
   const router = useRouter();
@@ -38,37 +37,45 @@ export default function Index() {
   const msgs = {
     inactive: {
       active: 'desativar',
-      deactive: 'ativar'
+      deactive: 'ativar',
     },
-  }
-  const updateDelivery = useCallback(async (data) => {
+  };
+  const updateDelivery = useCallback(async data => {
     try {
       const { ok } = await api.put(`${moduleName}/${data.id}`, data);
       if (ok) {
         addToast(updateToast.success);
-        await fetchData()
+        await fetchData();
       } else {
         addToast(updateToast.error);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       addToast(updateToast.error);
     }
-  }, [])
+  }, []);
 
-  const handleDelivery = useCallback(async (delivery: any, prop: 'is_provider' | 'inactive' | 'is_admin') => {
-    const msg = delivery[prop] ? msgs[prop].active: msgs[prop].deactive
-    delivery[prop] = !delivery[prop]
-    if(window.confirm(`Tem certeza que deseja ${msg}?`)) {
-      await updateDelivery(delivery)
-    }
-  },[msgs])
+  const handleDelivery = useCallback(
+    async (delivery: any, prop: 'is_provider' | 'inactive' | 'is_admin') => {
+      const msg = delivery[prop] ? msgs[prop].active : msgs[prop].deactive;
+      delivery[prop] = !delivery[prop];
+      if (window.confirm(`Tem certeza que deseja ${msg}?`)) {
+        await updateDelivery(delivery);
+      }
+    },
+    [msgs],
+  );
 
   const columns = [
     { title: 'Entrega', field: 'delivery' },
     {
       title: 'Inativo',
-      render: ({tableData, ...row}) => (<Switch checked={row.inactive} onClick={() => handleDelivery(row, "inactive")}/>),
+      render: ({ tableData, ...row }: any) => (
+        <Switch
+          checked={row.inactive}
+          onClick={() => handleDelivery(row, 'inactive')}
+        />
+      ),
     },
     {
       title: 'Actions',
@@ -91,23 +98,15 @@ export default function Index() {
   }
 
   return (
-    <Template
-      content={
-        <>
-          <Button
-            typeColor="create"
-            onClick={() => router.push(`/admin/${moduleName}/create`)}
-          >
-            Criar
-          </Button>
+    <Template>
+      <Button
+        typeColor="create"
+        onClick={() => router.push(`/admin/${moduleName}/create`)}
+      >
+        Criar
+      </Button>
 
-          <DataTable
-            title="Entregas"
-            columns={columns}
-            data={dataVal}
-          />
-        </>
-      }
-    />
+      <DataTable title="Entregas" columns={columns} data={dataVal} />
+    </Template>
   );
 }

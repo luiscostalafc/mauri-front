@@ -22,7 +22,7 @@ import {
   formatSend,
   formatSheet,
   // eslint-disable-next-line prettier/prettier
-  sheetToJson
+  sheetToJson,
 } from '../../../utils/uploadExcel';
 
 const moduleName = 'products/excel';
@@ -92,24 +92,20 @@ export default function Excel() {
     { href: '#', label: 'Produtos criar' },
   ];
   return (
-    <Template
-      content={
-        <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
-          <Bread admin breads={breads} />
-          <Heading size="md">Upload de produtos via Excel</Heading>
-          <Input
-            name="excel"
-            placeholder="Excel"
-            type="file"
-            onChange={handleInput}
-          />
-          <Button typeColor="create" type="submit">
-            Inserir
-          </Button>
-        </Form>
-      }
-      slider={<AdminMenu />}
-      group={<></>}
-    />
+    <Template slider={<AdminMenu />} group={<></>}>
+      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <Heading size="md">Upload de produtos via Excel</Heading>
+        <Input
+          name="excel"
+          placeholder="Excel"
+          type="file"
+          onChange={handleInput}
+        />
+        <Button typeColor="create" type="submit">
+          Inserir
+        </Button>
+      </Form>
+    </Template>
   );
 }

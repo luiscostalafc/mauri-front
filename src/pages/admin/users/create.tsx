@@ -92,50 +92,42 @@ export default function Create() {
     { href: '#', label: 'Usuários criar' },
   ];
   return (
-    <Template
-      content={
-        <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
-          <Bread admin breads={breads} />
-          <h1>Usuários</h1>
-          <Input name="name" placeholder="Nome" />
-          <Input name="username" placeholder="Username" />
-          <Input name="activity" placeholder="Atividade" />
-          <Input name="complete_name" placeholder="Nome completo" />
-          <Input name="email" placeholder="E-mail" />
-          <Input name="rg" placeholder="RG" />
-          <Checkbox
-            variantColor="green"
-            borderColor="#ed8936"
-            size="sm"
-            onChange={handleOptionDocument}
-            defaultIsChecked={check}
-          >
-            Mudar para CNPJ
-          </Checkbox>
-          {cpfNumber ? (
-            <InputMask
-              mask="999.999.999-99"
-              name="cpf_cnpj"
-              placeholder="CPF"
-            />
-          ) : (
-            <InputMask
-              mask="99.999.999/9999-99"
-              name="cpf_cnpj"
-              placeholder="CNPJ"
-            />
-          )}
-          <Input name="nick" placeholder="Apelido" />
-          <InputToogle name="is_provider" placeholder="Fornecedor" />
-          <InputToogle name="inactive" placeholder="Inativo" />
+    <Template slider={<AdminMenu />} group={<></>}>
+      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <h1>Usuários</h1>
+        <Input name="name" placeholder="Nome" />
+        <Input name="username" placeholder="Username" />
+        <Input name="activity" placeholder="Atividade" />
+        <Input name="complete_name" placeholder="Nome completo" />
+        <Input name="email" placeholder="E-mail" />
+        <Input name="rg" placeholder="RG" />
+        <Checkbox
+          variantColor="green"
+          borderColor="#ed8936"
+          size="sm"
+          onChange={handleOptionDocument}
+          defaultIsChecked={check}
+        >
+          Mudar para CNPJ
+        </Checkbox>
+        {cpfNumber ? (
+          <InputMask mask="999.999.999-99" name="cpf_cnpj" placeholder="CPF" />
+        ) : (
+          <InputMask
+            mask="99.999.999/9999-99"
+            name="cpf_cnpj"
+            placeholder="CNPJ"
+          />
+        )}
+        <Input name="nick" placeholder="Apelido" />
+        <InputToogle name="is_provider" placeholder="Fornecedor" />
+        <InputToogle name="inactive" placeholder="Inativo" />
 
-          <Button typeColor="create" type="submit">
-            Inserir
-          </Button>
-        </Form>
-      }
-      slider={<AdminMenu />}
-      group={<></>}
-    />
+        <Button typeColor="create" type="submit">
+          Inserir
+        </Button>
+      </Form>
+    </Template>
   );
 }

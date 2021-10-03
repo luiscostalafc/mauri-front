@@ -60,17 +60,13 @@ export default function Index() {
   ];
 
   return (
-    <Template
-      content={
-        <>
-          <DashboardAdminButtons />
-          <DashboardAdminTable
-            data={data}
-            columns={columns}
-            title="Painel Administrativo - Em trânsito"
-          />
-        </>
-      }
-    />
+    <Template>
+      <DashboardAdminButtons />
+      <DashboardAdminTable
+        data={data}
+        columns={columns}
+        title="Painel Administrativo - Em trânsito"
+      />
+    </Template>
   );
 }
