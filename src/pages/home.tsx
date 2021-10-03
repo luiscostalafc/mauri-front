@@ -7,13 +7,13 @@ import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import CartHeader from '../components/CartHeader';
 import AutoExpandMenu from '../components/ExpandMenu/AutoExpandMenu';
-import Footer from '../components/Footer';
+import Footer from '../components/Footer/index';
 // import Group from '../../src/components/Group'
 import Header from '../components/Header';
-import LeftMenu from '../components/LeftMenu';
 import ProductContent from '../components/Product/ProductContent';
-import RightMenu from '../components/RightMenu';
-import Slider from '../components/Slider';
+import LeftMenu from '../components/TemplateGeneral/LeftMenu';
+import RightMenu from '../components/TemplateGeneral/RightMenu';
+import Slider from '../components/TemplateGeneral/Slider';
 
 export default function Index() {
   const router = useRouter();

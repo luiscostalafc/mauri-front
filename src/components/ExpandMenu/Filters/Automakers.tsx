@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { api } from '../../../services/API/index';
 
 type Options = {
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NAME = 'automaker'
 const LABEL = 'Montadora'
-export default function Automaker(props: any) {
+export default function Automaker({onChange, defaultValue, ...props}: any) {
   const classes = useStyles();
   const [state, setState] = useState([] as Options[])
 
@@ -38,6 +38,10 @@ export default function Automaker(props: any) {
     fetch()
   },[])
 
+  const getValue = useCallback((val) => {
+    return state.findIndex(({value}) => value === val)
+  },[])
+  
   const defaultOptions = () => {
     <MenuItem value={''}>
       Sem Opções
@@ -49,8 +53,8 @@ export default function Automaker(props: any) {
       <InputLabel>{LABEL}</InputLabel>
         <Select
           name={NAME}
-          defaultValue={0}
-          onChange={props.onChange}
+          defaultValue={defaultValue &&  state.length ? getValue(defaultValue):  ''}
+          onChange={onChange}
           {...props}
         >
           {state.length ?

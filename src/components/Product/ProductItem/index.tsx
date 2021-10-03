@@ -11,9 +11,9 @@ import {
   Flex,
   Image,
   // eslint-disable-next-line prettier/prettier
-  Link,
+  Link
 } from '@chakra-ui/core';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { FaCartArrowDown } from 'react-icons/fa';
 import { IProduct } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
@@ -63,7 +63,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
           <Box d="flex" alignItems="baseline">
             <Badge rounded="full" px="2" variantColor="orange">
-              {group}
+              {group?.group ?? ""}
             </Badge>
           </Box>
         </Flex>

@@ -24,22 +24,34 @@ const useStyles = makeStyles((theme) => ({
 
 const NAME = 'model'
 const LABEL = 'Modelo'
-export default function Models(props: any) {
+export default function Models({automaker, onChange, defaultValue, ...props}: any) {
   const classes = useStyles();
   const [state, setState] = useState([] as Options[])
+  const [defaultIndex, setDefaultIndex] = useState('')
 
   useEffect(() => {
     async function fetch() {
-      const { data } = await api.post('api/products/distinct', {
+      const query = automaker ? {
         name: NAME,
         restrictions: [
-          { name: 'automaker', operator: '=', value: props.automaker}
+          { name: 'automaker', operator: '=', value: automaker}
         ]
-      })
+      } : { name: NAME}
+      const { data } = await api.post('api/products/distinct', query)
       if (data?.data) setState(data.data as Options[])
     }
     fetch()
-  },[props.automaker])
+  },[automaker])
+
+  useEffect((val) => {
+    if(!state?.length) {
+      setDefaultIndex('') 
+      return
+    }
+    const index = state.findIndex(({value}) => value === val)
+    setDefaultIndex(index !== -1 ? index : '')
+    return 
+  },[])
 
   const defaultOptions = () => {
     <MenuItem value={''}>
@@ -52,8 +64,8 @@ export default function Models(props: any) {
       <InputLabel>{LABEL}</InputLabel>
         <Select
           name={NAME}
-          defaultValue={0}
-          onChange={props.onChange}
+          defaultValue={defaultIndex}
+          onChange={onChange}
           {...props}
         >
           {state.length ?
