@@ -9,7 +9,7 @@ import React, {
   useCallback,
   useEffect,
   useRef,
-  useState
+  useState,
 } from 'react';
 import * as Yup from 'yup';
 import Template from '../../../components/Admin';
@@ -139,42 +139,34 @@ export default function Create() {
     { href: '#', label: 'Operações criar' },
   ];
   return (
-    <Template
-      content={
-        <Form
-          style={{ maxWidth: '100%' }}
-          ref={formRef}
-          onSubmit={handleSubmit}
-        >
-          <Bread admin breads={breads} />
-          <Heading size="md" justifyContent="center">
-            Pedidos
-          </Heading>
+    <Template slider={<AdminMenu />} group={<></>}>
+      <Form style={{ maxWidth: '100%' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <Heading size="md" justifyContent="center">
+          Pedidos
+        </Heading>
 
-          <SelectInput name="user_id" placeholder="Usuário" options={users} />
-          <SelectInput
-            name="provider_id"
-            placeholder="Prestador"
-            options={providers}
-          />
-          <SelectInput
-            name="order_status_id"
-            placeholder="Estatus Ordem"
-            options={orderStatus}
-          />
-          <SelectInput
-            name="delivery_id"
-            placeholder="Entrega"
-            options={deliveries}
-          />
+        <SelectInput name="user_id" placeholder="Usuário" options={users} />
+        <SelectInput
+          name="provider_id"
+          placeholder="Prestador"
+          options={providers}
+        />
+        <SelectInput
+          name="order_status_id"
+          placeholder="Estatus Ordem"
+          options={orderStatus}
+        />
+        <SelectInput
+          name="delivery_id"
+          placeholder="Entrega"
+          options={deliveries}
+        />
 
-          <Button typeColor="create" type="submit">
-            Inserir
-          </Button>
-        </Form>
-      }
-      slider={<AdminMenu />}
-      group={<></>}
-    />
+        <Button typeColor="create" type="submit">
+          Inserir
+        </Button>
+      </Form>
+    </Template>
   );
 }

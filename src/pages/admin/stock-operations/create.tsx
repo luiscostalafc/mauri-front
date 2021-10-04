@@ -67,22 +67,20 @@ export default function Create() {
     { href: '#', label: 'Operações de Estoque criar' },
   ];
   return (
-    <Template
-      content={
-        <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
-          <Bread admin breads={breads} />
-          <Heading size="md">Operações de estoque</Heading>
-          <Input name="quantity" placeholder="quantidade" />
-          <Input name="unit_value" placeholder="valor unitário" />
-          <Input name="comment" placeholder="comentário" />
-          <Input name="operation_id" placeholder="operation_id" />
-          <Input name="product_id" placeholder="product_id" />
+    <Template>
+      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <Heading size="md">Operações de estoque</Heading>
+        <Input name="quantity" placeholder="quantidade" />
+        <Input name="unit_value" placeholder="valor unitário" />
+        <Input name="comment" placeholder="comentário" />
+        <Input name="operation_id" placeholder="operation_id" />
+        <Input name="product_id" placeholder="product_id" />
 
-          <Button typeColor="create" type="submit">
-            Inserir
-          </Button>
-        </Form>
-      }
-    />
+        <Button typeColor="create" type="submit">
+          Inserir
+        </Button>
+      </Form>
+    </Template>
   );
 }

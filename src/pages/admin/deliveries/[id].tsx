@@ -77,20 +77,16 @@ export default function Edit() {
     { href: '#', label: 'Entregas editar' },
   ];
   return (
-    <Template
-      content={
-        <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
-          <Bread admin breads={breads} />
-          <Heading>Entregas</Heading>
-          <Input name="delivery" placeholder="Entrega" />
-          <InputToogle name="inactive" placeholder="Inativo" />
-          <Button typeColor="create" type="submit">
-            Editar
-          </Button>
-        </Form>
-      }
-      slider={<AdminMenu />}
-      group={<></>}
-    />
+    <Template slider={<AdminMenu />} group={<></>}>
+      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <Heading>Entregas</Heading>
+        <Input name="delivery" placeholder="Entrega" />
+        <InputToogle name="inactive" placeholder="Inativo" />
+        <Button typeColor="create" type="submit">
+          Editar
+        </Button>
+      </Form>
+    </Template>
   );
 }
