@@ -8,19 +8,29 @@ import { FormControl, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
   },
 }));
 
-const LABEL = 'Nome'
+const LABEL = 'Nome';
 export default function Name(props: any) {
   const classes = useStyles();
   return (
     <FormControl className={classes.formControl}>
-      <TextField label={LABEL} name="name" onChange={props.onChange}/>
-    </FormControl> 
-  )
+      <TextField
+        style={{
+          maxWidth: 110,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        label={LABEL}
+        name="name"
+        onChange={props.onChange}
+      />
+    </FormControl>
+  );
 }

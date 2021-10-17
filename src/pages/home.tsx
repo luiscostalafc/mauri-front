@@ -2,6 +2,7 @@
 /* eslint-disable react/jsx-curly-newline */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Image } from '@chakra-ui/core';
+import { useMediaQuery } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -17,8 +18,9 @@ import Slider from '../components/TemplateGeneral/Slider';
 
 export default function Index() {
   const router = useRouter();
-  // const [transform, setTransform] = useState('scaleX(0)')
   const [group, setGroup] = useState(0);
+
+  const [isMinorThanThan900] = useMediaQuery('(max-width: 900px)');
 
   function handleProduct(filter: any) {
     const queryParams = new URLSearchParams(filter).toString();
@@ -29,7 +31,7 @@ export default function Index() {
     if (Number(e) === 0) {
       router.push('/home');
       return;
-    } 
+    }
     setGroup(e);
     router.push({ pathname: '/home', query: { group_id: e } });
   }
@@ -43,7 +45,7 @@ export default function Index() {
         </Col>
         {/* header */}
         <Col xs={12} md={6} lg={6}>
-          <Header />
+          {!isMinorThanThan900 && <Header />}
         </Col>
         {/* logoR */}
         <Col xs={0} md={3} lg={3}>
@@ -57,13 +59,10 @@ export default function Index() {
         </Col>
         {/* filter */}
         <Col xs={12} md={6} lg={6}>
-          <AutoExpandMenu
-            group={group}
-            /* transform={transform} */ onSearch={handleProduct}
-          />
+          <AutoExpandMenu group={group} onSearch={handleProduct} />
         </Col>
         {/* menuR */}
-        <Col xs={0} md={3} lg={3}>
+        <Col xs={0} md={3} lg={3} xl={3}>
           <RightMenu />
         </Col>
       </Row>
@@ -77,7 +76,7 @@ export default function Index() {
           />
         </Col>
         {/* products */}
-        <Col xs={12} md={6} lg={6}>
+        <Col xs={12} sm={12} md={9} lg={8} xl={9}>
           <ProductContent />
         </Col>
         {/* grupo? */}
