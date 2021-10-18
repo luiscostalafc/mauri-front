@@ -64,10 +64,9 @@ const ProductContent: React.FC<ProductItemProps> = () => {
   const maxPage = 9;
   const offset = currentPage * maxPage;
 
-  const currentPageData = dataProducts?.length
-    ? dataProducts
-        .slice(offset, offset + maxPage)
-        .map(item => (
+  const currentPageData = !!dataProducts?.length
+    ? dataProducts.slice(offset, offset + maxPage).map(item => (
+        <Flex flex={1} alignItems="center" justifyContent="center">
           <ProductItem
             key={item.id}
             group={item.group}
@@ -75,9 +74,13 @@ const ProductContent: React.FC<ProductItemProps> = () => {
             obs={item.obs}
             image={item.image}
             price={item.price}
-            size={sizeProductsExample && sizeProductsExample.map((sizeProduct) => sizeProduct.name)}
+            size={
+              sizeProductsExample &&
+              sizeProductsExample.map(sizeProduct => sizeProduct.name)
+            }
           />
-        ))
+        </Flex>
+      ))
     : 'Não há produtos para exibir';
 
   const pageCount = Math.ceil(dataProducts?.length / maxPage);
@@ -108,21 +111,25 @@ const ProductContent: React.FC<ProductItemProps> = () => {
       )}
 
       {!isValidating && (
-        <Flex flexDir="row" maxWidth="100vh" wrap="wrap">
-          {currentPageData}
+        <>
+          <Flex flexDir="row" maxWidth="90%" wrap="wrap" marginTop="50px">
+            {currentPageData}
+          </Flex>
 
-          <ReactPaginate
-            pageCount={10}
-            pageRangeDisplayed={pageCount ?? 1}
-            marginPagesDisplayed={pageCount ?? 1}
-            previousLabel="← Previous"
-            nextLabel="Next →"
-            onPageChange={handlePageClick}
-            containerClassName={styles.pagination}
-            previousLinkClassName={styles.pagination__link}
-            nextLinkClassName={styles.pagination__link}
-          />
-        </Flex>
+          <Flex flexDirection="column">
+            <ReactPaginate
+              pageCount={10}
+              pageRangeDisplayed={pageCount ?? 1}
+              marginPagesDisplayed={pageCount ?? 1}
+              previousLabel="← Previous"
+              nextLabel="Next →"
+              onPageChange={handlePageClick}
+              containerClassName={styles.pagination}
+              previousLinkClassName={styles.pagination__link}
+              nextLinkClassName={styles.pagination__link}
+            />
+          </Flex>
+        </>
       )}
     </>
   );

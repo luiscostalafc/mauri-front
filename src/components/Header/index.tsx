@@ -2,7 +2,7 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { CSSProperties, useCallback } from 'react';
+import React, { CSSProperties, useCallback, useState } from 'react';
 import { LOGOUT_TOAST } from '../../constants/messages';
 import { useToast } from '../../hooks/toast';
 import { api } from '../../services/API/index';
@@ -15,7 +15,7 @@ const MenuItems: React.FC<CSSProperties> = ({ children }) => (
 );
 
 interface MenuItemsInterface {
-  label: string
+  label: string;
 }
 
 const menuItens: MenuItemsInterface[] = [
@@ -26,9 +26,9 @@ const menuItens: MenuItemsInterface[] = [
   { label: 'Compras' },
   { label: 'Vendas' },
   { label: 'Rastrear' },
-]
+];
 const Header = () => {
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
   const router = useRouter();
   const { addToast } = useToast();
   const handleToggle = () => setShow(!show);
@@ -45,7 +45,7 @@ const Header = () => {
     } catch (error) {
       addToast(LOGOUT_TOAST.ERROR);
     }
-  }, [])
+  }, []);
   return (
     <>
       <Flex
@@ -76,24 +76,33 @@ const Header = () => {
           flexGrow={1}
           flex-wrap="wrap"
         >
-          {menuItens.map(({label}) => (<MenuItems>{label}</MenuItems>))}
+          {menuItens?.map(({ label }) => (
+            <MenuItems>{label}</MenuItems>
+          ))}
         </Box>
 
         <Box
           display={{ sm: show ? 'block' : 'none', md: 'block' }}
           mt={{ base: 4, md: 0 }}
         >
-          {isUserAdmin() && <Link href="/admin/users">
-            <Button bg="transparent" border="1px" marginLeft={20}>
-              Admin
-            </Button>
-          </Link>}
+          {isUserAdmin() && (
+            <Link href="/admin/users">
+              <Button bg="transparent" border="1px" marginLeft={20}>
+                Admin
+              </Button>
+            </Link>
+          )}
           <Link href={`users/profile?id=${getUserId()}`}>
             <Button bg="transparent" border="1px" marginLeft={20}>
               Perfil
             </Button>
           </Link>
-          <Button bg="transparent" border="1px" marginLeft={20} onClick={handleSignout}>
+          <Button
+            bg="transparent"
+            border="1px"
+            marginLeft={20}
+            onClick={handleSignout}
+          >
             Logout
           </Button>
         </Box>

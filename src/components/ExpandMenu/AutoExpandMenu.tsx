@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Button } from '@chakra-ui/core';
+import { Button, Heading } from '@chakra-ui/core';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -34,13 +34,14 @@ const AutoExpandMenu = ({ group, onSearch, ...props }: any) => {
   const [defaultModel, setDefaultModel] = useState('');
   const [search, setSearch] = useState('');
 
-  let paramsState = ''
+  let paramsState = '';
   useEffect(() => {
     paramsState = new URLSearchParams(window?.location?.search);
-    console.log(paramsState.get('model'),paramsState.get('automaker'))
-    if(paramsState.has('model')) setDefaultModel(() => paramsState.get('model'))
-    if(paramsState.has('automaker')) setDefaultAutomaker(() => paramsState.get('automaker'))
-    setSearch(paramsState)
+    if (paramsState.has('model'))
+      setDefaultModel(() => paramsState.get('model'));
+    if (paramsState.has('automaker'))
+      setDefaultAutomaker(() => paramsState.get('automaker'));
+    setSearch(paramsState);
   }, []);
 
   useEffect(() => {
@@ -63,10 +64,10 @@ const AutoExpandMenu = ({ group, onSearch, ...props }: any) => {
   );
 
   const clearFilter = useCallback(() => {
-    setAutomaker(() => '')
-    setModel(() => '')
+    setAutomaker(() => '');
+    setModel(() => '');
     router.push('/home');
-  },[])
+  }, []);
 
   const mountQuery = useCallback(() => {
     const query: QueryObject = {};
@@ -90,7 +91,7 @@ const AutoExpandMenu = ({ group, onSearch, ...props }: any) => {
     <Container fluid>
       <Row>
         {hasInGroup([1, 2]) && (
-          <Col xs={2} md={2} lg={2}>
+          <Col xs={3} sm={3} md={4} lg={4} xl={3}>
             <Automakers
               defaultValue={defaultAutomaker}
               onChange={(e: any) => {
@@ -100,55 +101,62 @@ const AutoExpandMenu = ({ group, onSearch, ...props }: any) => {
             />
           </Col>
         )}
-        <Col xs={2} md={2} lg={2}>
+        <Col xs={3} sm={3} md={4} lg={4} xl={3}>
           <Models
             defaultValue={defaultModel}
-            automaker={automaker} 
+            automaker={automaker}
             onChange={(e: any) => {
-            handleChange(e)
-            setModel(() => e.target.value)
-          }} />
+              handleChange(e);
+              setModel(() => e.target.value);
+            }}
+          />
         </Col>
-        <Col xs={2} md={2} lg={2} >
+        <Col xs={3} sm={3} md={4} lg={3} xl={3}>
           <YearFab model={model} onChange={(e: any) => handleChange(e)} />
         </Col>
 
         {hasInGroup([1, 2]) && (
-          <Col xs={2} md={2} lg={2}>
+          <Col xs={2} sm={2} md={4} lg={4} xl={3}>
             <YearModel model={model} onChange={(e: any) => handleChange(e)} />
           </Col>
         )}
 
         {hasInGroup([1, 2]) && (
-          <Col xs={2} md={2} lg={2}>
+          <Col xs={3} sm={3} md={4} lg={4} xl={3}>
             <Motors model={model} onChange={(e: any) => handleChange(e)} />
           </Col>
         )}
 
         {hasInGroup([1, 2]) && (
-          <Col xs={2} md={2} lg={2}>
+          <Col xs={3} sm={3} md={4} lg={3} xl={3}>
             <Fuel model={model} onChange={(e: any) => handleChange(e)} />
           </Col>
         )}
         {hasInGroup([1, 2, 3, 4]) && (
-          <Col xs={2} md={2} lg={2}>
-            <Chassi
-              model={model}
-              onChange={(e: any) => handleChange(e)}
-            />
+          <Col xs={3} sm={3} md={4} lg={4} xl={3}>
+            <Chassi model={model} onChange={(e: any) => handleChange(e)} />
           </Col>
         )}
-        <Col xs={2} md={2} lg={2}>
+        <Col xs={2} sm={2} md={2} lg={1} xl={1}>
           <Name onChange={(e: any) => handleChange(e)} />
         </Col>
 
-        <Col xs={2} md={2} lg={2}>
+        <Col xs={2} sm={2} md={2} lg={2} xl={2}>
           <Button
             onClick={() => clearFilter()}
-            size="md"
+            width={{ xl: '150px', lg: '110px', md: '110px', sm: '110px' }}
+            marginTop={{ xl: '40px', md: '20px', sm: '20px' }}
+            marginBottom={{ sm: '20px' }}
+            marginLeft={{
+              xl: '90px',
+              lg: '80px',
+              md: '90px',
+              sm: '30px',
+              xs: '20px',
+            }}
             leftIcon={FaSearch}
           >
-            Limpar filtro
+            <Heading fontSize={{ md: '16px' }}> Limpar filtro </Heading>
           </Button>
         </Col>
       </Row>
