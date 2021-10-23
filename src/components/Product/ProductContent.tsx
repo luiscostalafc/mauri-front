@@ -19,7 +19,7 @@ interface ImageProduct {
   path: object | string;
 }
 
-interface ProductItemProps {
+export interface ProductItemProps {
   id?: string | any;
   group?: string | any;
   group_id?: number;

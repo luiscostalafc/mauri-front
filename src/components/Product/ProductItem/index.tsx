@@ -20,12 +20,12 @@ import { formatPrice } from '../../../utils/formatPrice';
 import MeasureProducts from '../../MeasureProducts';
 import ModalProduct from '../../ModalProduct';
 
-interface ProductItemProps {
+export interface ProductItemProps {
   id?: number;
   name?: string;
   price?: number;
   quantity?: number;
-  group?: string;
+  group?: any;
   obs?: string;
   image?: string;
   product?: IProduct;
@@ -63,7 +63,12 @@ const ProductItem: React.FC<ProductItemProps> = ({
           </Box>
 
           <Box d="flex" alignItems="baseline">
-            <Badge rounded="full" px="2" variantColor="orange">
+            <Badge
+              rounded="full"
+              px="1"
+              variantColor="orange"
+              marginLeft="-5px"
+            >
               {group?.group ?? ''}
             </Badge>
           </Box>
