@@ -86,10 +86,10 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       if (productExists) {
         productExists.quantity = quantity;
       } else {
-        const product = await api.get(`/products/${productId}`);
+        const { data } = await api.get(`/products/${productId}`);
 
         const newProduct = {
-          ...product.data,
+          ...data,
           quantity: 1,
         };
 
