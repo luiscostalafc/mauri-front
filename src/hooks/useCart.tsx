@@ -147,7 +147,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
         productExists.quantity = quantity;
         setCart(updatedCart);
       } else {
-        throw new Error();
+        throw new Error('Produto não existe');
       }
     } catch (error) {
       addToast(UPDATE_QUANTITY_PRODUCT_ERROR);
