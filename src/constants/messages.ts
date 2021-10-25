@@ -16,7 +16,7 @@ export const LOGOUT_TOAST = {
   ERROR: {
     type: 'error',
     title: 'Logout',
-    description: 'Erro ao fazer o logou!',
+    description: 'Erro ao fazer o logout!',
   },
 };
 
