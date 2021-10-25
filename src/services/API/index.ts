@@ -41,7 +41,7 @@ export const api = {
         headers,
       });
       return setResponse(response, { time, debug, silent, msg });
-    } catch (e) {
+    } catch (e: any) {
       redirectIfBadStatus(e?.response?.status, noRedirect);
       return setResponse(e?.response, { time, debug, silent, msg });
     }
@@ -62,7 +62,7 @@ export const api = {
         { headers },
       );
       return setResponse(response, { time, debug, silent, msg });
-    } catch (e) {
+    } catch (e: any) {
       redirectIfBadStatus(e?.response?.status, noRedirect);
       return setResponse(e?.response, { time, debug, silent, msg });
     }
@@ -83,7 +83,7 @@ export const api = {
         { headers },
       );
       return setResponse(response, { time, debug, silent, msg });
-    } catch (e) {
+    } catch (e: any) {
       redirectIfBadStatus(e?.response?.status, noRedirect);
       return setResponse(e?.response, { time, debug, silent, msg });
     }
@@ -101,7 +101,7 @@ export const api = {
         headers,
       });
       return setResponse(response, { time, debug, silent, msg });
-    } catch (e) {
+    } catch (e: any) {
       redirectIfBadStatus(e?.response?.status, noRedirect);
       return setResponse(e?.response, { time, debug, silent, msg });
     }
