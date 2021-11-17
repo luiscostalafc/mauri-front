@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-wrap-multilines */
@@ -34,7 +35,7 @@ export default function Index() {
 
   const router = useRouter();
   const { addToast } = useToast();
-  const msgs = {
+  const msgs: any = {
     inactive: {
       active: 'desativar',
       deactive: 'ativar',

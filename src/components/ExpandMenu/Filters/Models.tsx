@@ -1,3 +1,6 @@
+/* eslint-disable react/jsx-indent */
+/* eslint-disable no-extra-boolean-cast */
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-array-index-key */
@@ -50,18 +53,19 @@ export default function Models({
     fetch();
   }, [automaker]);
 
-  useEffect(val => {
-    if (!state?.length) {
-      setDefaultIndex('');
-      return;
-    }
-    const index = state.findIndex(({ value }) => value === val);
-    setDefaultIndex(index !== -1 ? index : '');
-    return;
-  }, []);
+  // Verificar de onde vem o val
+
+  // useEffect((val) => {
+  //   if (!state?.length) {
+  //     setDefaultIndex('');
+  //     return;
+  //   }
+  //   const index = state.findIndex(({ value }) => value === val);
+  //   setDefaultIndex(index !== -1 ? index : null);
+  // }, []);
 
   const defaultOptions = () => {
-    <MenuItem value={''}>Sem Opções</MenuItem>;
+    <MenuItem value="">Sem Opções</MenuItem>;
   };
 
   return (
