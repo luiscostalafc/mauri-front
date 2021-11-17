@@ -19,6 +19,7 @@ declare interface TemplateInterface {
   group?: JSX.Element;
   footer?: JSX.Element;
   children?: JSX.Element[] | any;
+  content?: any;
 }
 export default function Template({
   logo,

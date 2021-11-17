@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-wrap-multilines */
+/* eslint-disable react/display-name */
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import ActionButtons from '../../../components/ActionButtons';
@@ -10,10 +12,10 @@ import { useToast } from '../../../hooks/toast';
 import { api } from '../../../services/API/index';
 
 const moduleName = '/api/operations';
-export default function Index() {
+export default function Index(): any {
   const [dataVal, setData] = useState([]);
   useEffect(() => {
-    async function getData() {
+    async function getData(): Promise<void> {
       const { data: response } = await api.get(moduleName, { debug: true });
       setData(response);
     }
@@ -30,16 +32,19 @@ export default function Index() {
     },
     {
       title: 'Actions',
-      render: (row: { id: number }) => <ActionButtons
-        row={row}
-        onDelete={(state) => setData(state)}
-        moduleName="operations" 
-        isAdmin
-      />,
+      render: (row: { id: number }) => (
+        <ActionButtons
+          row={row}
+          onDelete={state => setData(state)}
+          moduleName="operations"
+          isAdmin
+        />
+      ),
     },
   ];
 
-  async function remove(id: number | string) {
+  async function remove(id: number | string): Promise<void> {
+    // eslint-disable-next-line no-restricted-globals
     if (confirm('Você tem certeza?')) {
       const { ok } = await api.delete(`${moduleName}/${id}`);
       if (ok) {
@@ -62,11 +67,7 @@ export default function Index() {
           >
             Criar
           </Button>
-          <DataTable
-            title="Operações"
-            columns={columns}
-            data={dataVal}
-          />
+          <DataTable title="Operações" columns={columns} data={dataVal} />
         </>
       }
       slider={<AdminMenu />}

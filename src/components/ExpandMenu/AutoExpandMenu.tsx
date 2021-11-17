@@ -34,7 +34,7 @@ const AutoExpandMenu = ({ group, onSearch, ...props }: any) => {
   const [defaultModel, setDefaultModel] = useState('');
   const [search, setSearch] = useState('');
 
-  let paramsState = '';
+  let paramsState: any = '';
   useEffect(() => {
     paramsState = new URLSearchParams(window?.location?.search);
     if (paramsState.has('model'))

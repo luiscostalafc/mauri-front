@@ -1,3 +1,6 @@
+/* eslint-disable import/no-named-default */
+/* eslint-disable react/display-name */
+import React from 'react';
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import Check from '@material-ui/icons/Check';
@@ -18,42 +21,67 @@ import MaterialTable from 'material-table';
 import { forwardRef } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 
-
 const tableIcons = {
-    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-    edit: forwardRef((props, ref) => <EditIcon {...props} ref={ref} />),
-    delete: forwardRef((props, ref) => <DeleteIcon {...props} ref={ref} />),
-    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-  };
+  Add: forwardRef((props: any, ref: any) => <AddBox {...props} ref={ref} />),
+  edit: forwardRef((props: any, ref: any) => <EditIcon {...props} ref={ref} />),
+  delete: forwardRef((props: any, ref: any) => (
+    <DeleteIcon {...props} ref={ref} />
+  )),
+  Check: forwardRef((props: any, ref: any) => <Check {...props} ref={ref} />),
+  Clear: forwardRef((props: any, ref: any) => <Clear {...props} ref={ref} />),
+  Delete: forwardRef((props: any, ref: any) => (
+    <DeleteOutline {...props} ref={ref} />
+  )),
+  DetailPanel: forwardRef((props: any, ref: any) => (
+    <ChevronRight {...props} ref={ref} />
+  )),
+  Edit: forwardRef((props: any, ref: any) => <Edit {...props} ref={ref} />),
+  Export: forwardRef((props: any, ref: any) => (
+    <SaveAlt {...props} ref={ref} />
+  )),
+  Filter: forwardRef((props: any, ref: any) => (
+    <FilterList {...props} ref={ref} />
+  )),
+  FirstPage: forwardRef((props: any, ref: any) => (
+    <FirstPage {...props} ref={ref} />
+  )),
+  LastPage: forwardRef((props: any, ref: any) => (
+    <LastPage {...props} ref={ref} />
+  )),
+  NextPage: forwardRef((props: any, ref: any) => (
+    <ChevronRight {...props} ref={ref} />
+  )),
+  PreviousPage: forwardRef((props: any, ref: any) => (
+    <ChevronLeft {...props} ref={ref} />
+  )),
+  ResetSearch: forwardRef((props: any, ref: any) => (
+    <Clear {...props} ref={ref} />
+  )),
+  Search: forwardRef((props: any, ref: any) => <Search {...props} ref={ref} />),
+  SortArrow: forwardRef((props: any, ref: any) => (
+    <ArrowDownward {...props} ref={ref} />
+  )),
+  ThirdStateCheck: forwardRef((props: any, ref: any) => (
+    <Remove {...props} ref={ref} />
+  )),
+  ViewColumn: forwardRef((props: any, ref: any) => (
+    <ViewColumn {...props} ref={ref} />
+  )),
+};
 
-export const DataTable = (props) => (
-<Container fluid>
-  <Row>
-    <Col xs={12} md={12} lg={12}>
-      <MaterialTable
-        {...props}
-        icons={tableIcons}
-        options={{
-          exportButton: true,
-          filtering: true
-        }}
-      />
-    </Col>
-  </Row>
-</Container>
-)
+export const DataTable = (props: any): React.ReactElement => (
+  <Container fluid>
+    <Row>
+      <Col xs={12} md={12} lg={12}>
+        <MaterialTable
+          {...props}
+          icons={tableIcons}
+          options={{
+            exportButton: true,
+            filtering: true,
+          }}
+        />
+      </Col>
+    </Row>
+  </Container>
+);
