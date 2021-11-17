@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -22,7 +23,7 @@ import {
   Content,
   Image,
   // eslint-disable-next-line prettier/prettier
-  ImageCart
+  ImageCart,
 } from '../../styles/pages/sign-in';
 import { User } from '../../types';
 
@@ -37,7 +38,7 @@ interface LoginResponse {
   expires_in: number;
 }
 
-const LOGGED_USER = "Usuário Logado"
+const LOGGED_USER = 'Usuário Logado';
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
@@ -48,7 +49,10 @@ const SignIn: React.FC = () => {
 
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
-      const { hasErrors, toForm, toToast } = await validateForm(signIpSchema, data);
+      const { hasErrors, toForm, toToast } = await validateForm(
+        signIpSchema,
+        data,
+      );
       if (hasErrors) {
         formRef.current?.setErrors(toForm);
         toToast.map(({ path, message }) =>
@@ -64,13 +68,13 @@ const SignIn: React.FC = () => {
       });
 
       if (ok) {
-        if (response?.message === LOGGED_USER) router.push('/home')
+        if (response?.message === LOGGED_USER) router.push('/home');
         const { token, user, expires_in } = response as LoginResponse;
         // @ts-ignore
         await signIn({ token, user, expires_in });
 
         if (user?.inactive) {
-          addToast(IN_APPROVAL_TOAST);
+          addToast(IN_APPROVAL_TOAST as any);
         } else {
           router.push('/home');
         }

@@ -4,7 +4,7 @@ import {
   FiCheckCircle,
   FiInfo,
   // eslint-disable-next-line prettier/prettier
-  FiXCircle
+  FiXCircle,
 } from 'react-icons/fi';
 import { ToastMessage, useToast } from '../../../hooks/toast';
 import { Container } from './styles';
@@ -14,7 +14,7 @@ interface ToastProps {
   style: CSSProperties;
 }
 
-const icons = {
+const icons: any = {
   info: <FiInfo size={24} />,
   error: <FiAlertCircle size={24} />,
   success: <FiCheckCircle size={24} />,
