@@ -12,7 +12,7 @@ type Options = {
   label: string;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
@@ -22,45 +22,50 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NAME = 'year_fab'
-const LABEL = 'Ano fabricação'
+const NAME = 'year_fab';
+const LABEL = 'Ano fabricação';
 export default function YearFab(props: any) {
   const classes = useStyles();
-  const [state, setState] = useState([] as Options[])
+  const [state, setState] = useState([] as Options[]);
 
   useEffect(() => {
     async function fetch() {
-      const { data } = await api.post('api/products/distinct', {
-        name: NAME
-      })
-      if (data?.data) setState(data.data as Options[])
+      const query = props.model
+        ? {
+            name: NAME,
+            restrictions: [
+              { name: 'model', operator: '=', value: props.model },
+            ],
+          }
+        : { name: NAME };
+      const { data } = await api.post('api/products/distinct', query);
+      if (data?.data) setState(data.data as Options[]);
     }
-    fetch()
-  },[])
+    fetch();
+  }, [props]);
 
   const defaultOptions = () => {
-    <MenuItem value={''}>
-      Sem Opções
-    </MenuItem>
-  }
+    <MenuItem value={''}>Sem Opções</MenuItem>;
+  };
 
   return (
     <FormControl className={classes.formControl}>
-      <InputLabel>{LABEL}</InputLabel>
-        <Select
-          name={NAME}
-          defaultValue={0}
-          onChange={props.onChange}
-          {...props}
-        >
-          {state.length ?
-            state.map(({ value, label }, index) => (
+      <InputLabel style={{ minWidth: 110 }}>{LABEL}</InputLabel>
+      <Select
+        rows={false}
+        name={NAME}
+        defaultValue={0}
+        onChange={props.onChange}
+        {...props}
+      >
+        {!!state?.length
+          ? state.map(({ value, label }, index) => (
               <MenuItem key={index} value={value}>
                 {label}
               </MenuItem>
-            )) :
-            defaultOptions()}
-        </Select>
+            ))
+          : defaultOptions()}
+      </Select>
     </FormControl>
   );
 }

@@ -6,10 +6,10 @@ import { Form } from '@unform/web';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useRef } from 'react';
 import * as Yup from 'yup';
+import Template from '../../../components/Admin';
 import Bread from '../../../components/Breadcrumb';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
-import Template from '../../../components/Template';
 import { updateToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
 // import { get, put } from '../../../services/API';
@@ -78,22 +78,20 @@ export default function Edit() {
     { href: '#', label: 'Operações de Estoque editar' },
   ];
   return (
-    <Template
-      content={
-        <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
-          <Bread admin breads={breads} />
-          <Heading size="md">Operações de Estoque</Heading>
-          <Input name="quantity" placeholder="quantidade" />
-          <Input name="unit_value" placeholder="unidade de medida" />
-          <Input name="comment" placeholder="comentário" />
-          <Input name="operation_id" placeholder="operation_id" />
-          <Input name="product_id" placeholder="product_id" />
+    <Template>
+      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <Heading size="md">Operações de Estoque</Heading>
+        <Input name="quantity" placeholder="quantidade" />
+        <Input name="unit_value" placeholder="unidade de medida" />
+        <Input name="comment" placeholder="comentário" />
+        <Input name="operation_id" placeholder="operation_id" />
+        <Input name="product_id" placeholder="product_id" />
 
-          <Button typeColor="create" type="submit">
-            Editar
-          </Button>
-        </Form>
-      }
-    />
+        <Button typeColor="create" type="submit">
+          Editar
+        </Button>
+      </Form>
+    </Template>
   );
 }

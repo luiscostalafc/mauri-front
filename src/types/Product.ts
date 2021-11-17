@@ -7,6 +7,10 @@ import { Subgroup } from './Subgroup';
 
 export type Product = {
   id: number;
+  quantity: number;
+  image: string;
+  priceFormatted?: any;
+  subTotal?: any;
   createdAt?: Date;
   updatedAt?: Date;
   inactive: boolean;

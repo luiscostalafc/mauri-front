@@ -1,135 +1,80 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/jsx-wrap-multilines */
-/* eslint-disable no-alert */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable react/display-name */
-/* eslint-disable @typescript-eslint/no-use-before-define */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Text } from '@chakra-ui/core';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import DataTable from 'react-data-table-component';
+import ActionButtons from '../../../components/ActionButtons';
+import Template from '../../../components/Admin';
 import Button from '../../../components/Button';
-import Template from '../../../components/Template';
-import { deletionToast } from '../../../config/toastMessages';
-import { useToast } from '../../../hooks/toast';
+import { DataTable } from '../../../components/DataTable';
 import { api } from '../../../services/API/index';
 
-const customStyles = {
-  rows: {
-    style: {
-      minHeight: '72px', // override the row height
-    },
-  },
-  headCells: {
-    style: {
-      paddingLeft: '8px', // override the cell padding for head cells
-      paddingRight: '8px',
-    },
-  },
-  cells: {
-    style: {
-      paddingLeft: '10px', // override the cell padding for data cells
-      paddingRight: '10px',
-    },
-  },
-};
+const moduleName = 'stock-operations';
 
-const moduleName = '/api/stock-operations';
-// export async function getStaticProps() {
-//   const { data } = await api.get(moduleName, { debug: true });
-//   console.log(`🚀  get ${moduleName} data!`);
-
-//   if (!data) {
-//     return {
-//       notFound: true,
-//     };
-//   }
-
-//   return {
-//     props: {
-//       data,
-//     },
-//   };
-// }
-
-// export default function Index({ data }: any) {
 export default function Index() {
   const [dataVal, setData] = useState([]);
   useEffect(() => {
     async function getData() {
-      const { data: response } = await api.get(moduleName, { debug: true });
+      const { data: response } = await api.get(`/api/${moduleName}`, {
+        debug: true,
+      });
       setData(response);
     }
     getData();
   }, []);
 
   const router = useRouter();
-  const { addToast } = useToast();
 
   const columns = [
-    { name: 'quantity', selector: 'quantity', sortable: true },
-    { name: 'unit_value', selector: 'unit_value', sortable: true },
-    { name: 'comment', selector: 'comment', sortable: true },
-    { name: 'operation_id', selector: 'operation_id', sortable: true },
-    { name: 'product_id', selector: 'product_id', sortable: true },
     {
-      name: 'Actions',
-      cell: (row: { id: number }) => (
-        <>
-          <Button
-            typeColor="edit"
-            onClick={() => router.push(`/admin/${moduleName}/${row.id}`)}
+      title: 'operação',
+      render: (row: any) =>
+        row?.operation?.operation && (
+          <Text
+            color={row.operation.operation == 'Entrada' ? 'green' : 'tomato'}
           >
-            Edit
-          </Button>
-          <Button
-            style={{ marginLeft: 5 }}
-            typeColor="delete"
-            onClick={() => remove(row.id)}
-          >
-            Delete
-          </Button>
-        </>
+            {row.operation.operation}
+          </Text>
+        ),
+    },
+    { title: 'quantidade', field: 'quantity' },
+    {
+      title: 'valor unitário',
+      render: (row: { unit_value: number }) =>
+        row?.unit_value && `R$ ${row.unit_value}`,
+    },
+    { title: 'comentário', field: 'comment' },
+    {
+      title: 'produto',
+      render: (row: any) => row?.product?.name && row.product.name,
+    },
+    {
+      title: 'Actions',
+      render: (row: { id: number }) => (
+        <ActionButtons
+          row={row}
+          moduleName="stock-operations"
+          noDelete
+          isAdmin
+        />
       ),
     },
   ];
 
-  async function remove(id: number | string) {
-    if (confirm('Are you sure?')) {
-      const { ok } = await api.delete(`${moduleName}/${id}`);
-      if (ok) {
-        const { data: state } = await api.get(moduleName);
-        addToast(deletionToast.success);
-        setData(state);
-      } else {
-        addToast(deletionToast.error);
-      }
-    }
-  }
-
   return (
-    <Template
-      content={
-        <>
-          <Button
-            typeColor="create"
-            onClick={() => router.push(`/admin/${moduleName}/create`)}
-          >
-            Criar
-          </Button>
-          <DataTable
-            title="Estoque de Produtos"
-            columns={columns}
-            data={dataVal}
-            pagination
-            highlightOnHover
-            striped
-            fixedHeader
-            customStyles={customStyles}
-          />
-        </>
-      }
-    />
+    <Template>
+      <Button
+        typeColor="create"
+        onClick={() => router.push(`/admin/${moduleName}/create`)}
+      >
+        Criar
+      </Button>
+      <Button typeColor="create" onClick={() => router.push(`/admin/stocks`)}>
+        Ver Totais
+      </Button>
+      <DataTable
+        title="Movimentação de produtos"
+        columns={columns}
+        data={dataVal}
+      />
+    </Template>
   );
 }

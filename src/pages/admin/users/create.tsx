@@ -7,13 +7,13 @@ import { Form } from '@unform/web';
 import { useRouter } from 'next/router';
 import React, { useCallback, useRef, useState } from 'react';
 import * as Yup from 'yup';
-import AdminMenu from '../../../components/AdminMenu';
+import Template from '../../../components/Admin';
+import AdminMenu from '../../../components/Admin/Menu';
 import Bread from '../../../components/Breadcrumb';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import InputMask from '../../../components/InputMask';
 import InputToogle from '../../../components/InputToogle';
-import Template from '../../../components/Template';
 // eslint-disable-next-line prettier/prettier
 import { creationToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
@@ -92,50 +92,42 @@ export default function Create() {
     { href: '#', label: 'Usuários criar' },
   ];
   return (
-    <Template
-      content={
-        <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
-          <Bread admin breads={breads} />
-          <h1>Usuários</h1>
-          <Input name="name" placeholder="Nome" />
-          <Input name="username" placeholder="Username" />
-          <Input name="activity" placeholder="Atividade" />
-          <Input name="complete_name" placeholder="Nome completo" />
-          <Input name="email" placeholder="E-mail" />
-          <Input name="rg" placeholder="RG" />
-          <Checkbox
-            variantColor="green"
-            borderColor="#ed8936"
-            size="sm"
-            onChange={handleOptionDocument}
-            defaultIsChecked={check}
-          >
-            Mudar para CNPJ
-          </Checkbox>
-          {cpfNumber ? (
-            <InputMask
-              mask="999.999.999-99"
-              name="cpf_cnpj"
-              placeholder="CPF"
-            />
-          ) : (
-            <InputMask
-              mask="99.999.999/9999-99"
-              name="cpf_cnpj"
-              placeholder="CNPJ"
-            />
-          )}
-          <Input name="nick" placeholder="Apelido" />
-          <InputToogle name="is_provider" placeholder="Fornecedor" />
-          <InputToogle name="inactive" placeholder="Inativo" />
+    <Template slider={<AdminMenu />} group={<></>}>
+      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <h1>Usuários</h1>
+        <Input name="name" placeholder="Nome" />
+        <Input name="username" placeholder="Username" />
+        <Input name="activity" placeholder="Atividade" />
+        <Input name="complete_name" placeholder="Nome completo" />
+        <Input name="email" placeholder="E-mail" />
+        <Input name="rg" placeholder="RG" />
+        <Checkbox
+          variantColor="green"
+          borderColor="#ed8936"
+          size="sm"
+          onChange={handleOptionDocument}
+          defaultIsChecked={check}
+        >
+          Mudar para CNPJ
+        </Checkbox>
+        {cpfNumber ? (
+          <InputMask mask="999.999.999-99" name="cpf_cnpj" placeholder="CPF" />
+        ) : (
+          <InputMask
+            mask="99.999.999/9999-99"
+            name="cpf_cnpj"
+            placeholder="CNPJ"
+          />
+        )}
+        <Input name="nick" placeholder="Apelido" />
+        <InputToogle name="is_provider" placeholder="Fornecedor" />
+        <InputToogle name="inactive" placeholder="Inativo" />
 
-          <Button typeColor="create" type="submit">
-            Inserir
-          </Button>
-        </Form>
-      }
-      slider={<AdminMenu />}
-      group={<></>}
-    />
+        <Button typeColor="create" type="submit">
+          Inserir
+        </Button>
+      </Form>
+    </Template>
   );
 }

@@ -12,6 +12,7 @@ export * from './Phone';
 export * from './Product';
 export * from './ProductAsingment';
 export * from './StockOperation';
+export * from './Stock';
 export * from './Subgroup';
 export * from './Synonym';
 export * from './User';

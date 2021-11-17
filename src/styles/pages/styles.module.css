@@ -1,11 +1,10 @@
 .pagination {
   display: flex;
-  min-width: 600px;
   justify-content: center;
   align-items: center;
   list-style: none;
   margin: 10px;
-  padding: 10px;
+  padding: 15px;
   cursor: pointer;
 }
 
@@ -14,7 +13,7 @@
   border-radius: 5px;
   border: 1px solid #ff9000;
   color: #fff;
-  background-color: #F6AD55;
+  background-color: #f6ad55;
 }
 
 .pagination__link {
@@ -23,7 +22,7 @@
 
 .pagination__link--active a {
   color: rgb(255, 255, 255);
-  background: #F6AD55;
+  background: #f6ad55;
 }
 
 .pagination__link--disabled a {

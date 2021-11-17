@@ -5,12 +5,12 @@ import { Form } from '@unform/web';
 import { useRouter } from 'next/router';
 import React, { useCallback, useRef } from 'react';
 import * as Yup from 'yup';
-import AdminMenu from '../../../components/AdminMenu';
+import Template from '../../../components/Admin';
+import AdminMenu from '../../../components/Admin/Menu';
 import Bread from '../../../components/Breadcrumb';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import InputToogle from '../../../components/InputToogle';
-import Template from '../../../components/Template';
 import { creationToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
 // import { post } from '../../../services/API';
@@ -62,20 +62,16 @@ export default function Create() {
     { href: '#', label: 'Entregas criar' },
   ];
   return (
-    <Template
-      content={
-        <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
-          <Bread admin breads={breads} />
-          <h1>Entregas</h1>
-          <Input name="delivery" placeholder="Entrega" />
-          <InputToogle name="inactive" placeholder="Inativo" />
-          <Button typeColor="create" type="submit">
-            Inserir
-          </Button>
-        </Form>
-      }
-      slider={<AdminMenu />}
-      group={<></>}
-    />
+    <Template slider={<AdminMenu />} group={<></>}>
+      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <h1>Entregas</h1>
+        <Input name="delivery" placeholder="Entrega" />
+        <InputToogle name="inactive" placeholder="Inativo" />
+        <Button typeColor="create" type="submit">
+          Inserir
+        </Button>
+      </Form>
+    </Template>
   );
 }

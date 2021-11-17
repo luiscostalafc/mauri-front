@@ -12,11 +12,11 @@ import React, {
   useState,
 } from 'react';
 import * as Yup from 'yup';
-import AdminMenu from '../../../components/AdminMenu';
+import Template from '../../../components/Admin';
+import AdminMenu from '../../../components/Admin/Menu';
 import Bread from '../../../components/Breadcrumb';
 import Button from '../../../components/Button';
 import SelectInput from '../../../components/SelectInput';
-import Template from '../../../components/Template';
 import { updateToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
 // import { get, put } from '../../../services/API';
@@ -147,39 +147,31 @@ export default function Edit() {
     { href: '#', label: 'Pedidos editar' },
   ];
   return (
-    <Template
-      content={
-        <Form
-          style={{ maxWidth: '100%' }}
-          ref={formRef}
-          onSubmit={handleSubmit}
-        >
-          <Bread admin breads={breads} />
-          <Heading>Pedidos</Heading>
-          <SelectInput name="user_id" placeholder="Usuário" options={users} />
-          <SelectInput
-            name="provider_id"
-            placeholder="Prestador"
-            options={providers}
-          />
-          <SelectInput
-            name="order_status_id"
-            placeholder="Estatus Ordem"
-            options={orderStatus}
-          />
-          <SelectInput
-            name="delivery_id"
-            placeholder="Entrega"
-            options={deliveries}
-          />
+    <Template slider={<AdminMenu />} group={<></>}>
+      <Form style={{ maxWidth: '100%' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <Heading>Pedidos</Heading>
+        <SelectInput name="user_id" placeholder="Usuário" options={users} />
+        <SelectInput
+          name="provider_id"
+          placeholder="Prestador"
+          options={providers}
+        />
+        <SelectInput
+          name="order_status_id"
+          placeholder="Estatus Ordem"
+          options={orderStatus}
+        />
+        <SelectInput
+          name="delivery_id"
+          placeholder="Entrega"
+          options={deliveries}
+        />
 
-          <Button typeColor="create" type="submit">
-            Editar
-          </Button>
-        </Form>
-      }
-      slider={<AdminMenu />}
-      group={<></>}
-    />
+        <Button typeColor="create" type="submit">
+          Editar
+        </Button>
+      </Form>
+    </Template>
   );
 }

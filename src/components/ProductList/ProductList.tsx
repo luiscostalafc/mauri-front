@@ -1,7 +1,7 @@
 import { Select } from '@chakra-ui/core';
 import React from 'react';
-import Card from './Card/Card';
-import Table from './Table/Table';
+import Card from '../Card/Card';
+import Table from '../Table/Table';
 
 const ProductList: React.FC = () => (
   <Card>

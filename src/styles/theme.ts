@@ -8,6 +8,7 @@ const breakpoints = createBreakpoints({
   lg: '1400px',
   xl: '1600px',
   '2xl': '1900px',
+  '2xs': '750px',
 });
 
 const config = {

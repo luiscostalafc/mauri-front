@@ -4,9 +4,9 @@
 /* eslint-disable react/require-default-props */
 import { Flex, Grid, Image } from '@chakra-ui/core';
 import React from 'react';
-import AdminLeftMenu from './AdminLeftMenu';
-import AdminRightMenu from './AdminRightMenu';
-import Header from './Header';
+import Header from '../Header/index';
+import AdminLeftMenu from './LeftMenu/index';
+import AdminRightMenu from './RightMenu';
 
 declare interface TemplateInterface {
   logo?: JSX.Element;
@@ -16,11 +16,22 @@ declare interface TemplateInterface {
   filter?: JSX.Element;
   menuR?: JSX.Element;
   slider?: JSX.Element;
-  content?: JSX.Element;
   group?: JSX.Element;
   footer?: JSX.Element;
+  children?: JSX.Element[] | any;
 }
-export default function Template(props: TemplateInterface) {
+export default function Template({
+  logo,
+  header,
+  logoR,
+  menuL,
+  filter,
+  menuR,
+  slider,
+  group,
+  footer,
+  children,
+}: TemplateInterface) {
   return (
     <Grid
       as="main"
@@ -38,7 +49,7 @@ export default function Template(props: TemplateInterface) {
       justifyItems="center"
     >
       <Flex gridArea="logoL" alignItems="flex-start" justify="center">
-        {props.logo || (
+        {logo || (
           <Image size="70%" src="/liconnection.svg" alt="Liconnection" />
         )}
       </Flex>
@@ -49,11 +60,11 @@ export default function Template(props: TemplateInterface) {
         alignItems="flex-start"
         width={{ sm: '68%', md: '100%' }}
       >
-        {props.header || <Header />}
+        {header || <Header />}
       </Flex>
 
       <Flex gridArea="logoR" alignItems="flex-start" justify="center">
-        {props.logoR || (
+        {logoR || (
           <Image size="70%" src="/liconnection.svg" alt="Liconnection" />
         )}
       </Flex>
@@ -65,7 +76,7 @@ export default function Template(props: TemplateInterface) {
         alignItems="flex-start"
         justifyContent="flex-start"
       >
-        {props.menuL || <AdminLeftMenu />}
+        {menuL || <AdminLeftMenu />}
       </Flex>
 
       <Flex
@@ -75,7 +86,7 @@ export default function Template(props: TemplateInterface) {
         alignItems="flex-start"
         justifyContent="flex-start"
       >
-        {props.menuR || <AdminRightMenu />}
+        {menuR || <AdminRightMenu />}
       </Flex>
 
       <Flex
@@ -85,7 +96,7 @@ export default function Template(props: TemplateInterface) {
         width="90%"
         wrap="wrap"
       >
-        {props.content}
+        {children}
       </Flex>
     </Grid>
   );

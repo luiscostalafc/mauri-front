@@ -7,12 +7,12 @@ import { Form } from '@unform/web';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useRef } from 'react';
 import * as Yup from 'yup';
-import AdminMenu from '../../../components/AdminMenu';
+import Template from '../../../components/Admin';
+import AdminMenu from '../../../components/Admin/Menu';
 import Bread from '../../../components/Breadcrumb';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import InputToogle from '../../../components/InputToogle';
-import Template from '../../../components/Template';
 // eslint-disable-next-line prettier/prettier
 import { updateToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
@@ -77,20 +77,16 @@ export default function Edit() {
     { href: '#', label: 'Entregas editar' },
   ];
   return (
-    <Template
-      content={
-        <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
-          <Bread admin breads={breads} />
-          <Heading>Entregas</Heading>
-          <Input name="delivery" placeholder="Entrega" />
-          <InputToogle name="inactive" placeholder="Inativo" />
-          <Button typeColor="create" type="submit">
-            Editar
-          </Button>
-        </Form>
-      }
-      slider={<AdminMenu />}
-      group={<></>}
-    />
+    <Template slider={<AdminMenu />} group={<></>}>
+      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <Heading>Entregas</Heading>
+        <Input name="delivery" placeholder="Entrega" />
+        <InputToogle name="inactive" placeholder="Inativo" />
+        <Button typeColor="create" type="submit">
+          Editar
+        </Button>
+      </Form>
+    </Template>
   );
 }

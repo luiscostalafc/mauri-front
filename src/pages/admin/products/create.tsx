@@ -6,11 +6,11 @@ import { Form } from '@unform/web';
 import { useRouter } from 'next/router';
 import React, { useCallback, useRef } from 'react';
 import * as Yup from 'yup';
-import AdminMenu from '../../../components/AdminMenu';
+import Template from '../../../components/Admin';
+import AdminMenu from '../../../components/Admin/Menu';
 import Bread from '../../../components/Breadcrumb';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
-import Template from '../../../components/Template';
 import { creationToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
 // import { post } from '../../../services/API';
@@ -87,45 +87,41 @@ export default function Create() {
     { href: '#', label: 'Produtos criar' },
   ];
   return (
-    <Template
-      content={
-        <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
-          <Bread admin breads={breads} />
-          <Heading size="md">Produtos</Heading>
-          <Input name="inactive" placeholder="inactive" />
-          <Input name="group_id" placeholder="group_id" />
-          <Input name="subgroup_id" placeholder="subgroup_id" />
-          <Input name="automaker" placeholder="automaker" />
-          <Input name="model" placeholder="model" />
-          <Input name="year_start" placeholder="year_start" />
-          <Input name="year_end" placeholder="year_end" />
-          <Input name="engine" placeholder="engine" />
-          <Input name="complement" placeholder="complement" />
-          <Input name="quantity_used" placeholder="quantity_used" />
-          <Input name="quantity_package" placeholder="quantity_package" />
-          <Input name="size" placeholder="size" />
-          <Input name="height" placeholder="height" />
-          <Input name="width" placeholder="width" />
-          <Input name="lenth" placeholder="lenth" />
-          <Input name="weight" placeholder="weight" />
-          <Input name="inner_diameter" placeholder="inner_diameter" />
-          <Input name="external_diameter" placeholder="external_diameter" />
-          <Input name="title" placeholder="title" />
-          <Input name="name" placeholder="name" />
-          <Input name="type" placeholder="type" />
-          <Input name="position" placeholder="position" />
-          <Input name="system" placeholder="system" />
-          <Input name="color" placeholder="color" />
-          <Input name="material" placeholder="material" />
-          <Input name="obs" placeholder="obs" />
+    <Template slider={<AdminMenu />} group={<></>}>
+      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
+        <Bread admin breads={breads} />
+        <Heading size="md">Produtos</Heading>
+        <Input name="inactive" placeholder="inactive" />
+        <Input name="group_id" placeholder="group_id" />
+        <Input name="subgroup_id" placeholder="subgroup_id" />
+        <Input name="automaker" placeholder="automaker" />
+        <Input name="model" placeholder="model" />
+        <Input name="year_start" placeholder="year_start" />
+        <Input name="year_end" placeholder="year_end" />
+        <Input name="engine" placeholder="engine" />
+        <Input name="complement" placeholder="complement" />
+        <Input name="quantity_used" placeholder="quantity_used" />
+        <Input name="quantity_package" placeholder="quantity_package" />
+        <Input name="size" placeholder="size" />
+        <Input name="height" placeholder="height" />
+        <Input name="width" placeholder="width" />
+        <Input name="lenth" placeholder="lenth" />
+        <Input name="weight" placeholder="weight" />
+        <Input name="inner_diameter" placeholder="inner_diameter" />
+        <Input name="external_diameter" placeholder="external_diameter" />
+        <Input name="title" placeholder="title" />
+        <Input name="name" placeholder="name" />
+        <Input name="type" placeholder="type" />
+        <Input name="position" placeholder="position" />
+        <Input name="system" placeholder="system" />
+        <Input name="color" placeholder="color" />
+        <Input name="material" placeholder="material" />
+        <Input name="obs" placeholder="obs" />
 
-          <Button typeColor="create" type="submit">
-            Inserir
-          </Button>
-        </Form>
-      }
-      slider={<AdminMenu />}
-      group={<></>}
-    />
+        <Button typeColor="create" type="submit">
+          Inserir
+        </Button>
+      </Form>
+    </Template>
   );
 }

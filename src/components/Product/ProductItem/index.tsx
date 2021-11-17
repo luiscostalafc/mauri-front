@@ -13,19 +13,19 @@ import {
   // eslint-disable-next-line prettier/prettier
   Link,
 } from '@chakra-ui/core';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { FaCartArrowDown } from 'react-icons/fa';
 import { IProduct } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
 import MeasureProducts from '../../MeasureProducts';
 import ModalProduct from '../../ModalProduct';
 
-interface ProductItemProps {
+export interface ProductItemProps {
   id?: number;
   name?: string;
   price?: number;
   quantity?: number;
-  group?: string;
+  group?: any;
   obs?: string;
   image?: string;
   product?: IProduct;
@@ -47,9 +47,10 @@ const ProductItem: React.FC<ProductItemProps> = ({
       rounded="lg"
       overflow="hidden"
       maxWidth="30vh"
+      height="450px"
     >
       <Box p="6">
-        <Flex align="center" justify="center" marginBottom={5}>
+        <Flex marginBottom={5}>
           <Box>
             <Link href="#">
               <Image
@@ -62,8 +63,13 @@ const ProductItem: React.FC<ProductItemProps> = ({
           </Box>
 
           <Box d="flex" alignItems="baseline">
-            <Badge rounded="full" px="2" variantColor="orange">
-              {group}
+            <Badge
+              rounded="full"
+              px="1"
+              variantColor="orange"
+              marginLeft="-5px"
+            >
+              {group?.group ?? ''}
             </Badge>
           </Box>
         </Flex>

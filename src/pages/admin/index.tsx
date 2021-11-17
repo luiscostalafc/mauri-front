@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
+import Template from '../../components/Admin';
 import DashboardAdminButtons from '../../components/DashboardAdminButtons';
 import DashboardAdminTable from '../../components/DashboardAdminTable';
-import Template from '../../components/Template';
 // import { get } from '../../services/API';
 import { api } from '../../services/API/index';
 const moduleName = '/api/users';
@@ -57,19 +57,13 @@ export default function Index() {
   ];
 
   return (
-    <Template
-      content={
-        <>
-          (
-          <DashboardAdminButtons />
-          <DashboardAdminTable
-            data={data}
-            columns={columns}
-            title="Painel Administrativo - Preparando"
-          />
-          )
-        </>
-      }
-    />
+    <Template>
+      <DashboardAdminButtons />
+      <DashboardAdminTable
+        data={data}
+        columns={columns}
+        title="Painel Administrativo - Preparando"
+      />
+    </Template>
   );
 }

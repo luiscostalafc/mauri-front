@@ -3,9 +3,9 @@
 /* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useEffect, useState } from 'react';
+import Template from '../../../components/Admin';
 import DashboardAdminButtons from '../../../components/DashboardAdminButtons';
 import DashboardAdminTable from '../../../components/DashboardAdminTable';
-import Template from '../../../components/Template';
 // import { get } from '../../../services/API';
 import { api } from '../../../services/API/index';
 
@@ -60,17 +60,13 @@ export default function Index() {
   ];
 
   return (
-    <Template
-      content={
-        <>
-          <DashboardAdminButtons />
-          <DashboardAdminTable
-            data={data}
-            columns={columns}
-            title="Painel Administrativo - Completadas"
-          />
-        </>
-      }
-    />
+    <Template>
+      <DashboardAdminButtons />
+      <DashboardAdminTable
+        data={data}
+        columns={columns}
+        title="Painel Administrativo - Completadas"
+      />
+    </Template>
   );
 }

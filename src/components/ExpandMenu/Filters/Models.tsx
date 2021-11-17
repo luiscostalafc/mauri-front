@@ -12,7 +12,7 @@ type Options = {
   label: string;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
@@ -22,48 +22,73 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NAME = 'model'
-const LABEL = 'Modelo'
-export default function Models(props: any) {
+const NAME = 'model';
+const LABEL = 'Modelo';
+export default function Models({
+  automaker,
+  onChange,
+  defaultValue,
+  ...props
+}: any) {
   const classes = useStyles();
-  const [state, setState] = useState([] as Options[])
+  const [state, setState] = useState([] as Options[]);
+  const [defaultIndex, setDefaultIndex] = useState('');
 
   useEffect(() => {
     async function fetch() {
-      const { data } = await api.post('api/products/distinct', {
-        name: NAME,
-        restrictions: [
-          { name: 'automaker', operator: '=', value: props.automaker}
-        ]
-      })
-      if (data?.data) setState(data.data as Options[])
+      const query = automaker
+        ? {
+            name: NAME,
+            restrictions: [
+              { name: 'automaker', operator: '=', value: automaker },
+            ],
+          }
+        : { name: NAME };
+      const { data } = await api.post('api/products/distinct', query);
+      if (data?.data) setState(data.data as Options[]);
     }
-    fetch()
-  },[props.automaker])
+    fetch();
+  }, [automaker]);
+
+  useEffect(val => {
+    if (!state?.length) {
+      setDefaultIndex('');
+      return;
+    }
+    const index = state.findIndex(({ value }) => value === val);
+    setDefaultIndex(index !== -1 ? index : '');
+    return;
+  }, []);
 
   const defaultOptions = () => {
-    <MenuItem value={''}>
-      Sem Opções
-    </MenuItem>
-  }
+    <MenuItem value={''}>Sem Opções</MenuItem>;
+  };
 
   return (
     <FormControl className={classes.formControl}>
-      <InputLabel>{LABEL}</InputLabel>
-        <Select
-          name={NAME}
-          defaultValue={0}
-          onChange={props.onChange}
-          {...props}
-        >
-          {state.length ?
-            state.map(({ value, label }, index) => (
+      <InputLabel
+        style={{
+          minWidth: 110,
+          display: 'flex',
+        }}
+      >
+        {LABEL}
+      </InputLabel>
+      <Select
+        name={NAME}
+        defaultValue={defaultIndex}
+        rows={false}
+        onChange={onChange}
+        {...props}
+      >
+        {!!state?.length
+          ? state.map(({ value, label }, index) => (
               <MenuItem key={index} value={value}>
                 {label}
               </MenuItem>
-            )) :
-            defaultOptions()}
-        </Select>
+            ))
+          : defaultOptions()}
+      </Select>
     </FormControl>
   );
 }
