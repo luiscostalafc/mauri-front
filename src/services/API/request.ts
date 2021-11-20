@@ -31,9 +31,7 @@ export function getBaseURL(): string {
     return String(process.env.NEXT_PUBLIC_POSTGRES_URI);
   }
 
-  return 'http://localhost:3333';
-
-  // return 'http://api.liconection.com.br';
+  return 'https://liconnection.herokuapp.com';
 }
 export const getCompleteURL = (URL: string): string => {
   const cleanURL = URL.charAt(0) === '/' ? URL.slice(1, URL.length) : URL;
