@@ -25,7 +25,7 @@ export interface ProductItemProps {
 }
 
 const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
-  const { name, price, group, obs, image, size } = product;
+  const { name, price, group, obs, image, size, unity } = product;
   const isOriginal = product?.quality === 'original';
 
   const style = {
@@ -98,7 +98,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
               <AccordionIcon />
             </AccordionHeader>
             <AccordionPanel marginLeft="-18px">
-              <MeasureProducts valuesMeasure={size} />
+              <MeasureProducts valuesMeasure={size} unity={unity} />
             </AccordionPanel>
           </AccordionItem>
         </Box>

@@ -8,10 +8,12 @@ import { Grid, Box, Checkbox, HStack, Heading } from '@chakra-ui/react';
 
 type MeasureOptionsProps = {
   valuesMeasure?: string | any;
+  unity?: string;
 };
 
 export default function MeasureProducts({
   valuesMeasure,
+  unity = '',
 }: MeasureOptionsProps) {
   const isValuesMeasure =
     Array.isArray(valuesMeasure) && valuesMeasure.length > 1;
@@ -27,6 +29,7 @@ export default function MeasureProducts({
                   <Checkbox colorScheme="orange" value={valueMeasure}>
                     <Heading marginBottom="-5px" fontSize="14px">
                       {valueMeasure}
+                      {unity}
                     </Heading>
                   </Checkbox>
                 </HStack>
@@ -42,7 +45,10 @@ export default function MeasureProducts({
       {isValuesMeasure ? (
         RenderValuesMeasure
       ) : (
-        <Box w="100%">{valuesMeasure}</Box>
+        <Box w="100%">
+          {valuesMeasure}
+          {unity}
+        </Box>
       )}
     </Grid>
   );
