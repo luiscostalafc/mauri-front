@@ -36,6 +36,7 @@ export interface ProductItemProps {
   price?: number; // valor
   image?: ImageProduct | any;
   size?: string | any;
+  product?: any;
 }
 
 const ProductContent: React.FC<ProductItemProps> = () => {
@@ -67,18 +68,7 @@ const ProductContent: React.FC<ProductItemProps> = () => {
   const currentPageData = !!dataProducts?.length
     ? dataProducts.slice(offset, offset + maxPage).map(item => (
         <Flex flex={1} alignItems="center" justifyContent="center">
-          <ProductItem
-            key={item.id}
-            group={item.group}
-            name={item.name}
-            obs={item.obs}
-            image={item.image}
-            price={item.price}
-            size={
-              sizeProductsExample &&
-              sizeProductsExample.map(sizeProduct => sizeProduct.name)
-            }
-          />
+          <ProductItem key={item.id} product={item} />
         </Flex>
       ))
     : 'Não há produtos para exibir';
@@ -96,7 +86,6 @@ const ProductContent: React.FC<ProductItemProps> = () => {
         atualize a página
       </div>
     );
-  if (!data) return <ProductLoading />;
 
   return (
     <>
