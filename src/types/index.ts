@@ -24,9 +24,16 @@ export interface IProduct {
   name: string;
   price: number;
   quantity: number;
-  group: string;
+  group: Group;
   obs: string;
   image: string;
+  quality: string;
+  size: number;
+  unity?: string;
+}
+
+interface Group {
+  group: string;
 }
 
 interface ImageProduct {
