@@ -21,25 +21,22 @@ import MeasureProducts from '../../MeasureProducts';
 import ModalProduct from '../../ModalProduct';
 
 export interface ProductItemProps {
-  id?: number;
-  name?: string;
-  price?: number;
-  quantity?: number;
-  group?: any;
-  obs?: string;
-  image?: string;
-  product?: IProduct;
-  size?: string | any;
+  product: Partial<IProduct>;
 }
 
-const ProductItem: React.FC<ProductItemProps> = ({
-  name,
-  price,
-  group,
-  obs,
-  image,
-  size,
-}) => {
+const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
+  const { name, price, group, obs, image, size, unity } = product;
+  const isOriginal = product?.quality === 'original';
+
+  const style = {
+    fontWeight: 600,
+    color: isOriginal ? 'blue' : 'orange',
+  };
+  const DisplayPrice = () => (
+    <Box style={style}>
+      {product?.quality?.toUpperCase()} {formatPrice(price ?? 1)}
+    </Box>
+  );
   return (
     <Flex
       margin={1}
@@ -101,7 +98,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
               <AccordionIcon />
             </AccordionHeader>
             <AccordionPanel marginLeft="-18px">
-              <MeasureProducts valuesMeasure={size} />
+              <MeasureProducts valuesMeasure={size} unity={unity} />
             </AccordionPanel>
           </AccordionItem>
         </Box>
@@ -115,12 +112,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
               <AccordionIcon />
             </AccordionHeader>
             <AccordionPanel>
-              <Box style={{ fontWeight: 'bold', color: 'orange' }}>
-                SIMILAR: {formatPrice(price ?? 1)}
-              </Box>
-              <Box style={{ fontWeight: 'bold', color: 'blue' }}>
-                ORIGINAL: {formatPrice(price ?? 2)}
-              </Box>
+              <DisplayPrice />
             </AccordionPanel>
           </AccordionItem>
         </Box>
