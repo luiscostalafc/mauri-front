@@ -15,6 +15,33 @@ const options: Option[] = [
 
 const RightMenu: React.FC = () => {
   const [isLargerThan1015] = useMediaQuery('(min-width:1015px)');
+
+  const RightMenuMobile = () => {
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          top: '0',
+          right: '5px',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        {options.map(({ variantColor, label }) => (
+          <Button
+            padding={{ xl: '5px' }}
+            width={{ xl: '100px', lg: '85px', md: '79px', sm: '', xs: '' }}
+            height={{ xl: '30px', lg: '30px', md: '30px', sm: '', xs: '' }}
+            variantColor={variantColor}
+            variant="solid"
+            marginTop={3}
+          >
+            {label}
+          </Button>
+        ))}
+      </div>
+    );
+  };
   return (
     <>
       {isLargerThan1015 ? (
@@ -76,7 +103,9 @@ const RightMenu: React.FC = () => {
             ))}
           </ButtonGroup>
         </Flex>
-      ) : null}
+      ) : (
+        <RightMenuMobile />
+      )}
     </>
   );
 };
