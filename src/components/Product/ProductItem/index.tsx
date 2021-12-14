@@ -19,6 +19,8 @@ import { IProduct } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
 import MeasureProducts from '../../MeasureProducts';
 import ModalProduct from '../../ModalProduct';
+import { useMediaQuery } from '@chakra-ui/react';
+import { StyledBadge } from './styles';
 
 export interface ProductItemProps {
   id?: number;
@@ -40,13 +42,15 @@ const ProductItem: React.FC<ProductItemProps> = ({
   image,
   size,
 }) => {
+  const [isMinorThanThan900] = useMediaQuery('(max-width: 900px)');
   return (
     <Flex
       margin={1}
       borderWidth="1px"
       rounded="lg"
       overflow="hidden"
-      maxWidth="30vh"
+      maxWidth={isMinorThanThan900 ? window.innerWidth : '30vw'}
+      minWidth={337}
       height="450px"
     >
       <Box p="6">
