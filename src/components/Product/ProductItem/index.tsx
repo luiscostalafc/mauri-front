@@ -15,34 +15,31 @@ import {
 } from '@chakra-ui/core';
 import React from 'react';
 import { FaCartArrowDown } from 'react-icons/fa';
+import { useMediaQuery } from '@chakra-ui/react';
 import { IProduct } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
 import MeasureProducts from '../../MeasureProducts';
 import ModalProduct from '../../ModalProduct';
-import { useMediaQuery } from '@chakra-ui/react';
 import { StyledBadge } from './styles';
 
 export interface ProductItemProps {
-  id?: number;
-  name?: string;
-  price?: number;
-  quantity?: number;
-  group?: any;
-  obs?: string;
-  image?: string;
-  product?: IProduct;
-  size?: string | any;
+  product: Partial<IProduct>;
 }
 
-const ProductItem: React.FC<ProductItemProps> = ({
-  name,
-  price,
-  group,
-  obs,
-  image,
-  size,
-}) => {
+const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
+  const { name, price, group, obs, image, size, unity } = product;
+  const isOriginal = product?.quality === 'original';
   const [isMinorThanThan900] = useMediaQuery('(max-width: 900px)');
+
+  const style = {
+    fontWeight: 600,
+    color: isOriginal ? 'blue' : 'orange',
+  };
+  const DisplayPrice = (): JSX.Element => (
+    <Box style={style}>
+      {product?.quality?.toUpperCase()} {formatPrice(price ?? 1)}
+    </Box>
+  );
   return (
     <Flex
       margin={1}
@@ -105,7 +102,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
               <AccordionIcon />
             </AccordionHeader>
             <AccordionPanel marginLeft="-18px">
-              <MeasureProducts valuesMeasure={size} />
+              <MeasureProducts valuesMeasure={size} unity={unity} />
             </AccordionPanel>
           </AccordionItem>
         </Box>
@@ -119,12 +116,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
               <AccordionIcon />
             </AccordionHeader>
             <AccordionPanel>
-              <Box style={{ fontWeight: 'bold', color: 'orange' }}>
-                SIMILAR: {formatPrice(price ?? 1)}
-              </Box>
-              <Box style={{ fontWeight: 'bold', color: 'blue' }}>
-                ORIGINAL: {formatPrice(price ?? 2)}
-              </Box>
+              <DisplayPrice />
             </AccordionPanel>
           </AccordionItem>
         </Box>
@@ -132,7 +124,6 @@ const ProductItem: React.FC<ProductItemProps> = ({
           <Button
             type="button"
             marginLeft={-3}
-            onClick={() => {}}
             size="sm"
             leftIcon={FaCartArrowDown}
             variantColor="green"

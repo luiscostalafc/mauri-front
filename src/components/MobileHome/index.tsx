@@ -182,15 +182,7 @@ const MobileHome: React.FC = () => {
       <Content>
         {products ? (
           products.map((item: Product) => (
-            <ProductItem
-              key={item.id}
-              group={item.group}
-              name={item.name}
-              obs={item.obs}
-              image={item.image}
-              price={item.price}
-              size={item.size}
-            />
+            <ProductItem key={item.id} product={item} />
           ))
         ) : (
           <Text>No há produtos a serem mostrados</Text>
