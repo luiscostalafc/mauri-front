@@ -3,9 +3,9 @@
 import useSWR from 'swr';
 import api from '../services/api';
 
-export function useFetch<Data = any, Error = any>(url: string) {
+export function useFetch<Data = any, Error = any>(url: string, params = {}) {
   const { data, error, mutate } = useSWR<Data, Error>(url, async () => {
-    const response = await api(url);
+    const response = await api(url, params);
 
     return response.data;
   });

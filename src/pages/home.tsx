@@ -15,6 +15,7 @@ import ProductContent from '../components/Product/ProductContent';
 import LeftMenu from '../components/TemplateGeneral/LeftMenu';
 import RightMenu from '../components/TemplateGeneral/RightMenu';
 import Slider from '../components/TemplateGeneral/Slider';
+import MobileHomeHeader from '../components/MobileHome';
 
 export default function Index() {
   const router = useRouter();
@@ -36,11 +37,15 @@ export default function Index() {
     router.push({ pathname: '/home', query: { group_id: e } });
   }
 
+  if (isMinorThanThan900) {
+    return <MobileHomeHeader />;
+  }
+
   return (
     <Container fluid>
       <Row>
         {/* Logo */}
-        <Col xs={0} md={3} lg={3}>
+        <Col xs={12} md={3} lg={3}>
           <Image size="70%" src="/liconnection.svg" alt="Liconnection" />
         </Col>
         {/* header */}
@@ -48,13 +53,13 @@ export default function Index() {
           {!isMinorThanThan900 && <Header />}
         </Col>
         {/* logoR */}
-        <Col xs={0} md={3} lg={3}>
+        <Col xs={12} md={3} lg={3}>
           <CartHeader />
         </Col>
       </Row>
       <Row>
         {/*  menuL */}
-        <Col xs={0} md={3} lg={3}>
+        <Col xs={3} md={3} lg={3}>
           <LeftMenu />
         </Col>
         {/* filter */}
@@ -62,7 +67,7 @@ export default function Index() {
           <AutoExpandMenu group={group} onSearch={handleProduct} />
         </Col>
         {/* menuR */}
-        <Col xs={0} md={3} lg={3} xl={3}>
+        <Col xs={3} md={3} lg={3} xl={3}>
           <RightMenu />
         </Col>
       </Row>
@@ -70,21 +75,30 @@ export default function Index() {
         {/*  slider */}
         <Col xs={0} md={3} lg={3}>
           <Slider
-            onClick={(e: { target: { value: number } }) =>
-              handleClick(e.target.value)
-            }
+            onClick={(e: { target: { value: number } }) => {
+              // handleClick(e.target.value)
+              const value = Number(e.target.value);
+              setGroup(value);
+              if (value === 0) router.push(`/home`);
+              else router.push(`/home?group_id=${value}`);
+            }}
           />
         </Col>
         {/* products */}
-        <Col xs={12} sm={12} md={9} lg={8} xl={9}>
+        <Col xs={12} sm={2} md={9} lg={8} xl={9}>
           <ProductContent />
         </Col>
         {/* grupo? */}
-        <Col xs={0} md={3} lg={3}></Col>
+        <Col xs={0} md={3} lg={3} sm={1}></Col>
       </Row>
       <Row>
         {/* footer */}
-        <Col xs={12} md={{ span: 4, offset: 4 }} lg={{ span: 4, offset: 4 }}>
+        <Col
+          xs={12}
+          md={{ span: 4, offset: 4 }}
+          lg={{ span: 4, offset: 4 }}
+          sm={1}
+        >
           <Footer />
         </Col>
       </Row>

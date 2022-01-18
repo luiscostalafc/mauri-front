@@ -24,11 +24,14 @@ export function setHeaders(file = false): Headers {
 }
 
 export function getBaseURL(): string {
-  return 'http://127.0.0.1:3333';
-  // if (process.env.POSTGRES_URI) return String(process.env.POSTGRES_URI);
-  // if (process.env.NEXT_PUBLIC_POSTGRES_URI)
-  //   return String(process.env.NEXT_PUBLIC_POSTGRES_URI);
-  //return 'https://api.liconection.com.br';
+  if (process.env.POSTGRES_URI) {
+    return String(process.env.POSTGRES_URI);
+  }
+  if (process.env.NEXT_PUBLIC_POSTGRES_URI) {
+    return String(process.env.NEXT_PUBLIC_POSTGRES_URI);
+  }
+
+  return 'https://liconnection.herokuapp.com';
 }
 export const getCompleteURL = (URL: string): string => {
   const cleanURL = URL.charAt(0) === '/' ? URL.slice(1, URL.length) : URL;

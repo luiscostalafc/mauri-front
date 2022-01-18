@@ -24,7 +24,7 @@ export interface IProduct {
   name: string;
   price: number;
   quantity: number;
-  group: Group;
+  group?: Group;
   obs: string;
   image: string;
   quality: string;
@@ -33,7 +33,7 @@ export interface IProduct {
 }
 
 interface Group {
-  group: string;
+  group?: string;
 }
 
 interface ImageProduct {
