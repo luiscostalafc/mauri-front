@@ -30,12 +30,13 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   const { name, price, group, obs, image, size, unity } = product;
   const isOriginal = product?.quality === 'original';
   const [isMinorThanThan900] = useMediaQuery('(max-width: 900px)');
-
   const style = {
     fontWeight: 600,
     color: isOriginal ? 'blue' : 'orange',
   };
+
   const DisplayPrice = (): JSX.Element => (
+
     <Box style={style}>
       {product?.quality?.toUpperCase()} {formatPrice(price ?? 1)}
     </Box>
