@@ -61,7 +61,7 @@ export default function Index() {
     <Template slider={<AdminMenu />} group={<></>}>
       <Button
         typeColor="create"
-        onClick={() => router.push(`/admin/${moduleName}/create`)}
+        onClick={() => router.push(`/admin/orders/create`)}
       >
         Criar
       </Button>

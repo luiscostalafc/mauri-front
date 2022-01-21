@@ -77,7 +77,7 @@ const Header = () => {
           flex-wrap="wrap"
         >
           {menuItens?.map(({ label }) => (
-            <MenuItems>{label}</MenuItems>
+            <MenuItems key={`${label}_${Date.now()}`}>{label}</MenuItems>
           ))}
         </Box>
 

@@ -15,10 +15,12 @@ import {
 } from '@chakra-ui/core';
 import React from 'react';
 import { FaCartArrowDown } from 'react-icons/fa';
+import { useMediaQuery } from '@chakra-ui/react';
 import { IProduct } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
 import MeasureProducts from '../../MeasureProducts';
 import ModalProduct from '../../ModalProduct';
+import { StyledBadge } from './styles';
 
 export interface ProductItemProps {
   product: Partial<IProduct>;
@@ -27,12 +29,14 @@ export interface ProductItemProps {
 const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   const { name, price, group, obs, image, size, unity } = product;
   const isOriginal = product?.quality === 'original';
-
+  const [isMinorThanThan900] = useMediaQuery('(max-width: 900px)');
   const style = {
     fontWeight: 600,
     color: isOriginal ? 'blue' : 'orange',
   };
-  const DisplayPrice = () => (
+
+  const DisplayPrice = (): JSX.Element => (
+
     <Box style={style}>
       {product?.quality?.toUpperCase()} {formatPrice(price ?? 1)}
     </Box>
@@ -43,7 +47,8 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
       borderWidth="1px"
       rounded="lg"
       overflow="hidden"
-      maxWidth="30vh"
+      maxWidth={isMinorThanThan900 ? window.innerWidth : '30vw'}
+      minWidth={337}
       height="450px"
     >
       <Box p="6">
@@ -120,7 +125,6 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
           <Button
             type="button"
             marginLeft={-3}
-            onClick={() => {}}
             size="sm"
             leftIcon={FaCartArrowDown}
             variantColor="green"
