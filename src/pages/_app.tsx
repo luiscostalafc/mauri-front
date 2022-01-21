@@ -19,7 +19,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const beforeHistoryChange = (route: string) => {
     if (route.includes(PRIVATE_ROUTE_PREFIX) && !isUserAdmin()) {
       Router.events.emit('routeChangeError');
-      throw new Error('Você não tem permissão para acessar esta rota!');
+      console.error('Você não tem permissão para acessar esta rota!');
     }
   };
 
