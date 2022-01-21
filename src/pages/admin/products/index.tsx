@@ -141,7 +141,7 @@ export default function Index() {
       </Button>
       <Button
         typeColor="create"
-        onClick={() => router.push(`/admin/${moduleName}/excel`)}
+        onClick={() => router.push(`/admin/products/excel`)}
       >
         Inserção via Excel
       </Button>
