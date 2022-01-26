@@ -87,7 +87,7 @@ const ForgotPassword: React.FC = () => {
               <ImageCart src="/liconnection.svg" alt="Logo do site" />
 
               <Form ref={formRef} onSubmit={handleSubmit}>
-                <h1>Faça seu login</h1>
+                <h1>Recuperar senha</h1>
                 <Input name="email" icon={FiMail} placeholder="E-mail" />
 
                 <Button loading={loading} type="submit">
