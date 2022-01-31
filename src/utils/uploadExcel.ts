@@ -34,7 +34,7 @@ export const formatSheet = [
   'Observações', // 'obs'
   // dimension
   'Tamanho', // não definido
-  'Medida (mm)', // 'measure'
+  'Medida', // 'measure'
   'Altura (cm)', // 'height'
   'Largura (cm)', // 'width'
   'Comprimento (cm)', // 'lenth'
@@ -64,8 +64,8 @@ export const formatSheet = [
   'Espessura (mm)', // 'depth'
   'Fornecedor Nome Fantasia', // 'provider_name'
   'NCM Código Fiscal', // 'ncm'
-  'SKU Código Fornecedor ', // 'sku'
-  'EAM Código Barras', // 'eam'
+  'SKU Código do Fornecedor ', // 'sku'
+  'EAM Código de Barras', // 'eam'
   'OEM Código Original', // 'oem'
   'MPN Código Marca', // 'mpn'
   'Marca do Produto', // 'brand'
@@ -79,12 +79,14 @@ export const formatSheet = [
   'Unidade', // 'unity'
   'Preço Custo', // 'cost_price'
   'Preço Venda', // 'sale_price'
-  'Descrição Título do Produto 60 Carateres C/Fórmula', // 'description'
+  'Descrição Título do Produto', // 'description'
   'Tipo MLB', // 'type_mlb'
   'Variações MLB', // 'variations_mlb'
   'Atribuições MLB', // 'assignments_mlb'
   'ID da Categorias MLB', // 'category_id_mlb'
   'Desativado', // 'inactive'
+  'Margem lucro',
+  'mpn código da marca',
 ];
 
 export const authorizedExtensions = [
@@ -96,8 +98,8 @@ export const authorizedExtensions = [
 
 export const sheetToJson = async (file: unknown): Promise<unknown> =>
   xlsxParser.onFileSelection(file, {
-    showNullProperties: true,
-    hideEmptyRows: false,
+    showNullProperties: false,
+    hideEmptyRows: true,
   });
 export const checkExtension = (file: { type: string }): boolean =>
   authorizedExtensions.includes(file.type);
@@ -112,11 +114,13 @@ export const checkFormat = (file: any): unknown => {
       isValid = false;
       break;
     }
-
+    const missingKeys = [];
+    const lowerCaseFields = formatSheet.map(t => t.trim().toLowerCase());
     for (const key of keys) {
-      if (!formatSheet.includes(key)) {
+      const parsedKey = key.trim().toLowerCase();
+      if (!lowerCaseFields.includes(parsedKey)) {
+        missingKeys.push(parsedKey);
         isValid = false;
-        break;
       }
     }
   }
@@ -148,7 +152,7 @@ const getProductsData = (s: { [x: string]: any }) => {
     quantity_package: s['Ebalagem de Venda'] ?? null,
     // dimension
     size: s.Tamanho ?? null, // não definido
-    measure: s['Medida (mm)'] ?? null,
+    measure: s['Medida'] ?? null,
     height: s['Altura (cm)'] ?? null,
     width: s['Largura (cm)'] ?? null,
     lenth: s['Comprimento (cm)'] ?? null,
@@ -176,8 +180,8 @@ const getProductsData = (s: { [x: string]: any }) => {
     depth: s['Espessura (mm)'] ?? null,
     provider_name: s['Fornecedor Nome Fantasia'] ?? null,
     ncm: s['NCM Código Fiscal'] ?? null,
-    sku: s['SKU Código Fornecedor '] ?? null,
-    eam: s['EAM Código Barras'] ?? null,
+    sku: s['SKU Código do Fornecedor '] ?? null,
+    eam: s['EAM Código de Barras'] ?? null,
     oem: s['OEM Código Original'] ?? null,
     mpn: s['MPN Código Marca'] ?? null,
     brand: s['Marca do Produto'] ?? null,
@@ -186,8 +190,7 @@ const getProductsData = (s: { [x: string]: any }) => {
     unity: s.Unidade ?? null,
     cost_price: s['Preço Custo'] ?? null,
     sale_price: s['Preço Venda'] ?? null,
-    description:
-      s['Descrição Título do Produto 60 Carateres C/Fórmula'] ?? null,
+    description: s['Descrição Título do Produto'] ?? null,
     type_mlb: s['Tipo MLB'] ?? null,
     variations_mlb: s['Variações MLB'] ?? null,
     assignments_mlb: s['Atribuições MLB'] ?? null,
