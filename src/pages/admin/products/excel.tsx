@@ -42,7 +42,7 @@ export default function Excel() {
       return;
     }
 
-    const { ok, messageErrors } = await api.put(`${moduleName}/excel`, excel);
+    const { ok, messageErrors } = await api.post(`api/${moduleName}`, excel);
     if (ok) {
       addToast(updateToast.success);
       router.push(`/admin/${moduleName}`);
