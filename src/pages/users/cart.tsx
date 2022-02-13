@@ -2,6 +2,7 @@
 /* eslint-disable react/no-array-index-key */
 // eslint-disable-next-line prettier/prettier
 import { Heading } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import {
   MdAddCircleOutline,
@@ -22,6 +23,7 @@ const Cart: React.FC<CartProductProps> = () => {
   const { increment, decrement, removeProduct } = useCartStore(state => state);
   const products = useCartStore(state => state.products);
   const [total, setTotal] = useState(0);
+  const router = useRouter()
 
   useEffect(() => {
     let sum = 0;
@@ -30,6 +32,38 @@ const Cart: React.FC<CartProductProps> = () => {
     });
     setTotal(sum);
   }, [products]);
+
+  async function createPreference(){
+    const data = {
+      items:products.map((product: Product) => ({
+        title: product.name,
+        description: product.obs,
+        picture_url: product.image,
+        category_id : product.automaker,
+        quantity: product.quantity,
+        currency_id : 'BRL',
+        unit_price: Number(product.price)
+      }))
+    }
+
+    try {
+      const res = await fetch(`${process.env.POSTGRES_URI}/mercadopago/createpreference`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-type': 'Application/json'
+        }
+      })
+
+      const resData = await res.json()
+      if(resData.body.sandbox_init_point as string){
+        router.push(resData.body.sandbox_init_point)
+      }
+    } catch (error) {
+      console.log(error)
+      alert('Algo deu errado com a sua compra, tente novamente mais tarde')
+    }
+  }
 
   return (
     <Container>
@@ -98,7 +132,7 @@ const Cart: React.FC<CartProductProps> = () => {
       </ProductTable>
 
       <footer>
-        <button type="button" onClick={() => {}} disabled={!products.length}>
+        <button type="button" onClick={createPreference} disabled={!products.length}>
           Finalizar pedido
         </button>
         <Total>
