@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { useRouter } from 'next/router';
 import ShoppingBasketOutlinedIcon from '@material-ui/icons/ShoppingBasketOutlined';
-import { Badge, Icon, Grid, GridItem } from '@chakra-ui/react';
-import { Box, Flex, Image, Input, Select, Text, Button } from '@chakra-ui/core';
-import { Header, Container, Content } from './styles';
+import { Badge, Icon, Button } from '@chakra-ui/react';
+import { Box, Flex, Image, Input, Select, Text } from '@chakra-ui/core';
+import { TriangleUpIcon } from '@chakra-ui/icons';
+import { Content } from './styles';
 import Menu from './components/Menu';
 import { useFetch } from '../../hooks/useFetch';
 import ProductItem from '../Product/ProductItem';
 import { Product } from '../../types/Product';
+import { useCartStore } from '../../stores/cartStore';
 
 interface Filters {
   value: string;
@@ -18,6 +20,7 @@ const MobileHome: React.FC = () => {
   const router = useRouter();
   const [showFilterModal, setShowFilterModal] = useState(false);
   const filters = useRef<Filters | null>(null);
+  const totalCartItens = useCartStore(state => state.products.length);
 
   const paramsState: any = new URLSearchParams(
     window?.location?.search,
@@ -149,19 +152,24 @@ const MobileHome: React.FC = () => {
     );
   };
 
+  const handleGoBackToTop = (): void =>
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
   return (
     <Box>
-      <Grid templateColumns="40px 1fr 40px" mt={2}>
+      <Flex justifyContent="space-between" alignItems="center" mt={2} mb={6}>
         <Menu />
         <Flex justify="center" align="center">
           <Image size="50px" src="/liconnection.svg" alt="Liconnection" />
           <Text>LiConnection</Text>
         </Flex>
         <Box w={60}>
-          <ShoppingBasketOutlinedIcon />
-          <Badge colorScheme="green">0</Badge>
+          <ShoppingBasketOutlinedIcon
+            onClick={() => router.push('/users/cart')}
+          />
+          <Text ml={2}>{totalCartItens}</Text>
         </Box>
-      </Grid>
+      </Flex>
       <Flex>
         <Box p={4}>
           <Flex
@@ -188,6 +196,15 @@ const MobileHome: React.FC = () => {
           <Text>No há produtos a serem mostrados</Text>
         )}
       </Content>
+      <Button
+        type="button"
+        position="fixed"
+        right={20}
+        bottom={20}
+        onClick={handleGoBackToTop}
+      >
+        <TriangleUpIcon />
+      </Button>
     </Box>
   );
 };

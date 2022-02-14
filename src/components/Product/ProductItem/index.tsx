@@ -20,7 +20,7 @@ import { IProduct } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
 import MeasureProducts from '../../MeasureProducts';
 import ModalProduct from '../../ModalProduct';
-import { StyledBadge } from './styles';
+import { useCartStore } from '../../../stores/cartStore';
 
 export interface ProductItemProps {
   product: Partial<IProduct>;
@@ -30,13 +30,13 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   const { name, price, group, obs, image, size, unity } = product;
   const isOriginal = product?.quality === 'original';
   const [isMinorThanThan900] = useMediaQuery('(max-width: 900px)');
+  const addProduct = useCartStore(state => state.addProduct);
   const style = {
     fontWeight: 600,
     color: isOriginal ? 'blue' : 'orange',
   };
 
   const DisplayPrice = (): JSX.Element => (
-
     <Box style={style}>
       {product?.quality?.toUpperCase()} {formatPrice(price ?? 1)}
     </Box>
@@ -129,8 +129,8 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
             leftIcon={FaCartArrowDown}
             variantColor="green"
             variant="solid"
+            onClick={() => addProduct(product)}
           >
-            {/* <Box marginLeft={-1} marginRight={2}>{ hasFailedStockCheck && <span style={{ color: 'red'}}>Falta de estoque</span>}</Box> */}
             Adicionar ao Carrinho
           </Button>
         </Box>

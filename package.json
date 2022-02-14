@@ -81,7 +81,8 @@
     "webpack": "5",
     "webpack-cli": "4",
     "xls-parser": "^3.1.0",
-    "yup": "^0.29.3"
+    "yup": "^0.29.3",
+    "zustand": "^3.6.9"
   },
   "devDependencies": {
     "@babel/core": "^7.10.3",
