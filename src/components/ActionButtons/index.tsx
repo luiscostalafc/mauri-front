@@ -17,7 +17,7 @@ declare interface ActionButtonsInterface {
   noDelete?: boolean;
   isAdmin?: boolean;
   moduleName: string;
-  row: { id: number };
+  row: { id: number; order_result_id: number };
   props?: any;
 }
 
@@ -48,6 +48,14 @@ const ActionButtons = ({
   const router = useRouter();
   return (
     <>
+      <Button
+        typeColor="edit"
+        onClick={() =>
+          router.push(`/admin/orders/details/${row.order_result_id}`)
+        }
+      >
+        Visualizar
+      </Button>
       {!noEdit && (
         <Button
           typeColor="edit"
