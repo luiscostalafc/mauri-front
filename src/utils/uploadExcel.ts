@@ -64,8 +64,8 @@ export const formatSheet = [
   'Espessura (mm)', // 'depth'
   'Fornecedor Nome Fantasia', // 'provider_name'
   'NCM Código Fiscal', // 'ncm'
-  'SKU Código do Fornecedor ', // 'sku'
-  'EAM Código de Barras', // 'eam'
+  'SKU Código Fornecedor ', // 'sku'
+  'EAM Código Barras', // 'eam'
   'OEM Código Original', // 'oem'
   'MPN Código Marca', // 'mpn'
   'Marca do Produto', // 'brand'
@@ -87,6 +87,7 @@ export const formatSheet = [
   'Desativado', // 'inactive'
   'Margem lucro',
   'mpn código da marca',
+  'descrição título do produto 60 carateres c/fórmula'
 ];
 
 export const authorizedExtensions = [
@@ -174,14 +175,15 @@ const getProductsData = (s: { [x: string]: any }) => {
     year_model: s['AnoMod.model'] ?? null, // não definido
     quality: s['Qualidade da Marca'] ?? null,
     price: s['Preço'] ?? null, // não definido
+    group: s['Grupo'] ?? null,
     // others
     branch_type: s.Seguimento ?? null,
     provider_description: s['Descrição do Fornecedor'] ?? null,
     depth: s['Espessura (mm)'] ?? null,
     provider_name: s['Fornecedor Nome Fantasia'] ?? null,
     ncm: s['NCM Código Fiscal'] ?? null,
-    sku: s['SKU Código do Fornecedor '] ?? null,
-    eam: s['EAM Código de Barras'] ?? null,
+    sku: s['SKU Código Fornecedor '] ?? null,
+    eam: s['EAM Código Barras'] ?? null,
     oem: s['OEM Código Original'] ?? null,
     mpn: s['MPN Código Marca'] ?? null,
     brand: s['Marca do Produto'] ?? null,
