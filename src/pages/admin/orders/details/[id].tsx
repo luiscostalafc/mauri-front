@@ -1,34 +1,45 @@
+import React from 'react';
 import { Box, Flex, Text, Heading } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import Template from '../../../../components/Admin';
 import AdminMenu from '../../../../components/Admin/Menu';
 
-export default function Details() {
-  const router = useRouter();
-  const { id } = router.query;
+export default function Details(): JSX.Element {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    async function getData() {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_POSTGRES_URI}/order-details/search/${id}`,
-      );
-      const data = await res.json();
+    async function getData(): Promise<void> {
+      if (window !== undefined) {
+        const { pathname } = window.location;
+        const splitedPath = pathname.split('/');
+        const id = splitedPath[splitedPath.length - 1];
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_POSTGRES_URI}/order-details/search/${id}`,
+        );
+        const resData = await res.json();
 
-      if (data) {
-        setData(data);
+        if (resData) {
+          setData(resData);
+        }
       }
     }
-
     getData();
   }, []);
 
   const orderStatuses = {
-    pending: 'Pendente',
-    approved: 'Aprovada',
-    failure: 'Falha',
+    pending: {
+      bg: 'orange',
+      text: 'Pendente',
+    },
+    approved: {
+      bg: 'green',
+      text: 'Aprovada',
+    },
+    failure: {
+      bg: 'red',
+      text: 'Falha',
+    },
   };
 
   const TableData = ({ children }) => (
@@ -46,12 +57,25 @@ export default function Details() {
   return (
     <Template slider={<AdminMenu />} group={<></>} flexDir="column">
       <Heading>Detalhes do Pedido</Heading>
+      {data.length ? (
+        <div
+          style={{
+            backgroundColor: orderStatuses[data[0].order_status].bg,
+            width: 'max-content',
+            padding: 5,
+            borderRadius: 6,
+            marginTop: 10,
+          }}
+        >
+          <Text>{orderStatuses[data[0].order_status].text}</Text>
+        </div>
+      ) : null}
       <br />
       <Flex flexDir="row" width="100%">
-        {data ? (
+        {data.length ? (
           <table style={{ width: '100%' }}>
-            <th>Status Ordem</th>
             <th>Método de pagamento</th>
+            <th>Produto</th>
             <th>Preço</th>
             <th>Quantidade</th>
             <th>Comprador</th>
@@ -65,11 +89,10 @@ export default function Details() {
                 }}
               >
                 <TableData>
-                  <Text>{orderStatuses[item.order_status] || '-'}</Text>
-                </TableData>
-
-                <TableData>
                   <Text>{item.payment_method}</Text>
+                </TableData>
+                <TableData>
+                  <Text>{item.product_name}</Text>
                 </TableData>
                 <TableData>
                   <Text>R$ {item.price}</Text>
