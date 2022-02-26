@@ -3,12 +3,14 @@
 // eslint-disable-next-line prettier/prettier
 import { Heading } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react';
 import {
   MdAddCircleOutline,
   MdDelete,
   MdRemoveCircleOutline,
 } from 'react-icons/md';
+import api from '../../services/api';
 
 import { useCartStore } from '../../stores/cartStore';
 
@@ -34,7 +36,10 @@ const Cart: React.FC<CartProductProps> = () => {
   }, [products]);
 
   async function createPreference(){
+    const user = Cookies.get('@Liconnection:user');
     const data = {
+      totalAmount: total,
+      user,
       items:products.map((product: Product) => ({
         title: product.name,
         description: product.obs,
@@ -42,22 +47,17 @@ const Cart: React.FC<CartProductProps> = () => {
         category_id : product.automaker,
         quantity: product.quantity,
         currency_id : 'BRL',
-        unit_price: Number(product.price)
+        unit_price: Number(product.price),
+        product_id: product.id
       }))
     }
 
     try {
-      const res = await fetch(`${process.env.POSTGRES_URI}/mercadopago/createpreference`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-type': 'Application/json'
-        }
-      })
 
-      const resData = await res.json()
-      if(resData.body.sandbox_init_point as string){
-        router.push(resData.body.sandbox_init_point)
+     
+      const response = await api.post('mercadopago/createpreference', data)
+      if(response.data.body.sandbox_init_point as string){
+        router.push(response.data.body.sandbox_init_point)
       }
     } catch (error) {
       console.log(error)
