@@ -20,6 +20,7 @@ declare interface TemplateInterface {
   footer?: JSX.Element;
   children?: JSX.Element[] | any;
   content?: any;
+  flexDir?: 'row' | 'column';
 }
 export default function Template({
   logo,
@@ -32,6 +33,7 @@ export default function Template({
   group,
   footer,
   children,
+  flexDir = 'row',
 }: TemplateInterface) {
   return (
     <Grid
@@ -92,7 +94,7 @@ export default function Template({
 
       <Flex
         gridArea="content"
-        flexDir="row"
+        flexDir={flexDir}
         alignItems="flex-center"
         width="90%"
         wrap="wrap"
