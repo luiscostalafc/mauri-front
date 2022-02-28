@@ -48,7 +48,7 @@ export type Product = {
   year_fab: string;
   year_model: string;
   quality: string;
-  price: number;
+  price: any;
   // others
   branch_type: string;
   provider_description: string;

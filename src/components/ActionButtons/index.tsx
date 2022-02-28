@@ -17,7 +17,7 @@ declare interface ActionButtonsInterface {
   noDelete?: boolean;
   isAdmin?: boolean;
   moduleName: string;
-  row: { id: number; order_result_id: number };
+  row: { id: number; order_result_id?: number };
   props?: any;
 }
 
