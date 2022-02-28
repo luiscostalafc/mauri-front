@@ -37,10 +37,11 @@ const checkIfAlreadyInCart = (newProduct: Product, productIncart: Product) => {
 
 const createAddProductSlice = set => ({
   addProduct: (newProduct: Product) =>
-    set(({ products }): Product[] => ({
-      products: products.map(p => p.id).includes(newProduct.id)
-        ? products.map(p => checkIfAlreadyInCart(newProduct, p))
-        : [...products, { ...newProduct, quantity: 1 }],
+    set(state => ({
+      ...state,
+      products: state.products.map(p => p.id).includes(newProduct.id)
+        ? state.products.map(p => checkIfAlreadyInCart(newProduct, p))
+        : [...state.products, { ...newProduct, quantity: 1 }],
     })),
 });
 
