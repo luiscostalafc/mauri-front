@@ -16,7 +16,7 @@ import {
 import React from 'react';
 import { FaCartArrowDown } from 'react-icons/fa';
 import { useMediaQuery } from '@chakra-ui/react';
-import { IProduct } from '../../../types';
+import { IProduct, Product } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
 import MeasureProducts from '../../MeasureProducts';
 import ModalProduct from '../../ModalProduct';
@@ -129,7 +129,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
             leftIcon={FaCartArrowDown}
             variantColor="green"
             variant="solid"
-            onClick={() => addProduct(product)}
+            onClick={() => addProduct(product as Product)}
           >
             Adicionar ao Carrinho
           </Button>
