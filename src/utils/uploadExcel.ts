@@ -87,7 +87,7 @@ export const formatSheet = [
   'Desativado', // 'inactive'
   'Margem lucro',
   'mpn código da marca',
-  'descrição título do produto 60 carateres c/fórmula'
+  'descrição título do produto 60 carateres c/fórmula',
 ];
 
 export const authorizedExtensions = [
@@ -212,8 +212,8 @@ export const formatSend = (file: any) => {
       nulableLines++;
     } else {
       products[i] = {
-        group: line.Grupo ?? null,
-        subgroup: line.SubGrupo ?? null,
+        group: line?.Grupo ?? null,
+        subgroup: line?.SubGrupo ?? null,
         synonyms: getSynonyms(line['Sinônimos']),
         product: getProductsData(line),
       };

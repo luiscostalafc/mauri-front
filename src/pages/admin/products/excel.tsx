@@ -16,6 +16,7 @@ import { useToast } from '../../../hooks/toast';
 // import { post } from '../../../services/API';
 import { api } from '../../../services/API/index';
 import { validationErrors } from '../../../services/validateForm';
+import { Spinner } from '@chakra-ui/react';
 import {
   checkExtension,
   checkFormat,
@@ -29,6 +30,7 @@ const moduleName = 'products/excel';
 export default function Excel() {
   const formRef = useRef<FormHandles>(null);
   const [excel, setExcel] = useState();
+  const [loading, setLoading] = useState(false);
   const { addToast } = useToast();
 
   const router = useRouter();
@@ -42,8 +44,14 @@ export default function Excel() {
       return;
     }
 
+    if (!loading) {
+      setLoading(true);
+    }
+
     const { ok, messageErrors } = await api.post(`api/${moduleName}`, excel);
+
     if (ok) {
+      setLoading(false);
       addToast(updateToast.success);
       router.push(`/admin/${moduleName}`);
     } else {
@@ -96,15 +104,26 @@ export default function Excel() {
       <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
         <Bread admin breads={breads} />
         <Heading size="md">Upload de produtos via Excel</Heading>
-        <Input
-          name="excel"
-          placeholder="Excel"
-          type="file"
-          onChange={handleInput}
-        />
-        <Button typeColor="create" type="submit">
-          Inserir
-        </Button>
+        {loading ? (
+          <Spinner
+            marginTop="20px"
+            width="50px"
+            height="50px"
+            color="#ED8936"
+          />
+        ) : (
+          <>
+            <Input
+              name="excel"
+              placeholder="Excel"
+              type="file"
+              onChange={handleInput}
+            />
+            <Button typeColor="create" type="submit">
+              Inserir
+            </Button>
+          </>
+        )}
       </Form>
     </Template>
   );
