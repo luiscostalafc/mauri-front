@@ -1,22 +1,34 @@
 /* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Heading } from '@chakra-ui/core';
+import {
+  Heading,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  Input,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  InputGroup,
+  InputLeftAddon,
+  Flex,
+  Box
+} from '@chakra-ui/core';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as Yup from 'yup';
 import Template from '../../../components/Admin';
 import AdminMenu from '../../../components/Admin/Menu';
 import Bread from '../../../components/Breadcrumb';
 import Button from '../../../components/Button';
-import Input from '../../../components/Input';
 import { updateToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
 // import { get, put } from '../../../services/API';
 import { api } from '../../../services/API/index';
 import { validateForm, validationErrors } from '../../../services/validateForm';
+import { translate } from '../../../utils/translater';
 
 interface FormData {
   inactive: boolean;
@@ -56,6 +68,7 @@ const moduleName = '/api/products';
 export default function Create() {
   const router = useRouter();
   const { id } = router.query;
+  const [fields, setFields] = useState([])
 
   const formRef = useRef<FormHandles>(null);
 
@@ -63,8 +76,11 @@ export default function Create() {
     if (id) {
       api
         .get(`${moduleName}/${id}`)
-        .then(({ data }) =>
-          formRef.current?.setData(data as Record<string, unknown>),
+        .then(({ data }) => {
+          const fields = Object.entries(data).map(([key, value]) => ({ [key]: typeof (value), value }))
+          setFields(fields)
+          formRef.current?.setData(data as Record<string, unknown>)
+        },
         );
     }
   }, [id]);
@@ -102,40 +118,55 @@ export default function Create() {
   ];
   return (
     <Template slider={<AdminMenu />} group={<></>}>
-      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
+      <Form style={{ width: '95%' }} ref={formRef} onSubmit={handleSubmit}>
         <Bread admin breads={breads} />
         <Heading>Produtos</Heading>
-        <Input name="inactive" placeholder="inactive" />
-        <Input name="group_id" placeholder="group_id" />
-        <Input name="subgroup_id" placeholder="subgroup_id" />
-        <Input name="automaker" placeholder="automaker" />
-        <Input name="model" placeholder="model" />
-        <Input name="year_start" placeholder="year_start" />
-        <Input name="year_end" placeholder="year_end" />
-        <Input name="engine" placeholder="engine" />
-        <Input name="complement" placeholder="complement" />
-        <Input name="quantity_used" placeholder="quantity_used" />
-        <Input name="quantity_package" placeholder="quantity_package" />
-        <Input name="size" placeholder="size" />
-        <Input name="height" placeholder="height" />
-        <Input name="width" placeholder="width" />
-        <Input name="lenth" placeholder="lenth" />
-        <Input name="weight" placeholder="weight" />
-        <Input name="inner_diameter" placeholder="inner_diameter" />
-        <Input name="external_diameter" placeholder="external_diameter" />
-        <Input name="title" placeholder="title" />
-        <Input name="name" placeholder="name" />
-        <Input name="type" placeholder="type" />
-        <Input name="position" placeholder="position" />
-        <Input name="system" placeholder="system" />
-        <Input name="color" placeholder="color" />
-        <Input name="material" placeholder="material" />
-        <Input name="obs" placeholder="obs" />
+        <Flex wrap={'wrap'}>
+          {fields.map(item => {
+            const key = Object.keys(item)[0]
+            const [datatype, value] = Object.values(item)
+            if (key === 'id') return null
+            switch (datatype) {
+              case 'string': {
+                return (
+                  <InputGroup mt={2} ml={2} flexGrow={1}>
+                    <InputLeftAddon children={translate(key)} />
+                    <Input name={key} type={datatype} defaultValue={value} />
+                  </InputGroup>
+                )
+              }
+              case "number": {
+                return (
+                  <NumberInput mt={2} ml={2} defaultValue={value} min={0} max={9999999} flexGrow={1}>
+                    <InputLeftAddon children={translate(key)} />
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+                )
+              }
 
+              default: {
+                return (
+                  <InputGroup mt={2} ml={2} flexGrow={1}>
+                    <InputLeftAddon children={translate(key)} />
+                    <Input name={key} type={datatype} defaultValue={value} />
+                  </InputGroup>
+                )
+              }
+
+            }
+
+          })}
+        </Flex>
         <Button typeColor="create" type="submit">
           Editar
         </Button>
+        <Box height={20} />
       </Form>
+
     </Template>
   );
 }
