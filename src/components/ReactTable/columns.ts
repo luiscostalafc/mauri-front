@@ -1,0 +1,50 @@
+export const COLUMNS = [
+  {
+    Header: 'ID',
+    accessor: 'id',
+    sticky: 'left',
+  },
+  {
+    Header: 'grupo',
+    accessor: 'group.group',
+  },
+  {
+    Header: 'subgroupo',
+    accessor: 'subgroup.subgroup',
+  },
+  { Header: 'Montadora', accessor: 'automaker' },
+  { Header: 'Modelo', accessor: 'model' },
+  { Header: 'Ano Modelo de', accessor: 'year_start' },
+  { Header: 'Ano Modelo até', accessor: 'year_end' },
+  { Header: 'Motor', accessor: 'engine' },
+  { Header: 'Complemento', accessor: 'complement' },
+  {
+    Header: 'Quantidade De Uso',
+    accessor: 'quantity_used',
+  },
+  {
+    Header: 'Embalagem de Venda',
+    accessor: 'quantity_package',
+  },
+  { Header: 'Tamanho', accessor: 'size' },
+  { Header: 'Altura (cm)', accessor: 'height' },
+  { Header: 'Largura (cm)', accessor: 'width' },
+  { Header: 'Comprimento (cm)', accessor: 'lenth' },
+  { Header: 'Peso', accessor: 'weight' },
+  {
+    Header: 'Diametro Interno (mm)',
+    accessor: 'inner_diameter',
+  },
+  {
+    Header: 'Diâmetro Externo (mm)',
+    accessor: 'external_diameter',
+  },
+  { Header: 'Título', accessor: 'title' },
+  { Header: 'Nome', accessor: 'name' },
+  { Header: 'Tipo', accessor: 'type' },
+  { Header: 'Posição', accessor: 'position' },
+  { Header: 'Sistema', accessor: 'system' },
+  { Header: 'Cor', accessor: 'color' },
+  { Header: 'Material', accessor: 'material' },
+  { Header: 'Observação', accessor: 'obs' },
+];
