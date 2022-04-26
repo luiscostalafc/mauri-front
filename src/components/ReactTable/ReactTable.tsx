@@ -10,6 +10,7 @@ import {
   useRowSelect,
   useBlockLayout,
 } from 'react-table';
+import { uuid } from 'uuidv4';
 import { Box, Text, Button, Flex, Switch } from '@chakra-ui/react';
 import { useSticky } from 'react-table-sticky';
 import { TiArrowSortedDown, TiArrowSortedUp } from 'react-icons/ti';
@@ -112,10 +113,12 @@ export const ReactTable = ({ products }): JSX.Element => {
           {
             id: 'status',
             maxWidth: 100,
+            sticky: 'left',
             Header: 'ativo',
-            Cell: ({ row }) => (
-              <Switch checked={row.original.inactive} size="sm" />
-            ),
+            Cell: ({ row }) => {
+              console.log('im a row ', row);
+              return <Switch checked={row.original.inactive} size="sm" />;
+            },
           },
           ...oldColumns,
         ];
@@ -226,7 +229,7 @@ export const ReactTable = ({ products }): JSX.Element => {
               <tr
                 {...headerGroup.getHeaderGroupProps()}
                 className="tr"
-                key={`${Date.now()}-${Math.floor(Math.random() + 1)}`}
+                key={uuid()}
               >
                 {headerGroup.headers.map(column => {
                   return (
