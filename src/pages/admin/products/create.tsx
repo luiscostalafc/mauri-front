@@ -7,14 +7,16 @@ import {
   FormErrorMessage,
   Heading,
   IconButton,
+  Select,
 } from '@chakra-ui/react';
 import { DeleteIcon, AddIcon } from '@chakra-ui/icons';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import AdminLeftMenu from '../../../components/Admin/LeftMenu';
 import Header from '../../../components/Header';
 import AdminRightMenu from '../../../components/Admin/RightMenu';
+import api from '../../../services/api';
 
 interface FormData {
   inactive: string;
@@ -57,6 +59,10 @@ const Input = styled.input`
 type Field = {
   name: string;
   type: string;
+  values?: {
+    option: string;
+    value: number | string;
+  }[];
 };
 
 const customFields: Field[] = [
@@ -133,11 +139,41 @@ const productFields: Field[] = [
   },
   {
     name: 'Grupo',
-    type: 'text',
+    type: 'select',
+    values: [
+      { option: 'Motor', value: 1 },
+      { option: 'Escapamento', value: 2 },
+      { option: 'Transmissão', value: 3 },
+      { option: 'Direção', value: 4 },
+      { option: 'Suspensão', value: 5 },
+      { option: 'Freio', value: 6 },
+      { option: 'Chassis', value: 7 },
+      { option: 'Carroceria', value: 8 },
+      { option: 'Elétrica', value: 9 },
+      { option: 'Acessórios', value: 0 },
+    ],
   },
   {
     name: 'SubGrupo ',
-    type: 'text',
+    type: 'select',
+    values: [
+      { value: 101, option: 'Bloco' },
+      { value: 103, option: 'Carter' },
+      { value: 105, option: 'Virabrequim' },
+      { value: 107, option: 'Balanceiro' },
+      { value: 109, option: 'Comando Vávulas' },
+      { value: 115, option: 'Bomba Óleo' },
+      { value: 117, option: 'Radiador Óleo' },
+      { value: 119, option: 'Chapas Motor' },
+      { value: 121, option: 'Radiador Agua' },
+      { value: 127, option: 'Bomba Combustivel' },
+      { value: 129, option: 'Carburador' },
+      { value: 130, option: 'Injeção' },
+      { value: 139, option: 'Ignição' },
+      { value: 141, option: 'Embreagem' },
+      { value: 198, option: 'Kits Motor' },
+      { value: 199, option: 'Fixação Motor' },
+    ],
   },
   {
     name: 'Medida',
@@ -298,7 +334,7 @@ const fornecedoresEquivalentesFields: Field[] = [
     type: 'text',
   },
 ];
-export default function Create() {
+export default function Create(): React.ReactNode {
   const {
     register,
     control,
@@ -307,10 +343,26 @@ export default function Create() {
   } = useForm({});
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'items',
+    name: 'aplicacoes',
+  });
+  const {
+    fields: fieldsFornecedores,
+    append: appendFornecedores,
+    remove: removeFornecedores,
+  } = useFieldArray({
+    control,
+    name: 'fornecedores',
   });
 
-  useEffect(() => append({}), []);
+  useEffect(() => {
+    append({});
+    appendFornecedores({});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleFormsubmit = useCallback(async data => {
+    const res = await api.post('/api/products', data);
+  }, []);
 
   return (
     <>
@@ -319,25 +371,50 @@ export default function Create() {
         <Header />
         <AdminRightMenu />
       </Flex>
-      <form onSubmit={handleSubmit(console.log)}>
+      <form onSubmit={handleSubmit(handleFormsubmit)}>
         <FormControl>
           {/* DESCRICOES */}
           <Box mb={8} w="100vw" bg="teal" textAlign="center" color="#FFF">
             <Heading py={4}>Descriçoes</Heading>
           </Box>
           <Flex flexWrap="wrap">
-            {productFields.map(productField =>
-              productField.type === 'boolean' ? (
-                <Checkbox defaultChecked>Inativo</Checkbox>
-              ) : (
+            {productFields.map(productField => {
+              if (productField.type === 'boolean')
+                return (
+                  <Checkbox
+                    defaultChecked
+                    ref={register()}
+                    name={productField.name}
+                  >
+                    Inativo
+                  </Checkbox>
+                );
+
+              if (productField.type === 'select')
+                return (
+                  <Select
+                    placeholder={productField.name}
+                    ref={register()}
+                    name={productField.name}
+                  >
+                    {productField.values.map(({ value, option }) => (
+                      <option key={value} value={value}>
+                        {option}
+                      </option>
+                    ))}
+                  </Select>
+                );
+
+              return (
                 <Input
+                  ref={register()}
                   key={productField.name}
                   placeholder={productField.name}
                   type={productField.type}
                   name={productField.name}
                 />
-              ),
-            )}
+              );
+            })}
           </Flex>
 
           {/* ESPECIFICACOES */}
@@ -345,18 +422,43 @@ export default function Create() {
             <Heading py={4}>Especificações</Heading>
           </Box>
           <Flex flexWrap="wrap">
-            {especificacoesFields.map(productField =>
-              productField.type === 'boolean' ? (
-                <Checkbox defaultChecked>Inativo</Checkbox>
-              ) : (
+            {especificacoesFields.map(productField => {
+              if (productField.type === 'boolean')
+                return (
+                  <Checkbox
+                    defaultChecked
+                    ref={register()}
+                    name={productField.name}
+                  >
+                    Inativo
+                  </Checkbox>
+                );
+
+              if (productField.type === 'select')
+                return (
+                  <Select
+                    placeholder={productField.name}
+                    ref={register()}
+                    name={productField.name}
+                  >
+                    {productField.values.map(({ value, option }) => (
+                      <option key={value} value={value}>
+                        {option}
+                      </option>
+                    ))}
+                  </Select>
+                );
+
+              return (
                 <Input
+                  ref={register()}
                   key={productField.name}
                   placeholder={productField.name}
                   type={productField.type}
                   name={productField.name}
                 />
-              ),
-            )}
+              );
+            })}
           </Flex>
 
           {/* APLICACOES */}
@@ -370,21 +472,13 @@ export default function Create() {
                   <Flex key={field.name}>
                     <Input
                       ref={register()}
-                      name={`items[${index}].aplicacoes.${field.name}`}
+                      name={`aplicacoes[${index}].${field.name}`}
                       type={field.type}
                       placeholder={field.name}
                       defaultValue={item[field.name]}
                     />
                   </Flex>
                 ))}
-                {index === fields.length - 1 ? (
-                  <IconButton
-                    ml={20}
-                    aria-label="add line icon"
-                    icon={<AddIcon />}
-                    onClick={() => append({})}
-                  />
-                ) : null}
                 <IconButton
                   ml={20}
                   aria-label="remove line icon"
@@ -394,43 +488,57 @@ export default function Create() {
               </Flex>
             );
           })}
+          <Button
+            ml={20}
+            bg="lightblue"
+            p={4}
+            mt={2}
+            borderRadius={4}
+            aria-label="add line icon"
+            onClick={() => append({})}
+          >
+            Adicionar aplicação
+          </Button>
 
           {/* FORNECEDORES EQUIVALENTES */}
           <Box my={8} w="100vw" bg="teal" textAlign="center" color="#FFF">
             <Heading py={4}>Fornecedores Equivalentes</Heading>
           </Box>
           <Flex flexWrap="wrap">
-            {fields.map((item, index) => {
+            {fieldsFornecedores.map((item, index) => {
               return (
                 <Flex key={item.id} flexWrap="wrap" mt={16}>
                   {fornecedoresEquivalentesFields.map(field => (
                     <Flex key={field.name}>
                       <Input
                         ref={register()}
-                        name={`items[${index}].fornecedores.${field.name}`}
+                        name={`fornecedores[${index}].${field.name}`}
                         type={field.type}
                         placeholder={field.name}
                         defaultValue={item[field.name]}
                       />
                     </Flex>
                   ))}
-                  {index === fields.length - 1 ? (
-                    <IconButton
-                      ml={20}
-                      aria-label="add line icon"
-                      icon={<AddIcon />}
-                      onClick={() => append({})}
-                    />
-                  ) : null}
                   <IconButton
                     ml={20}
                     aria-label="remove line icon"
                     icon={<DeleteIcon />}
-                    onClick={() => remove(index)}
+                    onClick={() => removeFornecedores(index)}
                   />
                 </Flex>
               );
             })}
+            <Button
+              ml={20}
+              bg="lightblue"
+              p={4}
+              mt={2}
+              borderRadius={4}
+              aria-label="add line icon"
+              onClick={() => appendFornecedores({})}
+            >
+              Adicionar fornecedor
+            </Button>
           </Flex>
           <FormErrorMessage>{errors}</FormErrorMessage>
         </FormControl>
