@@ -1,15 +1,7 @@
-import React, { useMemo } from 'react';
-import api from '../../../services/api';
-import { Form, ObjectFieldStyles, Field } from 'react-hook-form-generator';
-import {
-  FormProvider,
-  useFieldArray,
-  useForm,
-  useFormContext,
-} from 'react-hook-form';
-import { useEffect } from 'react';
-import { CollectionsBookmarkRounded } from '@material-ui/icons';
+import React from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { Box, Button, FormControl, FormErrorMessage } from '@chakra-ui/react';
+import api from '../../../services/api';
 import {
   SessionAplicacoes,
   SessionDescricao,
@@ -30,8 +22,6 @@ export default function Edit({ product }): React.ReactNode {
     Elétrica: 9,
     Acessórios: 0,
   };
-
-  console.log('sedas ', product);
 
   const methods = useForm({
     defaultValues: {
@@ -103,7 +93,7 @@ export default function Edit({ product }): React.ReactNode {
     'Fixação Motor': 199,
   };
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event): Promise<void> => {
     const { descricao, aplicacoes, fornecedores } = event;
 
     try {
