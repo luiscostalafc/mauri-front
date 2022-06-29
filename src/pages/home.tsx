@@ -17,6 +17,7 @@ import AdminLeftMenu from '../components/Admin/LeftMenu';
 import AdminRightMenu from '../components/Admin/RightMenu';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 // import Group from '../../src/components/Group'
 
@@ -53,9 +54,16 @@ export default function Home({ products, groups }) {
 
             <LeftMenu />
           </Box>
-          <Box>
+          <Flex>
             <Header />
-          </Box>
+            <Flex
+              p={6}
+              _hover={{ cursor: 'pointer' }}
+              onClick={() => router.push('/users/cart')}
+            >
+              <ShoppingCartIcon /> {cartProducts.length}
+            </Flex>
+          </Flex>
           <Flex>
             <RightMenu />
           </Flex>
@@ -89,7 +97,6 @@ export default function Home({ products, groups }) {
         >
           Todos
         </Button>
-        Cart {cartProducts.length}
       </Flex>
 
       <Flex flexWrap="wrap">
