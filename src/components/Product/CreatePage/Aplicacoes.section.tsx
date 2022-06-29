@@ -1,10 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Flex } from '@chakra-ui/core';
+import { useFieldArray } from 'react-hook-form';
 import { Field } from '../../../pages/admin/products/create';
-import { useFieldArray, useFormContext } from 'react-hook-form';
 import { ActionButton, Header } from '.';
 import { Input } from '../../ReactHookForm';
-import { Box } from '@chakra-ui/react';
 
 const customFields: Field[] = [
   {
@@ -69,13 +68,13 @@ const customFields: Field[] = [
   },
 ];
 
-export const SessionAplicacoes = ({ aplicacoes }) => {
+export const SessionAplicacoes = (): JSX.Element => {
   const { fields, append, remove } = useFieldArray({
     name: 'aplicacoes',
   });
 
   return (
-    <React.Fragment>
+    <>
       <Header>Aplicações</Header>
       <Flex flexWrap="wrap" bg="#cecece" borderRadius={6} mt={2} py={4}>
         {fields.map((item, index) => (
@@ -100,6 +99,6 @@ export const SessionAplicacoes = ({ aplicacoes }) => {
       </Flex>
 
       <ActionButton action="ADD" onClick={() => append({})} />
-    </React.Fragment>
+    </>
   );
 };
