@@ -4,11 +4,9 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
-  Text,
 } from '@chakra-ui/react';
-import React, { useCallback, useEffect } from 'react';
-import { useFieldArray, useForm, FormProvider } from 'react-hook-form';
-import styled from 'styled-components';
+import React, { useCallback } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
 import AdminLeftMenu from '../../../components/Admin/LeftMenu';
 import Header from '../../../components/Header';
 import AdminRightMenu from '../../../components/Admin/RightMenu';
@@ -38,8 +36,7 @@ export default function Create(): React.ReactNode {
   } = methods;
 
   const handleFormsubmit = useCallback(async data => {
-    console.log(data);
-    // const res = await api.post('/api/products', data);
+    const res = await api.post('/api/products', data);
   }, []);
 
   return (
@@ -55,7 +52,7 @@ export default function Create(): React.ReactNode {
             <FormControl>
               <SessionDescricao />
               <SessionEspecificacoes />
-              <SessionAplicacoes control={control} />
+              <SessionAplicacoes />
               <SessionFornecedores control={control} />
               <FormErrorMessage>{errors}</FormErrorMessage>
             </FormControl>

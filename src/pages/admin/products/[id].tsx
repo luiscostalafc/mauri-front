@@ -38,19 +38,24 @@ export default function Edit({ product }): React.ReactNode {
       cor: product.cor ?? null,
       observacoes: product.observacoes ?? null,
       desativado: product.desativado ?? null,
-      diametro_interno: product.productsEspecification.diametro_interno ?? null,
-      diametro_externo: product.productsEspecification.diametro_externo ?? null,
-      espessura: product.productsEspecification.expessura_cm ?? null,
-      peso: product.productsEspecification.peso_kg ?? null,
-      comprimento: product.productsEspecification.comprimento_cm ?? null,
-      largura: product.productsEspecification.largura_cm ?? null,
-      altura: product.productsEspecification.altura_cm ?? null,
-      condicoes_mlb: product.productsEspecification.condicoes_mlb ?? null,
-      tipo_anuncio_mlb: product.productsEspecification.tipo_anuncio_mlb ?? null,
-      id_categoria_mlb: product.productsEspecification.id_categoria_mlb ?? null,
-      registro_inmetro: product.productsEspecification.registro_inmetro ?? null,
+      diametro_interno:
+        product.productsEspecification?.diametro_interno ?? null,
+      diametro_externo:
+        product.productsEspecification?.diametro_externo ?? null,
+      espessura: product.productsEspecification?.expessura_cm ?? null,
+      peso: product.productsEspecification?.peso_kg ?? null,
+      comprimento: product.productsEspecification?.comprimento_cm ?? null,
+      largura: product.productsEspecification?.largura_cm ?? null,
+      altura: product.productsEspecification?.altura_cm ?? null,
+      condicoes_mlb: product.productsEspecification?.condicoes_mlb ?? null,
+      tipo_anuncio_mlb:
+        product.productsEspecification?.tipo_anuncio_mlb ?? null,
+      id_categoria_mlb:
+        product.productsEspecification?.id_categoria_mlb ?? null,
+      registro_inmetro:
+        product.productsEspecification?.registro_inmetro ?? null,
       detalhes_ficha_tecnica_mlb:
-        product.productsEspecification.detalhes_ficha_tecnica_mlb ?? null,
+        product.productsEspecification?.detalhes_ficha_tecnica_mlb ?? null,
       fornecedores: product.productsEquivalentSuppliers ?? null,
       aplicacoes:
         product.publicApplications?.map(ap => ({
@@ -121,7 +126,7 @@ export default function Edit({ product }): React.ReactNode {
           <FormControl>
             <SessionDescricao />
             <SessionEspecificacoes />
-            <SessionAplicacoes aplicacoes={product.publicApplications} />
+            <SessionAplicacoes />
             <SessionFornecedores control={control} />
             <FormErrorMessage>{errors}</FormErrorMessage>
           </FormControl>

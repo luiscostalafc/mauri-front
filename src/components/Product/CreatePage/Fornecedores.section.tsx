@@ -1,30 +1,10 @@
 import { Flex } from '@chakra-ui/core';
-import React, { useEffect } from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import React from 'react';
+import { useFieldArray } from 'react-hook-form';
 import { ActionButton, Header } from '.';
 import { Field } from '../../../pages/admin/products/create';
 import { Input } from '../../ReactHookForm';
 
-created_at: '2022-06-11T14:14:41.592-03:00';
-ean_cod_barras: 'tu';
-embalagem_compra: 2;
-embalagem_venda: 3;
-estoque_fornecedor: 2;
-fornecedor: 'eu';
-id: 1;
-local_produto: 'curitiba';
-marca: 'eu';
-mpn_cod_marca: 'eu';
-ncm_cod_fiscal: 'awdawd';
-oem_cod_original: 'tu';
-preco_custo: 12;
-preco_venda: 22;
-product_id: 1283;
-qualidade: 'eu';
-sku_cod_fornecedor: 'eu';
-unidade: 'peça';
-updated_at: '2022-06-11T14:14:41.592-03:00';
-venda_media: 1;
 const fornecedoresEquivalentesFields: Field[] = [
   {
     name: 'fornecedor',
@@ -107,7 +87,7 @@ const fornecedoresEquivalentesFields: Field[] = [
     type: 'text',
   },
 ];
-export const SessionFornecedores = ({ control }) => {
+export const SessionFornecedores = ({ control }): JSX.Element => {
   const {
     fields: fieldsFornecedores,
     append: appendFornecedores,
@@ -118,12 +98,19 @@ export const SessionFornecedores = ({ control }) => {
   });
 
   return (
-    <React.Fragment>
+    <>
       <Header>Fornecedores Equivalentes</Header>
       <Flex flexWrap="wrap">
         {fieldsFornecedores.map((item, index) => {
           return (
-            <Flex flexWrap="wrap" bg="#cecece" borderRadius={6} mb={2} py={4}>
+            <Flex
+              flexWrap="wrap"
+              bg="#cecece"
+              borderRadius={6}
+              mb={2}
+              py={4}
+              key={item.id}
+            >
               {fornecedoresEquivalentesFields.map(field => (
                 <Flex key={item.id}>
                   <Input
@@ -143,6 +130,6 @@ export const SessionFornecedores = ({ control }) => {
         })}
         <ActionButton action="ADD" onClick={() => appendFornecedores({})} />
       </Flex>
-    </React.Fragment>
+    </>
   );
 };
