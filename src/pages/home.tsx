@@ -1,107 +1,134 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-curly-newline */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Image } from '@chakra-ui/core';
-import { useMediaQuery } from '@chakra-ui/react';
+import {
+  Flex,
+  Button,
+  Grid,
+  GridItem,
+  Text,
+  Image,
+  Box,
+} from '@chakra-ui/react';
+import { GetServerSideProps, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import CartHeader from '../components/CartHeader';
-import AutoExpandMenu from '../components/ExpandMenu/AutoExpandMenu';
-import Footer from '../components/Footer/index';
-// import Group from '../../src/components/Group'
+import React from 'react';
+import AdminLeftMenu from '../components/Admin/LeftMenu';
+import AdminRightMenu from '../components/Admin/RightMenu';
+import Footer from '../components/Footer';
 import Header from '../components/Header';
-import ProductContent from '../components/Product/ProductContent';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+
+// import Group from '../../src/components/Group'
+
+import { Product } from '../components/Product';
 import LeftMenu from '../components/TemplateGeneral/LeftMenu';
 import RightMenu from '../components/TemplateGeneral/RightMenu';
-import Slider from '../components/TemplateGeneral/Slider';
-import MobileHomeHeader from '../components/MobileHome';
+import { useCartStore } from '../stores/cartStore';
 
-export default function Index() {
+export default function Home({ products, groups }) {
+  const groupsParse = groups.map(g => ({ id: g.id, group: g.group }));
   const router = useRouter();
-  const [group, setGroup] = useState(0);
-
-  const [isMinorThanThan900] = useMediaQuery('(max-width: 900px)');
-
-  function handleProduct(filter: any) {
-    const queryParams = new URLSearchParams(filter).toString();
-    router.push({ pathname: router.pathname, query: queryParams });
-  }
-
-  function handleClick(e: number) {
-    if (Number(e) === 0) {
-      router.push('/home');
-      return;
-    }
-    setGroup(e);
-    router.push({ pathname: '/home', query: { group_id: e } });
-  }
-
-  if (isMinorThanThan900) {
-    return <MobileHomeHeader />;
-  }
-
+  const cartProducts = useCartStore(store => store.products);
   return (
-    <Container fluid>
-      <Row>
-        {/* Logo */}
-        <Col xs={12} md={3} lg={3}>
-          <Image size="70%" src="/liconnection.svg" alt="Liconnection" />
-        </Col>
-        {/* header */}
-        <Col xs={12} md={6} lg={6}>
-          {!isMinorThanThan900 && <Header />}
-        </Col>
-        {/* logoR */}
-        <Col xs={12} md={3} lg={3}>
-          <CartHeader />
-        </Col>
-      </Row>
-      <Row>
-        {/*  menuL */}
-        <Col xs={3} md={3} lg={3}>
-          <LeftMenu />
-        </Col>
-        {/* filter */}
-        <Col xs={12} md={6} lg={6}>
-          <AutoExpandMenu group={group} onSearch={handleProduct} />
-        </Col>
-        {/* menuR */}
-        <Col xs={3} md={3} lg={3} xl={3}>
-          <RightMenu />
-        </Col>
-      </Row>
-      <Row>
-        {/*  slider */}
-        <Col xs={0} md={3} lg={3}>
-          <Slider
-            onClick={(e: { target: { value: number } }) => {
-              // handleClick(e.target.value)
-              const value = Number(e.target.value);
-              setGroup(value);
-              if (value === 0) router.push(`/home`);
-              else router.push(`/home?group_id=${value}`);
-            }}
-          />
-        </Col>
-        {/* products */}
-        <Col xs={12} sm={2} md={9} lg={8} xl={9}>
-          <ProductContent />
-        </Col>
-        {/* grupo? */}
-        <Col xs={0} md={3} lg={3} sm={1}></Col>
-      </Row>
-      <Row>
-        {/* footer */}
-        <Col
-          xs={12}
-          md={{ span: 4, offset: 4 }}
-          lg={{ span: 4, offset: 4 }}
-          sm={1}
+    <Grid templateColumns=".7fr 2fr" gap={4} p={12}>
+      <GridItem
+        colSpan={4}
+        position="sticky"
+        top={0}
+        bg="#FFF"
+        pb={6}
+        zIndex={10000}
+        h="20vh"
+      >
+        <Flex
+          display="flex"
+          justify="space-between"
+          alignItems="center"
+          h={80}
+          mb={16}
+          px={12}
         >
-          <Footer />
-        </Col>
-      </Row>
-    </Container>
+          <Box h="10vh">
+            <Image size="50%" src="/liconnection.svg" alt="Liconnection" />
+
+            <LeftMenu />
+          </Box>
+          <Flex>
+            <Header />
+            <Flex
+              p={6}
+              _hover={{ cursor: 'pointer' }}
+              onClick={() => router.push('/users/cart')}
+            >
+              <ShoppingCartIcon /> {cartProducts.length}
+            </Flex>
+          </Flex>
+          <Flex>
+            <RightMenu />
+          </Flex>
+        </Flex>
+      </GridItem>
+      <Flex flexDirection="column" w="80">
+        {groupsParse.map(g => (
+          <Button
+            key={g.id}
+            variant="outlined"
+            w="80"
+            h="40"
+            borderRadius={6}
+            mb={4}
+            color="#302b2b"
+            border="1px solid teal"
+            onClick={() => router.push(`home?group_id=${g.id}`)}
+          >
+            {g.group}
+          </Button>
+        ))}
+        <Button
+          variant="outlined"
+          w="80"
+          h="40"
+          borderRadius={6}
+          mb={4}
+          color="#302b2b"
+          border="1px solid teal"
+          onClick={() => router.push(`home`)}
+        >
+          Todos
+        </Button>
+      </Flex>
+
+      <Flex flexWrap="wrap">
+        {products.length ? (
+          products.map(product => (
+            <Product product={product} key={product.id} />
+          ))
+        ) : (
+          <Text mt={8} ml={8}>
+            Nenhum produto encontrado
+          </Text>
+        )}
+      </Flex>
+      <GridItem colSpan={3}>
+        <Footer />
+      </GridItem>
+    </Grid>
   );
 }
+
+Home.getInitialProps = async ({ query }) => {
+  const uri = new URLSearchParams(query);
+  const [res, resGroups] = await Promise.all([
+    fetch(`${process.env.POSTGRES_URI}/api/products?${uri}`),
+    fetch(`${process.env.POSTGRES_URI}/api/groups`),
+  ]);
+  const [products, { data: groups }] = await Promise.all([
+    res.json(),
+    resGroups.json(),
+  ]);
+  return {
+    products,
+    groups,
+  };
+};

@@ -1,172 +1,171 @@
-/* eslint-disable react/jsx-wrap-multilines */
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import React from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { Box, Button, FormControl, FormErrorMessage } from '@chakra-ui/react';
+import api from '../../../services/api';
 import {
-  Heading,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  Input,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  InputGroup,
-  InputLeftAddon,
-  Flex,
-  Box
-} from '@chakra-ui/core';
-import { FormHandles } from '@unform/core';
-import { Form } from '@unform/web';
-import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import * as Yup from 'yup';
-import Template from '../../../components/Admin';
-import AdminMenu from '../../../components/Admin/Menu';
-import Bread from '../../../components/Breadcrumb';
-import Button from '../../../components/Button';
-import { updateToast } from '../../../config/toastMessages';
-import { useToast } from '../../../hooks/toast';
-// import { get, put } from '../../../services/API';
-import { api } from '../../../services/API/index';
-import { validateForm, validationErrors } from '../../../services/validateForm';
-import { translate } from '../../../utils/translater';
+  SessionAplicacoes,
+  SessionDescricao,
+  SessionEspecificacoes,
+  SessionFornecedores,
+} from '../../../components/Product/CreatePage';
 
-interface FormData {
-  inactive: boolean;
-  group_id: number;
-  subgroup_id: number;
-  automaker: string;
-  model: string;
-  year_start: string;
-  year_end: string;
-  engine: string;
-  complement: string;
-  quantity_used: string;
-  quantity_package: string;
-  size: string;
-  height: string;
-  width: string;
-  lenth: string;
-  weight: string;
-  inner_diameter: string;
-  external_diameter: string;
-  title: string;
-  name: string;
-  type: string;
-  position: string;
-  system: string;
-  color: string;
-  material: string;
-  obs: string;
-}
+export default function Edit({ product }): React.ReactNode {
+  const parseGroups = {
+    Motor: 1,
+    Escapamento: 2,
+    Transmissão: 3,
+    Direção: 4,
+    Suspensão: 5,
+    Freio: 6,
+    Chassis: 7,
+    Carroceria: 8,
+    Elétrica: 9,
+    Acessórios: 0,
+  };
 
-const schema = Yup.object().shape({
-  group_id: Yup.string().required('Grupo é obrigatório'),
-  subgroup_id: Yup.string().required('Sub Grupo obrigatório'),
-});
-
-const moduleName = '/api/products';
-export default function Create() {
-  const router = useRouter();
-  const { id } = router.query;
-  const [fields, setFields] = useState([])
-
-  const formRef = useRef<FormHandles>(null);
-
-  useEffect(() => {
-    if (id) {
-      api
-        .get(`${moduleName}/${id}`)
-        .then(({ data }) => {
-          const fields = Object.entries(data).map(([key, value]) => ({ [key]: typeof (value), value }))
-          setFields(fields)
-          formRef.current?.setData(data as Record<string, unknown>)
-        },
-        );
-    }
-  }, [id]);
-
-  const { addToast } = useToast();
-
-  const handleSubmit = useCallback(
-    async (data: FormData) => {
-      data.inactive = Boolean(data.inactive);
-
-      const { hasErrors, toForm, toToast } = await validateForm(schema, data);
-      if (hasErrors) {
-        formRef.current?.setErrors(toForm);
-        toToast.map(({ path, message }) =>
-          addToast(validationErrors({ path, message })),
-        );
-      }
-
-      const { ok, messageErrors } = await api.put(`${moduleName}/${id}`, data);
-      if (ok) {
-        addToast(updateToast.success);
-        router.push(`/admin/${moduleName}`);
-      } else {
-        messageErrors?.length &&
-          messageErrors.map(({ path, message }) =>
-            addToast(validationErrors({ path, message })),
-          );
-      }
+  const methods = useForm({
+    defaultValues: {
+      idInterno: product.id ?? null,
+      seguimento: product.seguimento ?? null,
+      titulo: product.titulo ?? null,
+      nome: product.nome ?? null,
+      sinonimos: product.sinonimos ?? null,
+      medida: product.medida ?? null,
+      posicao: product.posicao ?? null,
+      sistema: product.sistema ?? null,
+      grupo: product.group.id ?? null,
+      subgrupo: product.subgroup.id ?? null,
+      cor: product.cor ?? null,
+      observacoes: product.observacoes ?? null,
+      desativado: product.desativado ?? null,
+      diametro_interno: product.productsEspecification.diametro_interno ?? null,
+      diametro_externo: product.productsEspecification.diametro_externo ?? null,
+      espessura: product.productsEspecification.expessura_cm ?? null,
+      peso: product.productsEspecification.peso_kg ?? null,
+      comprimento: product.productsEspecification.comprimento_cm ?? null,
+      largura: product.productsEspecification.largura_cm ?? null,
+      altura: product.productsEspecification.altura_cm ?? null,
+      condicoes_mlb: product.productsEspecification.condicoes_mlb ?? null,
+      tipo_anuncio_mlb: product.productsEspecification.tipo_anuncio_mlb ?? null,
+      id_categoria_mlb: product.productsEspecification.id_categoria_mlb ?? null,
+      registro_inmetro: product.productsEspecification.registro_inmetro ?? null,
+      detalhes_ficha_tecnica_mlb:
+        product.productsEspecification.detalhes_ficha_tecnica_mlb ?? null,
+      fornecedores: product.productsEquivalentSuppliers ?? null,
+      aplicacoes:
+        product.publicApplications?.map(ap => ({
+          montadora: ap.montadora,
+          modelo: ap.modelo,
+          'anoMod.de': ap.ano_mod_de,
+          'anoMod.ate': ap.ano_mod_ate,
+          'chassi.de': ap.chassi_de,
+          'chassi.ate': ap.chassi_ate,
+          motor: ap.motor,
+          combustivel: ap.combustivel,
+          complemento: ap.complemento,
+          quantidade_uso: ap.quantidade_uso,
+          criado_em: ap.criado_em,
+          atualizado_em: ap.atualizado_em,
+        })) ?? null,
     },
-    [router, addToast, id],
-  );
-  const breads = [
-    { href: 'products', label: 'Produtos lista' },
-    { href: '#', label: 'Produtos editar' },
-  ];
+  });
+  const {
+    control,
+    formState: { errors, isSubmitting },
+  } = methods;
+
+  const parseSubgroups = {
+    Bloco: 101,
+    Carter: 103,
+    Virabrequim: 105,
+    Balanceiro: 107,
+    'Comando Vávulas': 109,
+    'Bomba Óleo': 115,
+    'Radiador Óleo': 117,
+    'Chapas Motor': 119,
+    'Radiador Agua': 121,
+    'Bomba Combustivel': 127,
+    Carburador: 129,
+    Injeção: 130,
+    Ignição: 139,
+    Embreagem: 141,
+    'Kits Motor': 198,
+    'Fixação Motor': 199,
+  };
+
+  const handleSubmit = async (event): Promise<void> => {
+    const { descricao, aplicacoes, fornecedores } = event;
+
+    try {
+      const data = {
+        ...event,
+        descricao: {
+          ...descricao,
+          grupo: parseGroups[descricao.grupo],
+          subgrupo: parseSubgroups[descricao.subgrupo],
+        },
+        aplicacoes: aplicacoes?.map((ap: any) => ap.value),
+        fornecedores: fornecedores?.map((ap: any) => ap.value),
+      };
+
+      await api.post('/api/products', data);
+    } catch (error) {
+      console.error('sedas error:', error);
+    }
+  };
+
   return (
-    <Template slider={<AdminMenu />} group={<></>}>
-      <Form style={{ width: '95%' }} ref={formRef} onSubmit={handleSubmit}>
-        <Bread admin breads={breads} />
-        <Heading>Produtos</Heading>
-        <Flex wrap={'wrap'}>
-          {fields.map(item => {
-            const key = Object.keys(item)[0]
-            const [datatype, value] = Object.values(item)
-            if (key === 'id') return null
-            switch (datatype) {
-              case 'string': {
-                return (
-                  <InputGroup mt={2} ml={2} flexGrow={1}>
-                    <InputLeftAddon children={translate(key)} />
-                    <Input name={key} type={datatype} defaultValue={value} />
-                  </InputGroup>
-                )
-              }
-              case "number": {
-                return (
-                  <NumberInput mt={2} ml={2} defaultValue={value} min={0} max={9999999} flexGrow={1}>
-                    <InputLeftAddon children={translate(key)} />
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                )
-              }
+    <Box p={20}>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(handleSubmit)}>
+          <FormControl>
+            <SessionDescricao />
+            <SessionEspecificacoes />
+            <SessionAplicacoes aplicacoes={product.publicApplications} />
+            <SessionFornecedores control={control} />
+            <FormErrorMessage>{errors}</FormErrorMessage>
+          </FormControl>
 
-              default: {
-                return (
-                  <InputGroup mt={2} ml={2} flexGrow={1}>
-                    <InputLeftAddon children={translate(key)} />
-                    <Input name={key} type={datatype} defaultValue={value} />
-                  </InputGroup>
-                )
-              }
-
-            }
-
-          })}
-        </Flex>
-        <Button typeColor="create" type="submit">
-          Editar
-        </Button>
-        <Box height={20} />
-      </Form>
-
-    </Template>
+          <Button
+            mt={4}
+            isLoading={isSubmitting}
+            type="submit"
+            variant="solid"
+            bg="teal"
+            px={12}
+            py={2}
+            borderRadius={8}
+            ml={12}
+            color="#FFF"
+          >
+            Salvar
+          </Button>
+        </form>
+      </FormProvider>
+    </Box>
   );
 }
+
+export const getStaticPaths = async () => {
+  const res = await fetch(`${process.env.POSTGRES_URI}/api/products/`);
+  const products = await res.json();
+
+  return {
+    paths: products.map(product => ({
+      params: { id: product.id.toString() },
+    })),
+    fallback: false,
+  };
+};
+
+export const getStaticProps = async context => {
+  const res = await fetch(
+    `${process.env.POSTGRES_URI}/api/products/${context.params.id}`,
+  );
+  const product = await res.json();
+  return {
+    props: {
+      product,
+    },
+  };
+};
