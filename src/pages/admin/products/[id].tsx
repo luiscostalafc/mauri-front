@@ -8,6 +8,7 @@ import {
   SessionEspecificacoes,
   SessionFornecedores,
 } from '../../../components/Product/CreatePage';
+import { GetStaticPaths, GetStaticProps } from 'next';
 
 export default function Edit({ product }): React.ReactNode {
   const parseGroups = {
@@ -151,19 +152,19 @@ export default function Edit({ product }): React.ReactNode {
   );
 }
 
-export const getStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const res = await fetch(`${process.env.POSTGRES_URI}/api/products/`);
   const products = await res.json();
 
   return {
-    paths: products.map(product => ({
+    paths: products?.map(product => ({
       params: { id: product.id.toString() },
     })),
     fallback: false,
   };
 };
 
-export const getStaticProps = async context => {
+export const getStaticProps: GetStaticProps = async context => {
   const res = await fetch(
     `${process.env.POSTGRES_URI}/api/products/${context.params.id}`,
   );
