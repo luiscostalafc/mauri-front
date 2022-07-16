@@ -128,3 +128,12 @@ export const ImageCart = styled.img`
   background-repeat: no-repeat;
   padding: 20px;
 `;
+export const ContainerSignup = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+
+  @media (max-width: 880px) {
+    grid-template-columns: 1fr;
+  }
+`;

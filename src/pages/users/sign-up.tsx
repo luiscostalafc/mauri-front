@@ -19,9 +19,8 @@ import { validateForm, validationErrors } from '../../services/validateForm';
 import {
   AnimationContainer,
   Background,
-  Content,
-  // eslint-disable-next-line prettier/prettier
-  ImageCart
+  ImageCart,
+  ContainerSignup,
 } from '../../styles/pages/sign-up';
 import { User } from '../../types';
 
@@ -54,20 +53,26 @@ const SignUp: React.FC = () => {
 
   const handleSubmit = useCallback(
     async (data: SignUpFormData) => {
-      const { hasErrors, toForm, toToast } = await validateForm(signUpSchema, data);
+      const { hasErrors, toForm, toToast } = await validateForm(
+        signUpSchema,
+        data,
+      );
       if (hasErrors) {
         formRef.current?.setErrors(toForm);
         toToast.map(({ path, message }) =>
           addToast(validationErrors({ path, message })),
         );
-        return
+        return;
       }
 
-      const { data: response, ok, messageErrors } = await api.post('api/users',data);
+      const { data: response, ok, messageErrors } = await api.post(
+        'api/users',
+        data,
+      );
 
       if (ok) {
         const { id } = response as User;
-        updateToken(id)
+        updateToken(id);
 
         router.push(`phone-sign-up?id=${String(id)}`);
 
@@ -83,82 +88,74 @@ const SignUp: React.FC = () => {
   );
 
   return (
-    <Container>
-      <Row>
-        <Col xs={12} md={3} lg={3}>
-          <Content>
-            <AnimationContainer>
-              <Form ref={formRef} onSubmit={handleSubmit}>
-                <h1>Dados do usuário</h1>
+    <ContainerSignup>
+      <AnimationContainer>
+        <Form ref={formRef} onSubmit={handleSubmit}>
+          <h1>Dados do usuário</h1>
 
-                <Progress
-                  margin={5}
-                  hasStripe
-                  isAnimated
-                  value={1}
-                  size="sm"
-                  color="green"
-                />
+          <Progress
+            margin={5}
+            hasStripe
+            isAnimated
+            value={1}
+            size="sm"
+            color="green"
+          />
 
-                <Input name="name" icon={FiUser} placeholder="Nome completo" />
-                <Input name="username" icon={FiUser} placeholder="Usuário" />
-                <Input
-                  name="activity"
-                  icon={FiUser}
-                  placeholder="Ocupação Profissional"
-                />
-                <Input name="rg" icon={FiTrello} placeholder="RG" />
-                <Checkbox
-                  variantColor="green"
-                  borderColor="#ed8936"
-                  size="sm"
-                  onChange={handleOptionDocument}
-                  defaultIsChecked={check}
-                >
-                  Mudar para CNPJ
-                </Checkbox>
-                {cpfNumber ? (
-                  <InputMask
-                    mask="999.999.999-99"
-                    name="cpf_cnpj"
-                    icon={FiTrello}
-                    placeholder="CPF"
-                  />
-                ) : (
-                  <InputMask
-                    mask="99.999.999/9999-99"
-                    name="cpf_cnpj"
-                    icon={FiTrello}
-                    placeholder="CNPJ"
-                  />
-                )}
+          <Input name="name" icon={FiUser} placeholder="Nome completo" />
+          <Input name="username" icon={FiUser} placeholder="Usuário" />
+          <Input
+            name="activity"
+            icon={FiUser}
+            placeholder="Ocupação Profissional"
+          />
+          <Input name="rg" icon={FiTrello} placeholder="RG" />
+          <Checkbox
+            variantColor="green"
+            borderColor="#ed8936"
+            size="sm"
+            onChange={handleOptionDocument}
+            defaultIsChecked={check}
+          >
+            Mudar para CNPJ
+          </Checkbox>
+          {cpfNumber ? (
+            <InputMask
+              mask="999.999.999-99"
+              name="cpf_cnpj"
+              icon={FiTrello}
+              placeholder="CPF"
+            />
+          ) : (
+            <InputMask
+              mask="99.999.999/9999-99"
+              name="cpf_cnpj"
+              icon={FiTrello}
+              placeholder="CNPJ"
+            />
+          )}
 
-                <Input name="email" icon={FiMail} placeholder="E-mail" />
-                <Input
-                  name="password"
-                  icon={FiLock}
-                  type="password"
-                  placeholder="Senha"
-                />
+          <Input name="email" icon={FiMail} placeholder="E-mail" />
+          <Input
+            name="password"
+            icon={FiLock}
+            type="password"
+            placeholder="Senha"
+          />
 
-                <Button type="submit">Avançar {'>>'}</Button>
-              </Form>
-              <Link href="sign-in">
-                <a>
-                  <FiArrowLeft />
-                  Voltar ao login
-                </a>
-              </Link>
-            </AnimationContainer>
-          </Content>
-        </Col>
-        <Col xs={12} md={{ span: 6, offset: 3 }} lg={{ span: 6, offset: 3 }}>
-          <Background>
-            <ImageCart src="../cart_no_background.png" />
-          </Background>
-        </Col>
-      </Row>
-    </Container>
+          <Button type="submit">Avançar {'>>'}</Button>
+        </Form>
+        <Link href="sign-in">
+          <a>
+            <FiArrowLeft />
+            Voltar ao login
+          </a>
+        </Link>
+      </AnimationContainer>
+      <Background>
+        <ImageCart src="../cart_no_background.png" />
+      </Background>
+    </ContainerSignup>
   );
 };
 

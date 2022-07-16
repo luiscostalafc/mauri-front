@@ -29,7 +29,7 @@ export const Container = styled.button<ContainerProps>`
   border: 0;
   padding: 0 16px;
   color: #312e38;
-  width: 100%;
+  width: 80%;
   justify-items: center;
   align-items: center;
   justify-content: center;
