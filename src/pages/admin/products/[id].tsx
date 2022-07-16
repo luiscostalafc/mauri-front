@@ -152,18 +152,6 @@ export default function Edit({ product }): React.ReactNode {
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await fetch(`${process.env.POSTGRES_URI}/api/products/`);
-  const products = await res.json();
-
-  return {
-    paths: products?.map(product => ({
-      params: { id: product.id.toString() },
-    })),
-    fallback: false,
-  };
-};
-
 export const getStaticProps: GetStaticProps = async context => {
   const res = await fetch(
     `${process.env.POSTGRES_URI}/api/products/${context.params.id}`,

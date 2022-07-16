@@ -5,7 +5,6 @@ import { Form } from '@unform/web';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useCallback, useRef, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
 import { FiArrowLeft, FiLock, FiMail, FiTrello, FiUser } from 'react-icons/fi';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
