@@ -120,8 +120,8 @@ export default function Home({ products, groups }) {
 Home.getInitialProps = async ({ query }) => {
   const uri = new URLSearchParams(query);
   const [res, resGroups] = await Promise.all([
-    fetch(`${process.env.POSTGRES_URI}/api/products?${uri}`),
-    fetch(`${process.env.POSTGRES_URI}/api/groups`),
+    fetch(`${process.env.POSTGRES_URI}api/products?${uri}`),
+    fetch(`${process.env.POSTGRES_URI}api/groups`),
   ]);
   const [products, { data: groups }] = await Promise.all([
     res.json(),
