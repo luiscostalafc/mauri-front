@@ -1,5 +1,5 @@
-import { Button, ButtonGroup, Flex, Heading, Box } from '@chakra-ui/core';
-import { useMediaQuery } from '@chakra-ui/react';
+import { Button, Flex, Heading } from '@chakra-ui/core';
+import { Image, useMediaQuery } from '@chakra-ui/react';
 import React from 'react';
 import { FaCartArrowDown } from 'react-icons/fa';
 
@@ -15,61 +15,37 @@ const options: Option[] = [
 
 const LeftMenu: React.FC = () => {
   const [isLargerThan1015] = useMediaQuery('(min-width:1015px)');
-  return (
-    <>
-      {isLargerThan1015 ? (
-        <Flex width="120%">
-          <ButtonGroup spacing={4}>
-            {options.map(({ variantColor, label }) => (
-              <Button
-                padding={{ xl: '5px' }}
-                width={{ xl: '100px', lg: '85px', md: '75px', sm: '', xs: '' }}
-                height={{ xl: '30px', lg: '30px', md: '30px', sm: '', xs: '' }}
-                variantColor={variantColor}
-                marginLeft={{ xl: '0px', lg: '', md: '-12px', sm: '', xs: '' }}
-                variant="solid"
-              >
-                <Box
-                  marginTop="3px"
-                  width={{ xl: '20px', lg: '18px', md: '12px', sm: '', xs: '' }}
-                  height={{
-                    xl: '20px',
-                    lg: '18px',
-                    md: '15px',
-                    sm: '',
-                    xs: '',
-                  }}
-                  marginLeft={{
-                    xl: '3px',
-                  }}
-                  marginRight={{
-                    xl: '3px',
-                    lg: '2px',
-                    md: '4px',
-                    sm: '',
-                    xs: '',
-                  }}
-                >
-                  <FaCartArrowDown />
-                </Box>
 
-                <Heading
-                  fontSize={{
-                    xl: '14px',
-                    lg: '12px',
-                    md: '11px',
-                    sm: '',
-                    xs: '',
-                  }}
-                >
-                  {label}
-                </Heading>
-              </Button>
-            ))}
-          </ButtonGroup>
-        </Flex>
-      ) : null}
-    </>
+  return (
+    <Flex flexDirection="column" alignItems="center" mt={4}>
+      {isLargerThan1015 && (
+        <Image
+          width="150px"
+          height="auto"
+          src="/liconnection.svg"
+          alt="Liconnection"
+        />
+      )}
+      <Flex mt={2} flexDir={isLargerThan1015 ? 'row' : 'column'}>
+        {options.map(({ variantColor, label }) => (
+          <Button
+            padding={{ xl: '5px' }}
+            width="85px"
+            height="30px"
+            variantColor={variantColor}
+            marginLeft={2}
+            variant="solid"
+            mt={isLargerThan1015 ? 0 : 1}
+          >
+            {isLargerThan1015 && <FaCartArrowDown size={13} />}
+
+            <Heading fontSize={12} ml="4px">
+              {label}
+            </Heading>
+          </Button>
+        ))}
+      </Flex>
+    </Flex>
   );
 };
 
