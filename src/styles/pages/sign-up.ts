@@ -66,23 +66,6 @@ export const AnimationContainer = styled.div`
       color: ${shade(0.2, '#ED8936')};
     }
   }
-
-  button {
-    background: #ed8936;
-    height: 56px;
-    border-radius: 10px;
-    border: 0;
-    padding: 0 16px;
-    color: #312e38;
-    width: 100%;
-    font-weight: 500;
-    margin-top: 16px;
-    transition: background-color 0.2s;
-
-    &:hover {
-      background: ${shade(0.2, '#ED8936')};
-    }
-  }
 `;
 
 export const ButtonOptions = styled.button`
@@ -127,4 +110,13 @@ export const ImageCart = styled.img`
   background-size: 100%;
   background-repeat: no-repeat;
   padding: 20px;
+`;
+export const ContainerSignup = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+
+  @media (max-width: 880px) {
+    grid-template-columns: 1fr;
+  }
 `;

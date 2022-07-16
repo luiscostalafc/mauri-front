@@ -12,6 +12,7 @@ const InputToogle: React.FC<any> = ({
   placeholder,
   size,
   color,
+  style,
   ...rest
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -40,7 +41,12 @@ const InputToogle: React.FC<any> = ({
   }, [fieldName, registerField]);
 
   return (
-    <Container isErrored={!!error} isFilled={isFilled} isFocused={isFocused}>
+    <Container
+      isErrored={!!error}
+      isFilled={isFilled}
+      isFocused={isFocused}
+      style={style}
+    >
       {Icon && <Icon size={20} />}
       {placeholder && (
         <FormLabel htmlFor="email-alerts">{placeholder}</FormLabel>

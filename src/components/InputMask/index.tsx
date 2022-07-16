@@ -11,7 +11,7 @@ interface Props extends InputProps {
   icon?: React.ComponentType<IconBaseProps>;
 }
 
-const InputMask: React.FC<Props> = ({ name, icon: Icon, ...rest }) => {
+const InputMask: React.FC<Props> = ({ name, icon: Icon, style, ...rest }) => {
   const inputRef = useRef<any>(null);
 
   const [showChild, setShowChild] = useState(false);
@@ -46,7 +46,12 @@ const InputMask: React.FC<Props> = ({ name, icon: Icon, ...rest }) => {
     });
   }, [fieldName, registerField, showChild]);
   return (
-    <Container isErrored={!!error} isFilled={isFilled} isFocused={isFocused}>
+    <Container
+      isErrored={!!error}
+      isFilled={isFilled}
+      isFocused={isFocused}
+      style={style}
+    >
       {Icon && <Icon size={20} />}
 
       {showChild && (

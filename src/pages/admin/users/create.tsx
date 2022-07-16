@@ -91,38 +91,51 @@ export default function Create() {
     { href: 'users', label: 'Usuários lista' },
     { href: '#', label: 'Usuários criar' },
   ];
+
+  const CustomInput = props => (
+    <Input {...props} style={{ width: 400, marginRight: 10 }} />
+  );
   return (
     <Template slider={<AdminMenu />} group={<></>}>
-      <Form style={{ width: '80vh' }} ref={formRef} onSubmit={handleSubmit}>
-        <Bread admin breads={breads} />
-        <h1>Usuários</h1>
-        <Input name="name" placeholder="Nome" />
-        <Input name="username" placeholder="Username" />
-        <Input name="activity" placeholder="Atividade" />
-        <Input name="complete_name" placeholder="Nome completo" />
-        <Input name="email" placeholder="E-mail" />
-        <Input name="rg" placeholder="RG" />
+      <Bread admin breads={breads} />
+      <Form
+        style={{ width: '100%', display: 'flex', flexWrap: 'wrap' }}
+        ref={formRef}
+        onSubmit={handleSubmit}
+      >
+        <CustomInput name="name" placeholder="Nome" />
+        <CustomInput name="username" placeholder="Username" />
+        <CustomInput name="activity" placeholder="Atividade" />
+        <CustomInput name="complete_name" placeholder="Nome completo" />
+        <CustomInput name="email" placeholder="E-mail" />
+        <CustomInput name="rg" placeholder="RG" />
         <Checkbox
           variantColor="green"
           borderColor="#ed8936"
+          style={{ marginLeft: 10, marginRight: 10 }}
           size="sm"
           onChange={handleOptionDocument}
           defaultIsChecked={check}
         >
           Mudar para CNPJ
         </Checkbox>
-        {cpfNumber ? (
-          <InputMask mask="999.999.999-99" name="cpf_cnpj" placeholder="CPF" />
-        ) : (
-          <InputMask
-            mask="99.999.999/9999-99"
-            name="cpf_cnpj"
-            placeholder="CNPJ"
-          />
-        )}
-        <Input name="nick" placeholder="Apelido" />
-        <InputToogle name="is_provider" placeholder="Fornecedor" />
-        <InputToogle name="inactive" placeholder="Inativo" />
+        <InputMask
+          mask={cpfNumber ? '999.999.999-99' : '99.999.999/9999-99'}
+          name="cpf_cnpj"
+          placeholder={cpfNumber ? 'CPF' : 'CNPJ'}
+          style={{ width: 400, marginRight: 10 }}
+        />
+        <CustomInput name="nick" placeholder="Apelido" />
+        <InputToogle
+          name="is_provider"
+          placeholder="Fornecedor"
+          style={{ width: 300, marginRight: 10 }}
+        />
+        <InputToogle
+          name="inactive"
+          placeholder="Inativo"
+          style={{ width: 300, marginRight: 10 }}
+        />
 
         <Button typeColor="create" type="submit">
           Inserir

@@ -29,7 +29,8 @@ export const Container = styled.button<ContainerProps>`
   border: 0;
   padding: 0 16px;
   color: #312e38;
-  width: 100%;
+  width: 80%;
+  display: flex;
   justify-items: center;
   align-items: center;
   justify-content: center;
@@ -41,8 +42,4 @@ export const Container = styled.button<ContainerProps>`
     background: ${shade(0.2, '#ff9000')};
   }
   cursor: ${({ isLoading }) => (isLoading ? 'not-allowed' : 'pointer')};
-
-  @media (max-width: 700px) {
-    width: 50%;
-  }
 `;
