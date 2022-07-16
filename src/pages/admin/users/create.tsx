@@ -93,13 +93,18 @@ export default function Create() {
   ];
 
   const CustomInput = props => (
-    <Input {...props} style={{ width: 400, marginRight: 10 }} />
+    <Input {...props} style={{ width: 400, marginRight: 10, height: 54 }} />
   );
   return (
     <Template slider={<AdminMenu />} group={<></>}>
-      <Bread admin breads={breads} />
+      <Bread admin breads={breads} style={{ height: 30 }} />
       <Form
-        style={{ width: '100%', display: 'flex', flexWrap: 'wrap' }}
+        style={{
+          width: '100%',
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+        }}
         ref={formRef}
         onSubmit={handleSubmit}
       >
@@ -123,18 +128,18 @@ export default function Create() {
           mask={cpfNumber ? '999.999.999-99' : '99.999.999/9999-99'}
           name="cpf_cnpj"
           placeholder={cpfNumber ? 'CPF' : 'CNPJ'}
-          style={{ width: 400, marginRight: 10 }}
+          style={{ width: 400, marginRight: 10, height: 54 }}
         />
         <CustomInput name="nick" placeholder="Apelido" />
         <InputToogle
           name="is_provider"
           placeholder="Fornecedor"
-          style={{ width: 300, marginRight: 10 }}
+          style={{ width: 300, marginRight: 10, height: 54 }}
         />
         <InputToogle
           name="inactive"
           placeholder="Inativo"
-          style={{ width: 300, marginRight: 10 }}
+          style={{ width: 300, marginRight: 10, height: 54 }}
         />
 
         <Button typeColor="create" type="submit">

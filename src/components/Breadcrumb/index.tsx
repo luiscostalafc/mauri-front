@@ -1,8 +1,5 @@
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// import Link from 'next/link'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/core';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 type Bread = {
   href: string;
@@ -12,20 +9,19 @@ type Bread = {
 type BreadcrumbProps = {
   admin?: boolean;
   breads: Bread[];
+  style?: CSSProperties;
 };
 
-const Bread: React.FC<BreadcrumbProps> = ({
-  children,
-  admin,
-  breads,
-  ...rest
-}) => {
+const Bread: React.FC<BreadcrumbProps> = ({ admin, breads, style }) => {
   const getCompleteURL = (URL: string): string =>
     admin ? `/admin/${URL}` : URL;
   return (
-    <Breadcrumb spacing="8px" fontWeight="medium" fontSize="sm">
+    <Breadcrumb spacing="8px" fontWeight="medium" fontSize="sm" style={style}>
       <BreadcrumbItem>
-        <BreadcrumbLink href={admin ? '/admin/users' : '/'}>
+        <BreadcrumbLink
+          href={admin ? '/admin/users' : '/'}
+          style={{ height: 20 }}
+        >
           Home
         </BreadcrumbLink>
       </BreadcrumbItem>

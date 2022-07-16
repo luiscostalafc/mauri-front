@@ -79,20 +79,11 @@ export const ReactTable = ({ products }): JSX.Element => {
             Header: () => <Text>Acoes</Text>,
             Cell: ({ row }) => {
               return (
-                <Box>
-                  <Box>
-                    <Button bg="#79589f" color="#FFF" px={10} rounded={6}>
-                      <Link href={`products/${row.original.id}`}>
-                        <FaRegEye />
-                      </Link>
-                    </Button>
-                  </Box>
-                  <Box>
-                    <Button bg="#79589f" color="#FFF" px={10} rounded={6}>
-                      <MdEdit />
-                    </Button>
-                  </Box>
-                </Box>
+                <Button bg="#79589f" color="#FFF" px={10} rounded={6}>
+                  <Link href={`products/${row.original.id}`}>
+                    <MdEdit />
+                  </Link>
+                </Button>
               );
             },
           },
