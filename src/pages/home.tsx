@@ -1,25 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/jsx-curly-newline */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import {
-  Flex,
-  Button,
-  Grid,
-  GridItem,
-  Text,
-  Image,
-  Box,
-} from '@chakra-ui/react';
-import { GetServerSideProps, GetStaticProps } from 'next';
+import { Flex, Button, Grid, GridItem, Text, Box } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React from 'react';
-import AdminLeftMenu from '../components/Admin/LeftMenu';
-import AdminRightMenu from '../components/Admin/RightMenu';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-
-// import Group from '../../src/components/Group'
+import Headroom from 'react-headroom';
 
 import { Product } from '../components/Product';
 import LeftMenu from '../components/TemplateGeneral/LeftMenu';
@@ -31,43 +16,31 @@ export default function Home({ products, groups }) {
   const router = useRouter();
   const cartProducts = useCartStore(store => store.products);
   return (
-    <Grid templateColumns=".7fr 2fr" gap={4} p={12}>
-      <GridItem
-        colSpan={4}
-        position="sticky"
-        top={0}
-        bg="#FFF"
-        pb={6}
-        zIndex={10000}
-        h="20vh"
-      >
-        <Flex
-          display="flex"
-          justify="space-between"
-          alignItems="center"
-          h={80}
-          mb={16}
-          px={12}
-        >
-          <Box h="10vh">
-            <Image size="50%" src="/liconnection.svg" alt="Liconnection" />
-
+    <Grid templateColumns=".4fr 2fr" gap={4} p={12}>
+      <GridItem colSpan={4} bg="#FFF" zIndex={10000} height="15vh">
+        <Headroom>
+          <Flex
+            display="flex"
+            justify="space-between"
+            alignItems="center"
+            h={80}
+            mb={16}
+            px={12}
+          >
             <LeftMenu />
-          </Box>
-          <Flex>
-            <Header />
-            <Flex
-              p={6}
-              _hover={{ cursor: 'pointer' }}
-              onClick={() => router.push('/users/cart')}
-            >
-              <ShoppingCartIcon /> {cartProducts.length}
+            <Flex>
+              <Header />
+              <Flex
+                p={6}
+                _hover={{ cursor: 'pointer' }}
+                onClick={() => router.push('/users/cart')}
+              >
+                <ShoppingCartIcon /> {cartProducts.length}
+              </Flex>
             </Flex>
-          </Flex>
-          <Flex>
             <RightMenu />
           </Flex>
-        </Flex>
+        </Headroom>
       </GridItem>
       <Flex flexDirection="column" w="80">
         {groupsParse.map(g => (
@@ -120,8 +93,8 @@ export default function Home({ products, groups }) {
 Home.getInitialProps = async ({ query }) => {
   const uri = new URLSearchParams(query);
   const [res, resGroups] = await Promise.all([
-    fetch(`${process.env.POSTGRES_URI}api/products?${uri}`),
-    fetch(`${process.env.POSTGRES_URI}api/groups`),
+    fetch(`${process.env.POSTGRES_URI}/api/products?${uri}`),
+    fetch(`${process.env.POSTGRES_URI}/api/groups`),
   ]);
   const [products, { data: groups }] = await Promise.all([
     res.json(),

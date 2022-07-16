@@ -16,97 +16,26 @@ const options: Option[] = [
 const RightMenu: React.FC = () => {
   const [isLargerThan1015] = useMediaQuery('(min-width:1015px)');
 
-  const RightMenuMobile = () => {
-    return (
-      <div
-        style={{
-          position: 'absolute',
-          top: '0',
-          right: '5px',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+  return (
+    <Flex flexDirection="column" alignItems="center" mt={4}>
+      <Flex mt={2} flexDir={isLargerThan1015 ? 'row' : 'column'}>
         {options.map(({ variantColor, label }) => (
           <Button
             padding={{ xl: '5px' }}
-            width={{ xl: '100px', lg: '85px', md: '79px', sm: '', xs: '' }}
-            height={{ xl: '30px', lg: '30px', md: '30px', sm: '', xs: '' }}
+            width="85px"
+            height="30px"
             variantColor={variantColor}
+            marginLeft={2}
             variant="solid"
-            marginTop={3}
+            mt={isLargerThan1015 ? 0 : 1}
           >
-            {label}
+            <Heading fontSize={12} ml="4px">
+              {label}
+            </Heading>
           </Button>
         ))}
-      </div>
-    );
-  };
-  return (
-    <>
-      {isLargerThan1015 ? (
-        <Flex width="120%" marginLeft={{ md: '-60px' }}>
-          <ButtonGroup spacing={4}>
-            {options.map(({ variantColor, label }) => (
-              <Button
-                padding={{ xl: '5px' }}
-                width={{ xl: '100px', lg: '85px', md: '79px', sm: '', xs: '' }}
-                height={{ xl: '30px', lg: '30px', md: '30px', sm: '', xs: '' }}
-                variantColor={variantColor}
-                marginRight={{
-                  xl: '5px',
-                  lg: '3px',
-                  md: '2px',
-                  sm: '',
-                  xs: '',
-                }}
-                variant="solid"
-              >
-                <Box
-                  marginTop="3px"
-                  width={{ xl: '20px', lg: '18px', md: '12px', sm: '', xs: '' }}
-                  height={{
-                    xl: '20px',
-                    lg: '18px',
-                    md: '15px',
-                    sm: '',
-                    xs: '',
-                  }}
-                  marginRight={{
-                    xl: '3px',
-                    lg: '2px',
-                    md: '5px',
-                  }}
-                  marginLeft={{
-                    xl: '3px',
-                    lg: '2px',
-                    md: '2px',
-                    sm: '',
-                    xs: '',
-                  }}
-                >
-                  <FaCartArrowDown />
-                </Box>
-
-                <Heading
-                  fontSize={{
-                    xl: '14px',
-                    lg: '12px',
-                    md: '11px',
-                    sm: '',
-                    xs: '',
-                  }}
-                >
-                  {label}
-                </Heading>
-              </Button>
-            ))}
-          </ButtonGroup>
-        </Flex>
-      ) : (
-        <RightMenuMobile />
-      )}
-    </>
+      </Flex>
+    </Flex>
   );
 };
 
