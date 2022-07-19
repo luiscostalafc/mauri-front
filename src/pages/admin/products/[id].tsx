@@ -8,9 +8,32 @@ import {
   SessionEspecificacoes,
   SessionFornecedores,
 } from '../../../components/Product/CreatePage';
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetStaticProps } from 'next';
+import * as yup from 'yup';
+import { useToast } from '../../../hooks/toast';
 
-export default function Edit({ product }): React.ReactNode {
+const dataSchema = yup.object({
+  descricao: yup.object({
+    idInterno: yup.number().required(),
+    seguimento: yup.string().required(),
+    titulo: yup.string().required(),
+    nome: yup.string().required(),
+    sinonimos: yup.string().required(),
+    medida: yup.string().required(),
+    posicao: yup.string().required(),
+    sistema: yup.string().required(),
+    grupo: yup.number().required(),
+    subgrupo: yup.number().required(),
+    cor: yup.string().required(),
+    desativado: yup.bool().required(),
+  }),
+});
+
+export default function Edit(props): React.ReactNode {
+  const { product } = props;
+  const { addToast } = useToast();
+  console.log(product);
+
   const parseGroups = {
     Motor: 1,
     Escapamento: 2,
@@ -23,7 +46,6 @@ export default function Edit({ product }): React.ReactNode {
     Elétrica: 9,
     Acessórios: 0,
   };
-
   const methods = useForm({
     defaultValues: {
       idInterno: product.id ?? null,
@@ -100,23 +122,36 @@ export default function Edit({ product }): React.ReactNode {
   };
 
   const handleSubmit = async (event): Promise<void> => {
-    const { descricao, aplicacoes, fornecedores } = event;
-
+    const { aplicacoes, fornecedores } = event;
     try {
       const data = {
-        ...event,
         descricao: {
-          ...descricao,
-          grupo: parseGroups[descricao.grupo],
-          subgrupo: parseSubgroups[descricao.subgrupo],
+          ...event,
+          idInterno: product.id,
+          grupo: event.grupo,
+          subgrupo: event.subgrupo,
         },
-        aplicacoes: aplicacoes?.map((ap: any) => ap.value),
-        fornecedores: fornecedores?.map((ap: any) => ap.value),
+        aplicacoes,
+        fornecedores,
       };
+      const dataValidation = await dataSchema.validate(data);
 
       await api.post('/api/products', data);
     } catch (error) {
       console.error('sedas error:', error);
+      if (error.name === 'ValidationError') {
+        const errorType = error.type;
+        const errorPath = error.path;
+        const errorField = errorPath.includes('.')
+          ? errorPath.split('.')[1]
+          : errorPath;
+        if (errorType === 'required') {
+          addToast({
+            title: 'Ops',
+            description: `O campo ${errorField} é obrigatório`,
+          });
+        }
+      }
     }
   };
 

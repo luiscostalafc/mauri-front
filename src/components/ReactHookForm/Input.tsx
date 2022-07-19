@@ -23,17 +23,18 @@ const InputStyled = styled.input<{ isId: boolean }>`
 export const Input = ({ label, name, defaultValue }: IInputProps) => {
   const { register } = useFormContext();
   const isId = name === 'idInterno';
+  const shouldDisplayId = !!defaultValue;
   return (
     <Box display="flex" flexDirection="column" mx={6} mb={2} maxW="200px">
       <Text fontSize={12} fontWeight="bold">
         {label}
       </Text>
       <InputStyled
-        ref={register()}
+        ref={register({ required: true })}
         name={name}
         disabled={isId}
         isId={isId}
-        defaultValue={isId ? 'Automático' : defaultValue}
+        defaultValue={isId && !shouldDisplayId ? 'Automático' : defaultValue}
       />
     </Box>
   );
