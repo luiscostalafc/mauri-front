@@ -67,10 +67,10 @@ const especificacoesFields: Field[] = [
     type: 'text',
   },
 ];
-export const SessionEspecificacoes = () => {
+export const SessionEspecificacoes = (): JSX.Element => {
   const methods = useFormContext();
   return (
-    <React.Fragment>
+    <>
       <Header>Especificações</Header>
       <Flex flexWrap="wrap">
         {especificacoesFields.map(productField => {
@@ -78,10 +78,11 @@ export const SessionEspecificacoes = () => {
             case 'boolean':
               return (
                 <Checkbox
-                  children="Inativo"
                   name={productField.name}
-                  ref={methods.register()}
-                />
+                  {...methods.register(productField.name)}
+                >
+                  Inativo
+                </Checkbox>
               );
 
             case 'select':
@@ -97,6 +98,6 @@ export const SessionEspecificacoes = () => {
           }
         })}
       </Flex>
-    </React.Fragment>
+    </>
   );
 };
