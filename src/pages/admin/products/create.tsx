@@ -32,6 +32,7 @@ export default function Create(): React.ReactNode {
   const methods = useForm({});
   const {
     control,
+    register,
     formState: { errors, isSubmitting },
   } = methods;
 
@@ -49,13 +50,13 @@ export default function Create(): React.ReactNode {
       <Box p={20}>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(handleFormsubmit)}>
-            <FormControl>
-              <SessionDescricao />
-              <SessionEspecificacoes />
-              <SessionAplicacoes />
-              <SessionFornecedores control={control} />
-              <FormErrorMessage>{errors}</FormErrorMessage>
-            </FormControl>
+            {/* <FormControl> */}
+            <SessionDescricao />
+            <SessionEspecificacoes />
+            <SessionAplicacoes />
+            <SessionFornecedores control={control} />
+            <FormErrorMessage>{errors}</FormErrorMessage>
+            {/* </FormControl> */}
 
             <Button
               mt={4}

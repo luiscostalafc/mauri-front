@@ -1,8 +1,9 @@
+import React from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 
-interface IInputProps {
+interface InputProps {
   name: string;
   label: string;
   defaultValue?: string;
@@ -20,7 +21,11 @@ const InputStyled = styled.input<{ isId: boolean }>`
   }
 `;
 
-export const Input = ({ label, name, defaultValue }: IInputProps) => {
+export const Input = ({
+  label,
+  name,
+  defaultValue,
+}: InputProps): JSX.Element => {
   const { register } = useFormContext();
   const isId = name === 'idInterno';
   const shouldDisplayId = !!defaultValue;
@@ -30,11 +35,11 @@ export const Input = ({ label, name, defaultValue }: IInputProps) => {
         {label}
       </Text>
       <InputStyled
-        ref={register({ required: true })}
         name={name}
         disabled={isId}
         isId={isId}
         defaultValue={isId && !shouldDisplayId ? 'Automático' : defaultValue}
+        {...register(name)}
       />
     </Box>
   );

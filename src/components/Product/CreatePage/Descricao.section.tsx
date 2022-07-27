@@ -206,10 +206,10 @@ const productFields: Field[] = [
   },
 ];
 
-export const SessionDescricao = () => {
+export const SessionDescricao = (): JSX.Element => {
   const methods = useFormContext();
   return (
-    <React.Fragment>
+    <>
       <Header>Descrição</Header>
       <Flex flexWrap="wrap" alignItems="end">
         {productFields.map(productField => {
@@ -218,10 +218,11 @@ export const SessionDescricao = () => {
               return (
                 <Checkbox
                   key={productField.name}
-                  ref={methods.register()}
                   name={productField.name}
-                  children="Inativo"
-                />
+                  {...methods.register(productField.name)}
+                >
+                  Inativo
+                </Checkbox>
               );
             }
             case 'select':
@@ -238,6 +239,6 @@ export const SessionDescricao = () => {
           }
         })}
       </Flex>
-    </React.Fragment>
+    </>
   );
 };

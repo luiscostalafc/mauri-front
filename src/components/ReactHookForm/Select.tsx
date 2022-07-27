@@ -1,13 +1,13 @@
+import React from 'react';
 import { Box, Select as SelectChakra, Text } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
-import { MdArrowDropDown } from 'react-icons/md';
 import { Field } from '../../pages/admin/products/create';
 
-interface iSelectProps {
+interface SelectProps {
   productField: Field;
 }
 
-export const Select = ({ productField }: iSelectProps) => {
+export const Select = ({ productField }: SelectProps): JSX.Element => {
   const { register } = useFormContext();
   return (
     <Box
@@ -22,7 +22,7 @@ export const Select = ({ productField }: iSelectProps) => {
     >
       <Text>{productField.label}</Text>
       <SelectChakra
-        ref={register()}
+        {...register(productField.name)}
         name={productField.name}
         w="200px"
         maxW="200px"
