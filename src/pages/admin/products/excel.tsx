@@ -1,27 +1,26 @@
 /* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+import React, { useCallback, useRef, useState } from 'react';
 import { Heading } from '@chakra-ui/core';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { useRouter } from 'next/router';
-import React, { useCallback, useRef, useState } from 'react';
+import styled from 'styled-components';
+import { Button, Flex, Spinner } from '@chakra-ui/react';
 import Template from '../../../components/Admin';
 import AdminMenu from '../../../components/Admin/Menu';
 import Bread from '../../../components/Breadcrumb';
-import Button from '../../../components/Button';
-import Input from '../../../components/Input';
 import { updateToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
 // import { post } from '../../../services/API';
 import { api } from '../../../services/API/index';
 import { validationErrors } from '../../../services/validateForm';
-import { Spinner } from '@chakra-ui/react';
+
 import {
   checkExtension,
   checkFormat,
   formatSend,
-  formatSheet,
   // eslint-disable-next-line prettier/prettier
   sheetToJson,
 } from '../../../utils/uploadExcel';
@@ -31,15 +30,17 @@ export default function Excel() {
   const formRef = useRef<FormHandles>(null);
   const [excel, setExcel] = useState();
   const [loading, setLoading] = useState(false);
+  const [canImport, setCanImport] = useState(false);
   const { addToast } = useToast();
 
   const router = useRouter();
+  const inputFileRef = useRef<HTMLInputElement>();
 
   const handleSubmit = useCallback(async () => {
     if (!excel) {
       addToast({
         title: 'Erro',
-        description: 'Excel é obrigatório',
+        description: 'Arquivo excel é obrigatório',
       });
       return;
     }
@@ -75,22 +76,29 @@ export default function Excel() {
       return;
     }
     const parsedData = await sheetToJson(file);
-    const validFormat = checkFormat(parsedData);
-    if (!validFormat) {
-      addToast({
-        type: 'error',
-        title: 'ERRO!',
-        description:
-          'Formato das colunas da planilha inválido! Verifique o formato padrão',
-      });
-      addToast({
-        type: 'error',
-        title: 'ERRO!',
-        description: formatSheet.join(', '),
-      });
+    const { valid, error } = await checkFormat(parsedData);
+    if (!valid) {
+      if (error.type === 'required') {
+        inputFileRef.current.value = null;
+        error.errors.forEach((errorMessage: string) => {
+          addToast({
+            type: 'error',
+            title: `A coluna ${errorMessage.split(' ')[0]} é obrigatória`,
+            description:
+              'O valor pode ser vazio mas a coluna deve existir na planilha',
+          });
+        });
+      } else {
+        addToast({
+          type: 'error',
+          title:
+            'Todos os campos requiridos existem, mas houve algum outro problema',
+        });
+      }
+
       return;
     }
-
+    setCanImport(true);
     const excelData: any = formatSend(parsedData);
     setExcel(excelData);
   };
@@ -112,19 +120,40 @@ export default function Excel() {
             color="#ED8936"
           />
         ) : (
-          <>
-            <Input
+          <Flex flexDir="column">
+            <CustomInput
+              ref={inputFileRef}
               name="excel"
               placeholder="Excel"
               type="file"
               onChange={handleInput}
             />
-            <Button typeColor="create" type="submit">
+
+            <Button
+              type="submit"
+              disabled={!canImport}
+              bg="#68d391"
+              w={346}
+              h={48}
+              mt={8}
+              borderRadius={12}
+              textTransform="uppercase"
+              title={canImport ? 'Enviar' : 'Selecione um arquivo válido'}
+              style={{ transition: 'all .2s ease' }}
+              _hover={{ backgroundColor: canImport ? '#ff9000' : '#68d391' }}
+            >
               Inserir
             </Button>
-          </>
+          </Flex>
         )}
       </Form>
     </Template>
   );
 }
+
+const CustomInput = styled.input`
+  background-color: #a0aec0;
+  padding: 20px;
+  border-radius: 12px;
+  width: 346px;
+`;

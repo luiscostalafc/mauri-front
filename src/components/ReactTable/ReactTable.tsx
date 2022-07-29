@@ -92,11 +92,14 @@ export const ReactTable = ({ products }): JSX.Element => {
             sticky: 'left',
             maxWidth: 45,
             Header: ({ getToggleAllRowsSelectedProps }) => (
-              <Checkbox {...getToggleAllRowsSelectedProps()} />
+              <Checkbox
+                style={{ zIndex: 1000 }}
+                {...getToggleAllRowsSelectedProps()}
+              />
             ),
             Cell: ({ row }) => (
               <Checkbox
-                style={{ width: 30 }}
+                style={{ width: 30, zIndex: 1000 }}
                 {...row.getToggleRowSelectedProps()}
               />
             ),
@@ -105,11 +108,8 @@ export const ReactTable = ({ products }): JSX.Element => {
             id: 'status',
             maxWidth: 100,
             sticky: 'left',
-            Header: 'ativo',
-            Cell: ({ row }) => {
-              console.log('im a row ', row);
-              return <Switch checked={row.original.inactive} size="sm" />;
-            },
+            Header: 'Ativo',
+            Cell: ({ row }) => (row.original.inactive ? 'NÃO' : 'SIM'),
           },
           ...oldColumns,
         ];

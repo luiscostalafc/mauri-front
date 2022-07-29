@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-plusplus */
-/* eslint-disable no-restricted-syntax */
-// @ts-ignore
 import xlsxParser from 'xls-parser';
+import * as yup from 'yup';
 
 export const formatSheet = [
   'ID do Sistema', // 'id'
@@ -90,6 +87,44 @@ export const formatSheet = [
   'descrição título do produto 60 carateres c/fórmula',
 ];
 
+const dataSchema = yup.object({
+  'Altura (cm)': yup.string(),
+  'Ano Modelo Ate': yup.string(),
+  'Ano Modelo De': yup.string(),
+  Combustivel: yup.string(),
+  Complemento: yup.string(),
+  'Comprimento (cm)': yup.string(),
+  'Criado Em': yup.string(),
+  'EAN CódigoBarras': yup.string(),
+  'Embalagem Compra': yup.string(),
+  'Embalagem Venda': yup.string(),
+  'Estoque Fornecedor': yup.string(),
+  Fornecedor: yup.string(),
+  Grupo: yup.string(),
+  Inativo: yup.string(),
+  'Largura (cm)': yup.string(),
+  'MPN CódigoMarca': yup.string(),
+  Marca: yup.string(),
+  Medida: yup.string(),
+  Modelo: yup.string(),
+  Montadora: yup.string(),
+  Motor: yup.string(),
+  'NCM CódigoFiscal': yup.string(),
+  'Nome Produto': yup.string(),
+  'Peso (kg)': yup.string(),
+  'Preço Custo': yup.string(),
+  'Preço Venda': yup.string(),
+  Qualidade: yup.string(),
+  'Quantidade de Uso': yup.string(),
+  'SKU Código Fornecedor': yup.string(),
+  Seguimento: yup.string().required().nullable(true),
+  Sinônimos: yup.string(),
+  SubGrupo: yup.string(),
+  Titulo: yup.string(),
+  Unidade: yup.string(),
+  'Venda Média': yup.string(),
+});
+
 export const authorizedExtensions = [
   'text/csv',
   'application/vnd.oasis.opendocument.spreadsheet',
@@ -105,27 +140,24 @@ export const sheetToJson = async (file: unknown): Promise<unknown> =>
 export const checkExtension = (file: { type: string }): boolean =>
   authorizedExtensions.includes(file.type);
 
-export const checkFormat = (file: any): unknown => {
-  let isValid = true;
-  const sheets: Array<{ 0: string; 1: string[] }> = Object.entries(file);
-  for (const sheet of sheets) {
-    const firstline = sheet[1][0]; // sheet[0] is the name of sheet
-    const keys = Object.keys(firstline);
-    if (!keys.length) {
-      isValid = false;
-      break;
-    }
-    const missingKeys = [];
-    const lowerCaseFields = formatSheet.map(t => t.trim().toLowerCase());
-    for (const key of keys) {
-      const parsedKey = key.trim().toLowerCase();
-      if (!lowerCaseFields.includes(parsedKey)) {
-        missingKeys.push(parsedKey);
-        isValid = false;
-      }
-    }
+export const checkFormat = async (
+  file: unknown,
+): Promise<{ valid: boolean; error?: yup.ValidationError }> => {
+  try {
+    const rows = Object.values(file)[0];
+    const firstRow = rows[0];
+    await dataSchema.validate(firstRow);
+    return {
+      valid: true,
+      error: undefined,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      valid: false,
+      error,
+    };
   }
-  return isValid;
 };
 
 const getSynonyms = (s: string | null) => {

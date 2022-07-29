@@ -9,7 +9,6 @@ export default function Index(): JSX.Element {
 
   const fetchData = useCallback(async () => {
     const { data } = await api.get(moduleName);
-    console.log({ data });
     setProducts(data);
   }, []);
 
