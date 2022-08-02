@@ -136,6 +136,7 @@ export default function Create(): React.ReactNode {
             <Button
               mt={4}
               isLoading={isSubmitting}
+              disabled={isSubmitting}
               type="submit"
               variant="solid"
               bg="teal"
