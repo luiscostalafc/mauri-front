@@ -1,12 +1,7 @@
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, FormErrorMessage } from '@chakra-ui/react';
 import React, { useCallback } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
+import * as yup from 'yup';
 import AdminLeftMenu from '../../../components/Admin/LeftMenu';
 import Header from '../../../components/Header';
 import AdminRightMenu from '../../../components/Admin/RightMenu';
@@ -18,8 +13,6 @@ import {
   SessionFornecedores,
 } from '../../../components/Product/CreatePage';
 import { useToast } from '../../../hooks/toast';
-import { useRouter } from 'next/router';
-import * as yup from 'yup';
 
 const dataSchema = yup.object({
   altura: yup.string().required(),
@@ -62,10 +55,9 @@ export type Field = {
 export default function Create(): React.ReactNode {
   const methods = useForm({});
   const { addToast } = useToast();
-  const router = useRouter();
   const {
     control,
-    register,
+    reset,
     formState: { errors, isSubmitting },
   } = methods;
 
@@ -105,8 +97,17 @@ export default function Create(): React.ReactNode {
           title: 'Produto criado com sucesso',
           type: 'success',
         });
-
-        router.push('/admin/products');
+        reset(undefined, {
+          keepDefaultValues: false,
+          keepDirty: false,
+          keepDirtyValues: false,
+          keepValues: false,
+          keepIsSubmitted: false,
+          keepErrors: false,
+          keepSubmitCount: false,
+          keepIsValid: false,
+          keepTouched: false,
+        });
       }
 
       if (status === 400) {
