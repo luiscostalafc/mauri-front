@@ -5,7 +5,7 @@ import ToastContainer from '../components/ToastContainer';
 declare type Types = 'success' | 'error' | 'info';
 export interface ToastMessage {
   id: string;
-  type: Types;
+  type: Types | string;
   title: string;
   description?: string;
 }

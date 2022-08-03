@@ -86,6 +86,7 @@ export default function Create(): React.ReactNode {
       };
     }
   }, []);
+
   const handleFormsubmit = useCallback(async data => {
     try {
       const { error } = await validateSubmitData(data);
@@ -106,6 +107,13 @@ export default function Create(): React.ReactNode {
         });
 
         router.push('/admin/products');
+      }
+
+      if (status === 400) {
+        addToast({
+          title: 'Produto ja existe',
+          type: 'error',
+        });
       }
     } catch (error) {
       console.error(error);

@@ -138,7 +138,6 @@ export default function Edit(props): React.ReactNode {
 
       await api.post('/api/products', data);
     } catch (error) {
-      console.error('sedas error:', error);
       if (error.name === 'ValidationError') {
         const errorType = error.type;
         const errorPath = error.path;
@@ -147,6 +146,7 @@ export default function Edit(props): React.ReactNode {
           : errorPath;
         if (errorType === 'required') {
           addToast({
+            type: 'error',
             title: 'Ops',
             description: `O campo ${errorField} é obrigatório`,
           });
