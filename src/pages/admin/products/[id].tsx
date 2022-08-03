@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Box, Button, FormControl, FormErrorMessage } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+} from '@chakra-ui/react';
 import api from '../../../services/api';
 import {
   SessionAplicacoes,
@@ -11,6 +17,7 @@ import {
 import { GetStaticProps } from 'next';
 import * as yup from 'yup';
 import { useToast } from '../../../hooks/toast';
+import { useRouter } from 'next/router';
 
 const dataSchema = yup.object({
   descricao: yup.object({
@@ -28,98 +35,135 @@ const dataSchema = yup.object({
     desativado: yup.bool().required(),
   }),
 });
+const parseGroups = {
+  Motor: 1,
+  Escapamento: 2,
+  Transmissão: 3,
+  Direção: 4,
+  Suspensão: 5,
+  Freio: 6,
+  Chassis: 7,
+  Carroceria: 8,
+  Elétrica: 9,
+  Acessórios: 0,
+};
 
-export default function Edit(props): React.ReactNode {
-  const { product } = props;
+const parseSubgroups = {
+  Bloco: 101,
+  Carter: 103,
+  Virabrequim: 105,
+  Balanceiro: 107,
+  'Comando Vávulas': 109,
+  'Bomba Óleo': 115,
+  'Radiador Óleo': 117,
+  'Chapas Motor': 119,
+  'Radiador Agua': 121,
+  'Bomba Combustivel': 127,
+  Carburador: 129,
+  Injeção: 130,
+  Ignição: 139,
+  Embreagem: 141,
+  'Kits Motor': 198,
+  'Fixação Motor': 199,
+};
+
+export default function Edit(): React.ReactNode {
+  const router = useRouter();
+  const [product, setProduct] = useState(null);
+  const [error, setError] = useState('');
+  const { id } = router.query;
   const { addToast } = useToast();
-  console.log(product);
 
-  const parseGroups = {
-    Motor: 1,
-    Escapamento: 2,
-    Transmissão: 3,
-    Direção: 4,
-    Suspensão: 5,
-    Freio: 6,
-    Chassis: 7,
-    Carroceria: 8,
-    Elétrica: 9,
-    Acessórios: 0,
-  };
+  useEffect(() => {
+    async function getProduct(): Promise<void> {
+      if (!id) return;
+      const res = await fetch(`${process.env.POSTGRES_URI}/api/products/${id}`);
+      const data = await res.json();
+
+      if (data.id) {
+        setProduct(data);
+      } else {
+        setError('Produto nao encontrado');
+      }
+    }
+
+    getProduct();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const methods = useForm({
-    defaultValues: {
-      idInterno: product.id ?? null,
-      seguimento: product.seguimento ?? null,
-      titulo: product.titulo ?? null,
-      nome: product.nome ?? null,
-      sinonimos: product.sinonimos ?? null,
-      medida: product.medida ?? null,
-      posicao: product.posicao ?? null,
-      sistema: product.sistema ?? null,
-      grupo: product.group.id ?? null,
-      subgrupo: product.subgroup.id ?? null,
-      cor: product.cor ?? null,
-      observacoes: product.observacoes ?? null,
-      desativado: product.desativado ?? null,
-      diametro_interno:
-        product.productsEspecification?.diametro_interno ?? null,
-      diametro_externo:
-        product.productsEspecification?.diametro_externo ?? null,
-      espessura: product.productsEspecification?.expessura_cm ?? null,
-      peso: product.productsEspecification?.peso_kg ?? null,
-      comprimento: product.productsEspecification?.comprimento_cm ?? null,
-      largura: product.productsEspecification?.largura_cm ?? null,
-      altura: product.productsEspecification?.altura_cm ?? null,
-      condicoes_mlb: product.productsEspecification?.condicoes_mlb ?? null,
-      tipo_anuncio_mlb:
-        product.productsEspecification?.tipo_anuncio_mlb ?? null,
-      id_categoria_mlb:
-        product.productsEspecification?.id_categoria_mlb ?? null,
-      registro_inmetro:
-        product.productsEspecification?.registro_inmetro ?? null,
-      detalhes_ficha_tecnica_mlb:
-        product.productsEspecification?.detalhes_ficha_tecnica_mlb ?? null,
-      fornecedores: product.productsEquivalentSuppliers ?? null,
-      aplicacoes:
-        product.publicApplications?.map(ap => ({
-          montadora: ap.montadora,
-          modelo: ap.modelo,
-          'anoMod.de': ap.ano_mod_de,
-          'anoMod.ate': ap.ano_mod_ate,
-          'chassi.de': ap.chassi_de,
-          'chassi.ate': ap.chassi_ate,
-          motor: ap.motor,
-          combustivel: ap.combustivel,
-          complemento: ap.complemento,
-          quantidade_uso: ap.quantidade_uso,
-          criado_em: ap.criado_em,
-          atualizado_em: ap.atualizado_em,
-        })) ?? null,
-    },
+    defaultValues: !product
+      ? {}
+      : {
+          idInterno: product.id ?? null,
+          seguimento: product.seguimento ?? null,
+          titulo: product.titulo ?? null,
+          nome: product.nome ?? null,
+          sinonimos: product.sinonimos ?? null,
+          medida: product.medida ?? null,
+          posicao: product.posicao ?? null,
+          sistema: product.sistema ?? null,
+          grupo: product.group.id ?? null,
+          subgrupo: product.subgroup.id ?? null,
+          cor: product.cor ?? null,
+          observacoes: product.observacoes ?? null,
+          desativado: product.desativado ?? null,
+          diametro_interno:
+            product.productsEspecification?.diametro_interno ?? null,
+          diametro_externo:
+            product.productsEspecification?.diametro_externo ?? null,
+          espessura: product.productsEspecification?.expessura_cm ?? null,
+          peso: product.productsEspecification?.peso_kg ?? null,
+          comprimento: product.productsEspecification?.comprimento_cm ?? null,
+          largura: product.productsEspecification?.largura_cm ?? null,
+          altura: product.productsEspecification?.altura_cm ?? null,
+          condicoes_mlb: product.productsEspecification?.condicoes_mlb ?? null,
+          tipo_anuncio_mlb:
+            product.productsEspecification?.tipo_anuncio_mlb ?? null,
+          id_categoria_mlb:
+            product.productsEspecification?.id_categoria_mlb ?? null,
+          registro_inmetro:
+            product.productsEspecification?.registro_inmetro ?? null,
+          detalhes_ficha_tecnica_mlb:
+            product.productsEspecification?.detalhes_ficha_tecnica_mlb ?? null,
+          fornecedores: product.productsEquivalentSuppliers ?? null,
+          aplicacoes:
+            product.publicApplications?.map(ap => ({
+              montadora: ap.montadora,
+              modelo: ap.modelo,
+              'anoMod.de': ap.ano_mod_de,
+              'anoMod.ate': ap.ano_mod_ate,
+              'chassi.de': ap.chassi_de,
+              'chassi.ate': ap.chassi_ate,
+              motor: ap.motor,
+              combustivel: ap.combustivel,
+              complemento: ap.complemento,
+              quantidade_uso: ap.quantidade_uso,
+              criado_em: ap.criado_em,
+              atualizado_em: ap.atualizado_em,
+            })) ?? null,
+        },
   });
   const {
     control,
     formState: { errors, isSubmitting },
   } = methods;
 
-  const parseSubgroups = {
-    Bloco: 101,
-    Carter: 103,
-    Virabrequim: 105,
-    Balanceiro: 107,
-    'Comando Vávulas': 109,
-    'Bomba Óleo': 115,
-    'Radiador Óleo': 117,
-    'Chapas Motor': 119,
-    'Radiador Agua': 121,
-    'Bomba Combustivel': 127,
-    Carburador: 129,
-    Injeção: 130,
-    Ignição: 139,
-    Embreagem: 141,
-    'Kits Motor': 198,
-    'Fixação Motor': 199,
-  };
+  if (!product && !error) {
+    return (
+      <Flex justify="center" mt={24} fontSize={16}>
+        Carregando produto...
+      </Flex>
+    );
+  }
+
+  if (error) {
+    return (
+      <Flex justify="center" mt={24} fontSize={16} color="red">
+        {error}
+      </Flex>
+    );
+  }
 
   const handleSubmit = async (event): Promise<void> => {
     const { aplicacoes, fornecedores } = event;
@@ -138,7 +182,6 @@ export default function Edit(props): React.ReactNode {
 
       await api.post('/api/products', data);
     } catch (error) {
-      console.error('sedas error:', error);
       if (error.name === 'ValidationError') {
         const errorType = error.type;
         const errorPath = error.path;
@@ -147,6 +190,7 @@ export default function Edit(props): React.ReactNode {
           : errorPath;
         if (errorType === 'required') {
           addToast({
+            type: 'error',
             title: 'Ops',
             description: `O campo ${errorField} é obrigatório`,
           });
@@ -186,29 +230,3 @@ export default function Edit(props): React.ReactNode {
     </Box>
   );
 }
-
-export const getStaticPaths = async () => {
-  const res = await fetch(`${process.env.POSTGRES_URI}/api/products/`);
-  const products = await res.json();
-
-  return {
-    paths:
-      products?.length &&
-      products.map(product => ({
-        params: { id: product.id.toString() },
-      })),
-    fallback: false,
-  };
-};
-
-export const getStaticProps: GetStaticProps = async context => {
-  const res = await fetch(
-    `${process.env.POSTGRES_URI}/api/products/${context.params.id}`,
-  );
-  const product = await res.json();
-  return {
-    props: {
-      product,
-    },
-  };
-};

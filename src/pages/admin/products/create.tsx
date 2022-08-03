@@ -1,12 +1,7 @@
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, FormErrorMessage } from '@chakra-ui/react';
 import React, { useCallback } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
+import * as yup from 'yup';
 import AdminLeftMenu from '../../../components/Admin/LeftMenu';
 import Header from '../../../components/Header';
 import AdminRightMenu from '../../../components/Admin/RightMenu';
@@ -17,6 +12,35 @@ import {
   SessionEspecificacoes,
   SessionFornecedores,
 } from '../../../components/Product/CreatePage';
+import { useToast } from '../../../hooks/toast';
+
+const dataSchema = yup.object({
+  altura: yup.string().required(),
+  comprimento: yup.string().required(),
+  condicoes_mlb: yup.string().required(),
+  cor: yup.string().required(),
+  desativado: yup.string().required(),
+  detalhes_ficha_tecnica_mlb: yup.string().required(),
+  diametro_externo: yup.string().required(),
+  diametro_interno: yup.string().required(),
+  espessura: yup.string().required(),
+  grupo: yup.string().required(),
+  id_categoria_mlb: yup.string().required(),
+  largura: yup.string().required(),
+  material: yup.string().required(),
+  medida: yup.string().required(),
+  nome: yup.string().required(),
+  observacoes: yup.string(),
+  peso: yup.string().required(),
+  posicao: yup.string().required(),
+  registro_inmetro: yup.string().required(),
+  seguimento: yup.string().required(),
+  sinonimos: yup.string().required(),
+  sistema: yup.string().required(),
+  subgrupo: yup.string().required(),
+  tipo_anuncio_mlb: yup.string().required(),
+  titulo: yup.string().required(),
+});
 
 export type Field = {
   name: string;
@@ -30,14 +54,76 @@ export type Field = {
 
 export default function Create(): React.ReactNode {
   const methods = useForm({});
+  const { addToast } = useToast();
   const {
     control,
-    register,
+    reset,
     formState: { errors, isSubmitting },
   } = methods;
 
+  const validateSubmitData = useCallback(async (data): Promise<{
+    error: boolean;
+  }> => {
+    try {
+      const isDataValid = await dataSchema.validateSync(data);
+      return {
+        error: false,
+      };
+    } catch (error) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(error);
+      }
+      return {
+        error: true,
+      };
+    }
+  }, []);
+
   const handleFormsubmit = useCallback(async data => {
-    const res = await api.post('/api/products', data);
+    try {
+      const { error } = await validateSubmitData(data);
+      if (error) {
+        addToast({
+          title: 'Erro na validação dos campos do produto',
+          description: 'Verifique os dados preenchidos',
+          type: 'error',
+        });
+        return;
+      }
+      const { status } = await api.post('/api/products', data);
+
+      if (status === 201) {
+        addToast({
+          title: 'Produto criado com sucesso',
+          type: 'success',
+        });
+        reset(undefined, {
+          keepDefaultValues: false,
+          keepDirty: false,
+          keepDirtyValues: false,
+          keepValues: false,
+          keepIsSubmitted: false,
+          keepErrors: false,
+          keepSubmitCount: false,
+          keepIsValid: false,
+          keepTouched: false,
+        });
+      }
+
+      if (status === 400) {
+        addToast({
+          title: 'Produto ja existe',
+          type: 'error',
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      addToast({
+        title: 'Falha ao criar produto',
+        type: 'error',
+        description: 'Um erro inesperado aconteceu, tente novamente mais tarde',
+      });
+    }
   }, []);
 
   return (
@@ -50,17 +136,16 @@ export default function Create(): React.ReactNode {
       <Box p={20}>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(handleFormsubmit)}>
-            {/* <FormControl> */}
             <SessionDescricao />
             <SessionEspecificacoes />
             <SessionAplicacoes />
             <SessionFornecedores control={control} />
             <FormErrorMessage>{errors}</FormErrorMessage>
-            {/* </FormControl> */}
 
             <Button
               mt={4}
               isLoading={isSubmitting}
+              disabled={isSubmitting}
               type="submit"
               variant="solid"
               bg="teal"
