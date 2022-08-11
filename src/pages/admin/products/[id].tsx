@@ -48,6 +48,10 @@ const parseGroups = {
   Acessórios: 0,
 };
 
+const capitalize = (word: string) => {
+  return word[0].toUpperCase() + word.substring(1);
+};
+
 const parseSubgroups = {
   Bloco: 101,
   Carter: 103,
@@ -68,27 +72,71 @@ const parseSubgroups = {
 };
 
 export default function Edit(): React.ReactNode {
-  const router = useRouter();
   const [product, setProduct] = useState(null);
   const [error, setError] = useState('');
-  const { id } = router.query;
   const { addToast } = useToast();
 
   useEffect(() => {
-    async function getProduct(): Promise<void> {
-      if (!id) return;
-      const res = await fetch(`${process.env.POSTGRES_URI}/api/products/${id}`);
-      const data = await res.json();
-
-      if (data.id) {
-        setProduct(data);
-      } else {
-        setError('Produto nao encontrado');
-      }
-    }
-
-    getProduct();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const { signal } = new AbortController();
+    setTimeout(() => {
+      const href = window.location.href.split('/products/');
+      const id = href.splice(-1)[0];
+      fetch(`${process.env.POSTGRES_URI}/api/products/${id}`, {
+        signal,
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          if (data.id) {
+            setValue('idInterno', data.id);
+            setValue('seguimento', data.seguimento);
+            setValue('titulo', data.titulo);
+            setValue('nome', data.nome);
+            setValue('sinonimos', data.sinonimos);
+            setValue('grupo', data.group_id);
+            setValue('subgrupo', data.subgroup_id);
+            setValue('medida', data.medida);
+            setValue('cor', capitalize(data.cor));
+            setValue('observacoes', data.observacoes);
+            setValue('posicao', capitalize(data.posicao));
+            setValue('sistema', data.sistema);
+            setValue(
+              'diametro_interno',
+              data.productsEspecification.diametro_interno,
+            );
+            setValue(
+              'diametro_externo',
+              data.productsEspecification.diametro_externo,
+            );
+            setValue('espessura', data.productsEspecification.expessura_cm);
+            setValue('peso', data.productsEspecification.peso_kg);
+            setValue('comprimento', data.productsEspecification.comprimento_cm);
+            setValue('largura', data.productsEspecification.largura_cm);
+            setValue('altura', data.productsEspecification.altura_cm);
+            setValue(
+              'condicoes_mlb',
+              data.productsEspecification.condicoes_mlb,
+            );
+            setValue(
+              'tipo_anuncio_mlb',
+              data.productsEspecification.tipo_anuncio_mlb,
+            );
+            setValue(
+              'id_categoria_mlb',
+              data.productsEspecification.id_categoria_mlb,
+            );
+            setValue(
+              'registro_inmetro',
+              data.productsEspecification.registro_inmetro,
+            );
+            setValue(
+              'detalhes_ficha_tecnica_mlb',
+              data.productsEspecification.detalhes_ficha_tecnica_mlb,
+            );
+            setProduct(data);
+          } else setError('Produto nao encontrado');
+        });
+    }, 500);
   }, []);
 
   const methods = useForm({
@@ -146,6 +194,7 @@ export default function Edit(): React.ReactNode {
   });
   const {
     control,
+    setValue,
     formState: { errors, isSubmitting },
   } = methods;
 
@@ -180,7 +229,7 @@ export default function Edit(): React.ReactNode {
       };
       const dataValidation = await dataSchema.validate(data);
 
-      await api.post('/api/products', data);
+      await api.post('/api/products/edit', data);
     } catch (error) {
       if (error.name === 'ValidationError') {
         const errorType = error.type;
