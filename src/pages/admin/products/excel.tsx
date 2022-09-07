@@ -39,6 +39,7 @@ export default function Excel() {
   const handleSubmit = useCallback(async () => {
     if (!excel) {
       addToast({
+        type:'info',
         title: 'Erro',
         description: 'Arquivo excel é obrigatório',
       });
