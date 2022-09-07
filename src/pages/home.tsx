@@ -90,7 +90,7 @@ export default function Home({ products, groups }) {
   );
 }
 
-Home.getInitialProps = async ({ query }) => {
+export async function getStaticProps({ query }) {
   const uri = new URLSearchParams(query);
   const [res, resGroups] = await Promise.all([
     fetch(`${process.env.POSTGRES_URI}/api/products?${uri}`),
@@ -100,8 +100,16 @@ Home.getInitialProps = async ({ query }) => {
     res.json(),
     resGroups.json(),
   ]);
-  return {
+
+  console.log(JSON.stringify({
     products,
-    groups,
+    groups
+  }))
+  return {
+    props:{
+      products: products ?? [],
+      groups : groups ?? [],
+    }
   };
-};
+}
+
