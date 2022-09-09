@@ -77,31 +77,32 @@ export default function Excel() {
       return;
     }
     const parsedData = await sheetToJson(file);
-    const { valid, error } = await checkFormat(parsedData);
-    if (!valid) {
-      if (error.type === 'required') {
-        inputFileRef.current.value = null;
-        error.errors.forEach((errorMessage: string) => {
-          addToast({
-            type: 'error',
-            title: `A coluna ${errorMessage.split(' ')[0]} é obrigatória`,
-            description:
-              'O valor pode ser vazio mas a coluna deve existir na planilha',
-          });
-        });
-      } else {
-        addToast({
-          type: 'error',
-          title:
-            'Todos os campos requiridos existem, mas houve algum outro problema',
-        });
-      }
+    // const { valid, error } = await checkFormat(parsedData);
+    // if (!valid) {
+    //   if (error.type === 'required') {
+    //     inputFileRef.current.value = null;
+    //     error.errors.forEach((errorMessage: string) => {
+    //       addToast({
+    //         type: 'error',
+    //         title: `A coluna ${errorMessage.split(' ')[0]} é obrigatória`,
+    //         description:
+    //           'O valor pode ser vazio mas a coluna deve existir na planilha',
+    //       });
+    //     });
+    //   } else {
+    //     addToast({
+    //       type: 'error',
+    //       title:
+    //         'Todos os campos requiridos existem, mas houve algum outro problema',
+    //     });
+    //   }
 
-      return;
-    }
+    //   return;
+    // }
     setCanImport(true);
-    const excelData: any = formatSend(parsedData);
-    setExcel(excelData);
+    console.log("parsedData: ", parsedData)
+    // const excelData: any = formatSend(parsedData);
+    setExcel(parsedData as any);
   };
 
   const breads = [

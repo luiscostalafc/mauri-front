@@ -134,7 +134,7 @@ export const authorizedExtensions = [
 
 export const sheetToJson = async (file: unknown): Promise<unknown> =>
   xlsxParser.onFileSelection(file, {
-    showNullProperties: false,
+    showNullProperties: true,
     hideEmptyRows: true,
   });
 export const checkExtension = (file: { type: string }): boolean =>
