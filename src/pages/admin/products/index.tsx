@@ -36,14 +36,11 @@ export default function Index({ products }): JSX.Element {
     <ReactTable products={products} /> 
   );
 }
-
-
 export const getServerSideProps:GetServerSideProps = async (props) => {
   const {data: products} = await api.get(moduleName)
-  console.log(products)
   return {
     props:{
-      products
+      products: typeof products === 'object' ? [products] : products
     }
   }
 }
