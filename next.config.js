@@ -4,6 +4,6 @@ module.exports = withImages({
   esModule: true,
   distDir: 'out',
   env: {
-    POSTGRES_URI: process.env.POSTGRES_URI,
+    BACKEND_URL: process.env.BACKEND_URL,
   },
 });

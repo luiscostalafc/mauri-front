@@ -31,7 +31,7 @@ export default function Home(): JSX.Element {
       try {
         setloading(true);
         const res = await fetch(
-          `${process.env.POSTGRES_URI}/api/products${
+          `${process.env.BACKEND_URL}/api/products${
             seguimentoSelecionado ? `?seguimento=${seguimentoSelecionado}` : ''
           }`,
         );

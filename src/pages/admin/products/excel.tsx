@@ -14,7 +14,7 @@ import Bread from '../../../components/Breadcrumb';
 import { updateToast } from '../../../config/toastMessages';
 import { useToast } from '../../../hooks/toast';
 // import { post } from '../../../services/API';
-import { api } from '../../../services/API/index';
+// import { api } from '../../../services/API/index';
 import { validationErrors } from '../../../services/validateForm';
 
 import {
@@ -39,7 +39,7 @@ export default function Excel() {
   const handleSubmit = useCallback(async () => {
     if (!excel) {
       addToast({
-        type:'info',
+        type: 'info',
         title: 'Erro',
         description: 'Arquivo excel é obrigatório',
       });
@@ -50,19 +50,22 @@ export default function Excel() {
       setLoading(true);
     }
 
-    const { ok, messageErrors } = await api.post(`api/${moduleName}`, excel);
+    const res = await fetch(`${process.env.BACKEND_URL}/api/products/excel`, {
+      method: 'post',
+      body: JSON.stringify({ data: excel }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-    if (ok) {
+    const data = await res.json();
+
+    if (data.ok) {
       setLoading(false);
       addToast(updateToast.success);
       router.push(`/admin/${moduleName}`);
-    } else {
-      messageErrors?.length &&
-        messageErrors.map(({ path, message }) =>
-          addToast(validationErrors({ path, message })),
-        );
     }
-  }, [excel, router, addToast]);
+  }, [excel, loading, addToast, router]);
 
   const handleInput = async (e: any) => {
     const file = e.target.files[0];
@@ -100,7 +103,7 @@ export default function Excel() {
     //   return;
     // }
     setCanImport(true);
-    console.log("parsedData: ", parsedData)
+    console.log('parsedData: ', parsedData);
     // const excelData: any = formatSend(parsedData);
     setExcel(parsedData as any);
   };

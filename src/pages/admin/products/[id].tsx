@@ -82,7 +82,7 @@ export default function Edit(): React.ReactNode {
     setTimeout(() => {
       const href = window.location.href.split('/products/');
       const id = href.splice(-1)[0];
-      fetch(`${process.env.POSTGRES_URI}/api/products/${id}`, {
+      fetch(`${process.env.BACKEND_URL}/api/products/${id}`, {
         signal,
       })
         .then(res => res.json())
