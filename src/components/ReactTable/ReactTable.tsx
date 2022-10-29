@@ -204,82 +204,85 @@ export const ReactTable = ({ products }): JSX.Element => {
       >
         Inserção via Excel
       </Button>
-
-      <Styles>
-        <div
-          {...getTableProps()}
-          className="table sticky"
-          style={{
-            width: width - 80,
-            height: height - 200,
-            backgroundColor: '#fff',
-          }}
-        >
-          <div className="header">
-            {headerGroups.map(headerGroup => (
-              <tr
-                {...headerGroup.getHeaderGroupProps()}
-                className="tr"
-                key={uuid()}
-              >
-                {headerGroup.headers.map(column => {
-                  return (
-                    <div
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
-                      className="th"
-                      key={`${Date.now()}-${Math.floor(Math.random() + 1)}`}
-                    >
-                      <Flex mt={4} mb={4} justify="center">
-                        {column.render('Header')}
-                        {column.canSort ? (
-                          column.isSorted ? (
-                            column.isSortedDesc ? (
-                              <TiArrowSortedDown
-                                style={{ transform: 'translate(12px, 0)' }}
-                              />
+      <div style={{ width: '100%', height: '100%', background: '#dedede' }}>
+        <Styles>
+          <div
+            {...getTableProps()}
+            className="table sticky"
+            style={{
+              width: width - 80,
+              height: height - 200,
+              backgroundColor: '#fff',
+            }}
+          >
+            <div className="header">
+              {headerGroups.map(headerGroup => (
+                <tr
+                  {...headerGroup.getHeaderGroupProps()}
+                  className="tr"
+                  key={uuid()}
+                >
+                  {headerGroup.headers.map(column => {
+                    return (
+                      <div
+                        {...column.getHeaderProps(
+                          column.getSortByToggleProps(),
+                        )}
+                        className="th"
+                        key={`${Date.now()}-${Math.floor(Math.random() + 1)}`}
+                      >
+                        <Flex mt={4} mb={4} justify="center">
+                          {column.render('Header')}
+                          {column.canSort ? (
+                            column.isSorted ? (
+                              column.isSortedDesc ? (
+                                <TiArrowSortedDown
+                                  style={{ transform: 'translate(12px, 0)' }}
+                                />
+                              ) : (
+                                <TiArrowSortedUp
+                                  style={{ transform: 'translate(12px, 0)' }}
+                                />
+                              )
                             ) : (
-                              <TiArrowSortedUp
+                              <FaSort
                                 style={{ transform: 'translate(12px, 0)' }}
                               />
                             )
-                          ) : (
-                            <FaSort
-                              style={{ transform: 'translate(12px, 0)' }}
-                            />
-                          )
-                        ) : null}
-                      </Flex>
-                      {column.canFilter ? column.render('Filter') : null}
-                    </div>
-                  );
-                })}
-              </tr>
-            ))}
+                          ) : null}
+                        </Flex>
+                        {column.canFilter ? column.render('Filter') : null}
+                      </div>
+                    );
+                  })}
+                </tr>
+              ))}
+            </div>
+            <div {...getTableBodyProps()} className="body">
+              {page.map(row => {
+                prepareRow(row);
+                return (
+                  <div
+                    {...row.getRowProps()}
+                    className="tr"
+                    key={`${Date.now()}-${Math.floor(Math.random() + 1)}`}
+                  >
+                    {row.cells.map(cell => (
+                      <div
+                        {...cell.getCellProps()}
+                        className="td"
+                        key={`${Date.now()}-${Math.floor(Math.random() + 1)}`}
+                      >
+                        {cell.render('Cell')}
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div {...getTableBodyProps()} className="body">
-            {page.map(row => {
-              prepareRow(row);
-              return (
-                <div
-                  {...row.getRowProps()}
-                  className="tr"
-                  key={`${Date.now()}-${Math.floor(Math.random() + 1)}`}
-                >
-                  {row.cells.map(cell => (
-                    <div
-                      {...cell.getCellProps()}
-                      className="td"
-                      key={`${Date.now()}-${Math.floor(Math.random() + 1)}`}
-                    >
-                      {cell.render('Cell')}
-                    </div>
-                  ))}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </Styles>
+        </Styles>
+      </div>
       <Pagination
         {...{
           canNextPage,
