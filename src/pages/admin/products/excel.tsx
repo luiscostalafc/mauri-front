@@ -59,12 +59,13 @@ export default function Excel() {
     });
 
     const data = await res.json();
-
-    if (data.ok) {
-      setLoading(false);
-      addToast(updateToast.success);
-      router.push(`/admin/${moduleName}`);
+    setLoading(false);
+    if (!data.ok) {
+      addToast(updateToast.error);
+      return;
     }
+    addToast(updateToast.success);
+    router.push(`/admin/${moduleName}`);
   }, [excel, loading, addToast, router]);
 
   const handleInput = async (e: any) => {
