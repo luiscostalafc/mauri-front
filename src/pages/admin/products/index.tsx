@@ -20,6 +20,8 @@ export default function Index(): JSX.Element {
   }, []);
 
   return (
-    <div>{products.length ? <ReactTable products={products} /> : null}</div>
+    <div>
+      <ReactTable products={products} />{' '}
+    </div>
   );
 }
