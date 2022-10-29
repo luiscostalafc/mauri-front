@@ -24,14 +24,7 @@ export function setHeaders(file = false): Headers {
 }
 
 export function getBaseURL(): string {
-  if (process.env.POSTGRES_URI) {
-    return String(process.env.POSTGRES_URI);
-  }
-  if (process.env.NEXT_PUBLIC_POSTGRES_URI) {
-    return String(process.env.NEXT_PUBLIC_POSTGRES_URI);
-  }
-
-  return 'https://liconnection.herokuapp.com';
+  return process.env.BACKEND_URL
 }
 export const getCompleteURL = (URL: string): string => {
   const cleanURL = URL.charAt(0) === '/' ? URL.slice(1, URL.length) : URL;

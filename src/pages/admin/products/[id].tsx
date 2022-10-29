@@ -49,6 +49,7 @@ const parseGroups = {
 };
 
 const capitalize = (word: string) => {
+  if (!word) return
   return word[0].toUpperCase() + word.substring(1);
 };
 
@@ -81,7 +82,7 @@ export default function Edit(): React.ReactNode {
     setTimeout(() => {
       const href = window.location.href.split('/products/');
       const id = href.splice(-1)[0];
-      fetch(`${process.env.POSTGRES_URI}/api/products/${id}`, {
+      fetch(`${process.env.BACKEND_URL}/api/products/${id}`, {
         signal,
       })
         .then(res => res.json())
@@ -100,39 +101,43 @@ export default function Edit(): React.ReactNode {
             setValue('observacoes', data.observacoes);
             setValue('posicao', capitalize(data.posicao));
             setValue('sistema', data.sistema);
-            setValue(
-              'diametro_interno',
-              data.productsEspecification.diametro_interno,
-            );
-            setValue(
-              'diametro_externo',
-              data.productsEspecification.diametro_externo,
-            );
-            setValue('espessura', data.productsEspecification.expessura_cm);
-            setValue('peso', data.productsEspecification.peso_kg);
-            setValue('comprimento', data.productsEspecification.comprimento_cm);
-            setValue('largura', data.productsEspecification.largura_cm);
-            setValue('altura', data.productsEspecification.altura_cm);
-            setValue(
-              'condicoes_mlb',
-              data.productsEspecification.condicoes_mlb,
-            );
-            setValue(
-              'tipo_anuncio_mlb',
-              data.productsEspecification.tipo_anuncio_mlb,
-            );
-            setValue(
-              'id_categoria_mlb',
-              data.productsEspecification.id_categoria_mlb,
-            );
-            setValue(
-              'registro_inmetro',
-              data.productsEspecification.registro_inmetro,
-            );
-            setValue(
-              'detalhes_ficha_tecnica_mlb',
-              data.productsEspecification.detalhes_ficha_tecnica_mlb,
-            );
+            if (data.productsEspecification) {
+
+
+              setValue(
+                'diametro_interno',
+                data.productsEspecification.diametro_interno,
+              );
+              setValue(
+                'diametro_externo',
+                data.productsEspecification.diametro_externo,
+              );
+              setValue('espessura', data.productsEspecification.expessura_cm);
+              setValue('peso', data.productsEspecification.peso_kg);
+              setValue('comprimento', data.productsEspecification.comprimento_cm);
+              setValue('largura', data.productsEspecification.largura_cm);
+              setValue('altura', data.productsEspecification.altura_cm);
+              setValue(
+                'condicoes_mlb',
+                data.productsEspecification.condicoes_mlb,
+              );
+              setValue(
+                'tipo_anuncio_mlb',
+                data.productsEspecification.tipo_anuncio_mlb,
+              );
+              setValue(
+                'id_categoria_mlb',
+                data.productsEspecification.id_categoria_mlb,
+              );
+              setValue(
+                'registro_inmetro',
+                data.productsEspecification.registro_inmetro,
+              );
+              setValue(
+                'detalhes_ficha_tecnica_mlb',
+                data.productsEspecification.detalhes_ficha_tecnica_mlb,
+              );
+            }
             setProduct(data);
           } else setError('Produto nao encontrado');
         });
@@ -143,54 +148,54 @@ export default function Edit(): React.ReactNode {
     defaultValues: !product
       ? {}
       : {
-          idInterno: product.id ?? null,
-          seguimento: product.seguimento ?? null,
-          titulo: product.titulo ?? null,
-          nome: product.nome ?? null,
-          sinonimos: product.sinonimos ?? null,
-          medida: product.medida ?? null,
-          posicao: product.posicao ?? null,
-          sistema: product.sistema ?? null,
-          grupo: product.group.id ?? null,
-          subgrupo: product.subgroup.id ?? null,
-          cor: product.cor ?? null,
-          observacoes: product.observacoes ?? null,
-          desativado: product.desativado ?? null,
-          diametro_interno:
-            product.productsEspecification?.diametro_interno ?? null,
-          diametro_externo:
-            product.productsEspecification?.diametro_externo ?? null,
-          espessura: product.productsEspecification?.expessura_cm ?? null,
-          peso: product.productsEspecification?.peso_kg ?? null,
-          comprimento: product.productsEspecification?.comprimento_cm ?? null,
-          largura: product.productsEspecification?.largura_cm ?? null,
-          altura: product.productsEspecification?.altura_cm ?? null,
-          condicoes_mlb: product.productsEspecification?.condicoes_mlb ?? null,
-          tipo_anuncio_mlb:
-            product.productsEspecification?.tipo_anuncio_mlb ?? null,
-          id_categoria_mlb:
-            product.productsEspecification?.id_categoria_mlb ?? null,
-          registro_inmetro:
-            product.productsEspecification?.registro_inmetro ?? null,
-          detalhes_ficha_tecnica_mlb:
-            product.productsEspecification?.detalhes_ficha_tecnica_mlb ?? null,
-          fornecedores: product.productsEquivalentSuppliers ?? null,
-          aplicacoes:
-            product.publicApplications?.map(ap => ({
-              montadora: ap.montadora,
-              modelo: ap.modelo,
-              'anoMod.de': ap.ano_mod_de,
-              'anoMod.ate': ap.ano_mod_ate,
-              'chassi.de': ap.chassi_de,
-              'chassi.ate': ap.chassi_ate,
-              motor: ap.motor,
-              combustivel: ap.combustivel,
-              complemento: ap.complemento,
-              quantidade_uso: ap.quantidade_uso,
-              criado_em: ap.criado_em,
-              atualizado_em: ap.atualizado_em,
-            })) ?? null,
-        },
+        idInterno: product.id ?? null,
+        seguimento: product.seguimento ?? null,
+        titulo: product.titulo ?? null,
+        nome: product.nome ?? null,
+        sinonimos: product.sinonimos ?? null,
+        medida: product.medida ?? null,
+        posicao: product.posicao ?? null,
+        sistema: product.sistema ?? null,
+        grupo: product.group.id ?? null,
+        subgrupo: product.subgroup.id ?? null,
+        cor: product.cor ?? null,
+        observacoes: product.observacoes ?? null,
+        desativado: product.desativado ?? null,
+        diametro_interno:
+          product.productsEspecification?.diametro_interno ?? null,
+        diametro_externo:
+          product.productsEspecification?.diametro_externo ?? null,
+        espessura: product.productsEspecification?.expessura_cm ?? null,
+        peso: product.productsEspecification?.peso_kg ?? null,
+        comprimento: product.productsEspecification?.comprimento_cm ?? null,
+        largura: product.productsEspecification?.largura_cm ?? null,
+        altura: product.productsEspecification?.altura_cm ?? null,
+        condicoes_mlb: product.productsEspecification?.condicoes_mlb ?? null,
+        tipo_anuncio_mlb:
+          product.productsEspecification?.tipo_anuncio_mlb ?? null,
+        id_categoria_mlb:
+          product.productsEspecification?.id_categoria_mlb ?? null,
+        registro_inmetro:
+          product.productsEspecification?.registro_inmetro ?? null,
+        detalhes_ficha_tecnica_mlb:
+          product.productsEspecification?.detalhes_ficha_tecnica_mlb ?? null,
+        fornecedores: product.productsEquivalentSuppliers ?? null,
+        aplicacoes:
+          product.publicApplications?.map(ap => ({
+            montadora: ap.montadora,
+            modelo: ap.modelo,
+            'anoMod.de': ap.ano_mod_de,
+            'anoMod.ate': ap.ano_mod_ate,
+            'chassi.de': ap.chassi_de,
+            'chassi.ate': ap.chassi_ate,
+            motor: ap.motor,
+            combustivel: ap.combustivel,
+            complemento: ap.complemento,
+            quantidade_uso: ap.quantidade_uso,
+            criado_em: ap.criado_em,
+            atualizado_em: ap.atualizado_em,
+          })) ?? null,
+      },
   });
   const {
     control,

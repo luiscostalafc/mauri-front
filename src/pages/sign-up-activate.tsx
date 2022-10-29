@@ -27,7 +27,7 @@ export default function ResetPassword(): JSX.Element {
       alert('As senhas fornecidas são diferentes');
     }
 
-    const res = await fetch(`${process.env.POSTGRES_URI}/change-password`, {
+    const res = await fetch(`${process.env.BACKEND_URL}/change-password`, {
       method: 'POST',
       headers: { 'Content-type': 'Application/json' },
       body: JSON.stringify({

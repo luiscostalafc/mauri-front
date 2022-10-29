@@ -32,8 +32,8 @@ const AdminLeftMenu: React.FC = props => {
   return (
     <Flex>
       <ButtonGroup spacing={4}>
-        {options.map(({ variantColor, marginLeft, route, label }) => (
-          <Link href={route} key={label}>
+        {options.map(({ variantColor, marginLeft, route, label }, index) => (
+          <Link href={route} key={index}>
             <Button
               size="xs"
               leftIcon={FaCartArrowDown}

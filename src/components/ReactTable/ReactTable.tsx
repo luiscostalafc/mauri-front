@@ -130,7 +130,7 @@ export const ReactTable = ({ products }): JSX.Element => {
 
     try {
       const res = await fetch(
-        `${process.env.POSTGRES_URI}/api/file-exporter/productsById`,
+        `${process.env.BACKEND_URL}/api/file-exporter/productsById`,
         {
           method: 'POST',
           headers: {

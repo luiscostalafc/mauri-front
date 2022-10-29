@@ -81,7 +81,7 @@ export const DataTable = (props: any): React.ReactElement => (
             filtering: true,
             exportCsv: (columns, data) => {
               if(window !== undefined){
-                window.open(`${process.env.POSTGRES_URI}/api/file-exporter/products`)
+                window.open(`${process.env.BACKEND_URL}/api/file-exporter/products`)
               }
             }
           }}

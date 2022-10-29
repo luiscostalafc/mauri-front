@@ -13,7 +13,7 @@ export default function Details() {
     async function getData() {
       const { id } = router.query;
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_POSTGRES_URI}/order-details/search/${id}`,
+        `${process.env.BACKEND_URL}/order-details/search/${id}`,
       );
       const data = await res.json();
 
