@@ -1,26 +1,24 @@
 const withImages = require('next-images');
 
-
-module.exports = (phase) => {
-  const isDev = phase === PHASE_DEVELOPMENT_SERVER
-
-  // when `next build` or `npm run build` is used
-  const isProd = phase === PHASE_PRODUCTION_BUILD && process.env.STAGING !== '1'
+module.exports = phase => {
+  //const isDev = phase === PHASE_DEVELOPMENT_SERVER
 
   // when `next build` or `npm run build` is used
-  const isStaging =
-    phase === PHASE_PRODUCTION_BUILD && process.env.STAGING === '1'
+  //const isProd = phase === PHASE_PRODUCTION_BUILD && process.env.STAGING !== '1'
 
-  const flyIoUrl = "https://liconnection-adonis.fly.dev"
+  // when `next build` or `npm run build` is used
+  // const isStaging =
+  //   phase === PHASE_PRODUCTION_BUILD && process.env.STAGING === '1'
+
+  const flyIoUrl = 'https://liconnection-adonis.fly.dev';
 
   const env = {
     BACKEND_URL: (() => {
-      if (isDev) return 'http://localhost:3333'
-      if (isProd || isStaging) return flyIoUrl
+      return flyIoUrl;
+      // if (isDev) return 'http://localhost:3333'
+      // if (isProd || isStaging) return flyIoUrl
     })(),
-
-  }
-
+  };
 
   return {
     default: withImages({
@@ -28,5 +26,5 @@ module.exports = (phase) => {
       distDir: 'out',
     }),
     env,
-  }
-}
+  };
+};
